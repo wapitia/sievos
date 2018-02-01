@@ -1,0 +1,38 @@
+<project>
+	<!-- ================================= 
+          target: clean-reset-all             
+         ================================= -->
+    <target name="clean-reset-all" depends="init" 
+    	description="Clean all non-essentials from all rom all projects">
+        <!-- delete all target files -->
+        <antcall target="clean-module">
+            <param name="module-name" value="." />
+        </antcall>
+        <antcall target="clean-module">
+            <param name="module-name" value="modules" />
+        </antcall>
+    	<antcall target="clean-module">
+    		<param name="module-name" value="modules/sievos-core" />
+    	</antcall>
+        <antcall target="clean-module">
+            <param name="module-name" value="modules/sievos-lex-lang" />
+        </antcall>
+        <antcall target="clean-module">
+            <param name="module-name" value="modules/sievos-lex-appl" />
+        </antcall>
+    </target>
+	
+    <target name="clean-module">
+        <delete file="${module-name}/.project" failonerror="false" />
+        <delete file="${module-name}/.cache-main" failonerror="false" />
+        <delete file="${module-name}/.cache-tests" failonerror="false" />
+        <delete file="${module-name}/.classpath" failonerror="false" />
+        <delete dir="${module-name}/.settings" failonerror="false" />
+    	<delete dir="${module-name}/target" failonerror="false" />
+        <delete dir="${module-name}/build" failonerror="false" />
+    </target>
+	
+	<target name="init">
+	</target>
+
+</project>

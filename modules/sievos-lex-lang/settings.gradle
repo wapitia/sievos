@@ -9,7 +9,5 @@
  */
 
 include 'modules:sievos-core'
-include 'modules:sievos-lex-lang'
-include 'modules:sievos-lex-appl'
 
 rootProject.name = 'sievos'
