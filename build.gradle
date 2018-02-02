@@ -12,6 +12,7 @@ project.version = sievosVersion
 project.ext {
     BUILD_CLASSES_DIR = "build/classes"
     GEN_SOURCES_DIR = "build/generated-src/java"
+    String lexLangMessage
 }
 
 allprojects {

@@ -27,9 +27,9 @@
         <delete file="${module-name}/.cache-main" failonerror="false" />
         <delete file="${module-name}/.cache-tests" failonerror="false" />
         <delete file="${module-name}/.classpath" failonerror="false" />
-        <delete dir="${module-name}/.settings" failonerror="false" />
     	<delete dir="${module-name}/target" failonerror="false" />
         <delete dir="${module-name}/build" failonerror="false" />
+        <delete dir="${module-name}/bin" failonerror="false" />
     </target>
 	
 	<target name="init">

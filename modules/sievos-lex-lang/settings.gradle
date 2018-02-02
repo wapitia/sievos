@@ -8,6 +8,6 @@
  * in the user guide at https://docs.gradle.org/3.5/userguide/multi_project_builds.html
  */
 
-include 'modules:sievos-core'
+include ':modules:sievos-core'
 
 rootProject.name = 'sievos'

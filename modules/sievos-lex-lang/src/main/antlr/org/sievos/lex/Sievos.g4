@@ -2,22 +2,37 @@ grammar Sievos;
 
 // PARSER
 
-fcall     : t3 func         # SINGF
+// rule fcall
+// a single FTFTuple or other FTFTuple stream representation which can be
+// applied against a composite functional block
+// (<tuple>) <identifier>...
+//
+// example: 'TFF r z'
+//
+fcall     : ptp func        # SINGF
           | fcall func      # MULTF
           ;
 
-t1        : T
+// rule ptp
+// <tuple> 
+// a single FTFTuple or other FTFTuple stream representation which can be
+// applied against a composite functional block 
+//
+//ptp       : LPAR ptp RPAR  # PTUP
+ptp       : tp             # TUP
+          ;
+
+// rule tp
+// <T|F>...
+// 
+// example: 'TFT'
+//          
+tp        : sing           # T1
+          | sing tp        # TX
+          ;
+          
+sing      : T
           | F
-          ;
-          
-t2        : v0=t1 v1=t1      # TUP2 
-          ;
-          
-t3exp     : LPAR t3exp RPAR  # SINGT3
-          | t3               # ALONET3
-          ;
-          
-t3        : v1=t1 v2=t2      # TUP3
           ;
           
 func      : IDENT

@@ -33,6 +33,16 @@ dependencies {
     compile 'org.slf4j:slf4j-api:1.7.5'
     compile 'org.scala-lang:scala-library:2.12.3'
     
+//    compile 'com.puppycrawl.tools:checkstyle:8.8'
+    
     testCompile "junit:junit:4.11"
+    compile project(':modules:sievos-core')
+    compile project(':modules:sievos-lex-lang')
    
+}
+
+task action(dependsOn: ":modules:sievos-lex-lang:action") {
+    doLast {
+        println("Consuming message: ${rootProject.ext.lexLangMessage}")
+    }
 }
