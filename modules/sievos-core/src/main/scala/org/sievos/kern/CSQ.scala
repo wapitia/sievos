@@ -1,10 +1,11 @@
 package org.sievos.kern
 
-import Kern.{N,TF,F,T}
+import TI.{F,T}
+import Kern.{N}
 
 import CSQ.num;
 
-case class CSQ(c:TF,s:TF,q:TF) {
+case class CSQ(c:TI,s:TI,q:TI) {
 
   override def toString = "%d%d;%d".format(num(c),num(s),num(q));
       
@@ -12,7 +13,7 @@ case class CSQ(c:TF,s:TF,q:TF) {
 
 object CSQ {
   def csq(n: N): CSQ = CSQ(c = n.b,s = n.x,q = n.y)
-  def num(n: TF) = n match {
+  def num(n: TI) = n match {
     case F => 0
     case T => 1
   }

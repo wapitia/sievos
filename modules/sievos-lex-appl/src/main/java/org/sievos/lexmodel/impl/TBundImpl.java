@@ -1,30 +1,34 @@
 /**
- * 
+ *
  */
 package org.sievos.lexmodel.impl;
 
 import java.util.BitSet;
 
-class NTuple {
+import org.sievos.lexmodel.TBund;
+import org.sievos.lexmodel.TI;
+
+class TBundImpl implements TBund {
 
 	final BitSet bitset;
 	final int numBits;
 
-	NTuple(final int numBits) {
+	TBundImpl(final int numBits) {
 		this(numBits, new BitSet(numBits));
+
 	}
 
 	/**
 	 * @param bitSet
 	 */
-	public NTuple(final int numBits, final BitSet bitSet) {
+	public TBundImpl(final int numBits, final BitSet bitSet) {
 		this.numBits = numBits;
 		this.bitset = bitSet;
 	}
 
 	@Override
 	public String toString() {
-		return NTuple.bundleToString(bitset, numBits);
+		return TBundImpl.bundleToString(bitset, numBits);
 	}
 
 	public static String bundleToString(final BitSet bitset, final int size) {
@@ -37,5 +41,17 @@ class NTuple {
 
 	public static char tDispChar(final boolean state) {
 		return state ? 'T' : 'F';
+	}
+
+	/**
+	 *
+	 * @return
+	 * @see org.sievos.lexmodel.TBund#asArray()
+	 */
+	@Override
+	public TI[] asArray() {
+//		TF tf = F;
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

@@ -34,7 +34,7 @@ public class SievosCompiler_0_0_1 implements SievosCompiler {
 
         final ParseTree tree = makeParseTree(expression);
         final LexNode answer = comp.visit(tree);
-        final VisitFuncOne.Nodes.CompositeFunc f = (VisitFuncOne.Nodes.CompositeFunc) answer;
+        final LexNodeMenagerie.CompositeFunctionLN f = (LexNodeMenagerie.CompositeFunctionLN) answer;
         final String answerStr = f.toString();
         System.out.printf("%s = %s\n", expression, answerStr);
         // TODO

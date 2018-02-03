@@ -1,14 +1,10 @@
-
-
 package org.sievos.kern
+
+import TI.{F,T}
 
 object Kern {
   
-  sealed trait TF
-  case object F extends TF
-  case object T extends TF
-  
-  case class N(b:TF,y:TF,x:TF)
+  case class N(b:TI,y:TI,x:TI)
 
   def z(n: N) = n match {
     case N(F,_,_) => n
@@ -19,14 +15,4 @@ object Kern {
     case N(b,y,x) => N(x,b,y)
   }
   
-//  def rot(n: N) = rotr(n)
-//  
-//  def rotl(n: N) = n match {
-//    case N(b,y,x) => N(y,x,b)
-//  }
-//  
-//  def rotr(n: N) = n match {
-//    case N(b,y,x) => N(x,b,y)
-//  }
-//  
 }

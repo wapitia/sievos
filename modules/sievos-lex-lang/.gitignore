@@ -6,3 +6,5 @@ target/
 .settings
 .cache-*
 /.settings/*
+build/*
+/bin/

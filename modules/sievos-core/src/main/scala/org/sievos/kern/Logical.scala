@@ -1,6 +1,7 @@
 package org.sievos.kern
 
-import Kern.{N,F,T}
+import Kern.{N}
+import TI.{F,T}
 
 object Logical {
   
@@ -12,12 +13,5 @@ object Logical {
   def N3 = N(F,T,T)
   def F2 = N(T,T,F)
   def F3 = N(T,T,T)
-  
-  def isLegal(n: N) = n match {
-    case N(T,F,_) => true
-    case N(F,T,_) => true
-    case N(F,F,_) => false
-    case N(T,T,_) => false
-  }
   
 }
