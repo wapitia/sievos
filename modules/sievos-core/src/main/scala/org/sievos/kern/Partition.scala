@@ -3,7 +3,10 @@ package org.sievos.kern
 /**
  * Part is a simple binary tree representation called here a Partition.
  * Each Part is a node in the binary tree. A node may either be a
- * LeafNode or a SplitNode (non-terminal node).
+ * LeafNode (terminal node) or a SplitNode (non-terminal node).
+ * A node may also be the "empty" object (node EmptyNode), which is a standalone
+ * Part reference representing an empty tree, which cannot be a node
+ * belonging to any other tree. 
  * 
  * <p>The creation of the tree is strictly enforced by the Part constructor
  * apply methods and by the extract/prepend/combine operations so that:
@@ -16,7 +19,7 @@ package org.sievos.kern
  * <li>All nodes are immutable. To change a value, a new tree is constructed
  *     as the old tree is traversed via extract/prepend/combine operations.
  * </ul>
- * 
+ * @param T the types of the leaf values in the tree
  */
 trait Part[+T] {
   
@@ -72,18 +75,50 @@ trait Part[+T] {
   def extractL: (T,Part[T])
   def extractR: (Part[T],T)
   
+  /**
+   * Prepend the supplied item to the partitions left-most leaf node value
+   * according to the behavior of the supplied combiner function.
+   * A new Part is returned representing the new modified tree. 
+   */
   def prepend[B >: T](item: B, tcomb: (B,B) => B): Part[B]
+  
+  /**
+   * Append the supplied item to the partitions right-most leaf node value
+   * according to the behavior of the supplied combiner function.
+   * A new Part is returned representing the new modified tree. 
+   */
   def append[B >: T](item: B, tcomb: (B,B) => B): Part[B]
   
 }
 
 object Part {
   
+  /**
+   * empty constructor gives the EmptyNode node object
+   */
   def apply[B](): Part[B] = EmptyNode
   
+  /**
+   * Single-value constructor gives a single LeafNode, a "tree" of
+   * a single item.
+   */
   def apply[B](v: B): Part[B] = LeafNode(v)
   
+  /**
+   * Constructor takes a partition and then an item to add to the
+   * partition on the right.  If the supplied partition is empty
+   * (it is the EmptyNode), then this results in a LeafNode.
+   * Otherwise this results in a SplitNode of (left | Part(v)) 
+   */
   def apply[B](left: Part[B], v: B): Part[B] = left | Part(v)
+  
+  /**
+   * Constructor takes a partition and then an item to add to the
+   * partition on the right.  If the supplied partition is empty
+   * (it is the EmptyNode), then this results in a LeafNode.
+   * Otherwise this results in a SplitNode of (left | Part(v)) 
+   */
+  def apply[B](v: B, right: Part[B]): Part[B] = Part(v) | right
   
   def apply[B](left: Part[B], right: Part[B]): Part[B] = {
     
@@ -138,6 +173,9 @@ object Part {
  
   }
   
+  /**
+   * The EmptyNode is a single object shared as all empty nodes.
+   */
   private case object EmptyNode extends PartImpl[Nothing] {
     
     override def isEmpty = true
@@ -145,7 +183,7 @@ object Part {
     override def visit(ctx: PCTX, tconsumer: (Nothing,PCTX) => Unit) 
     {}
     
-    override def toString = "(|)"
+    override def toString = "()"
     
     override def prepend[B](item: B, tcomb: (B,B) => B): Part[B] = 
         Part(item)
@@ -154,6 +192,9 @@ object Part {
         Part(item)
   }
   
+  /**
+   * LeafNode contains one value and no children.
+   */
   sealed private case class LeafNode[T](v: T) extends PartImpl[T] {
     
     override def isLeaf = true
@@ -175,6 +216,11 @@ object Part {
     
   }
   
+  
+  /**
+   * SplitNode contains left and right child LeafNodes or SplitNodes,
+   * and no values
+   */
   sealed private case class SplitNode[T](left: PartImpl[T], right: PartImpl[T]) 
     extends PartImpl[T] 
   {
@@ -216,13 +262,8 @@ object Part {
     override def subFormatSpec: String = "(%s)"
     
     override def toString : String = {
-      
-      val ls : String = left.toString 
-      val rs: String = right.toString
-      val lformat: String = left.formatSpec
-      val rformat: String = right.subFormatSpec
-      val sformat = "%s|%s".format(lformat, rformat)
-      sformat.format(ls,rs)
+      val sformat = "%s|%s".format(left.formatSpec, right.subFormatSpec)
+      sformat.format(left,right)
       
     }
 
