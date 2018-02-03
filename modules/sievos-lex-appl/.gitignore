@@ -2,8 +2,7 @@
 target/
 .classpath
 .project
-.settings/*
-.settings
 .cache-*
 /.settings/*
 /bin/
+build/*
