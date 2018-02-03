@@ -1,6 +1,3 @@
-/**
- *
- */
 package com.wapitia.common.collections;
 
 import java.util.Iterator;
@@ -12,6 +9,8 @@ import java.util.function.Function;
  * Provides an iterator for an Optional chain pattern where one link (or node)
  * in a chain holds an optional reference to the next node in the chain.
  *
+ * <p>
+ * Usage:
  * <pre>
  *  class Node implements {@code Iterable<String>} {
  *
@@ -45,8 +44,8 @@ import java.util.function.Function;
  *      }
  * </pre>
  *
- * @param <T>
- * @param <LINK>
+ * @param <T> Iteration item type
+ * @param <LINK> Link node type in the chain
  */
 public class OptionalIterable<T,LINK> {
 
@@ -63,8 +62,8 @@ public class OptionalIterable<T,LINK> {
 
 	class OnDeckIter implements Iterator<T> {
 
-		// mutuble iteration state. while linkOnDeck is present,
-		// the iterator has more items.
+		// Mutuble iteration state.
+		// while linkOnDeck is present the iterator has more items.
 		private Optional<LINK> linkOnDeck;
 
 		OnDeckIter(final LINK headLink) {

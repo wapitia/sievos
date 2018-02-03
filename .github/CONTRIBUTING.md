@@ -19,17 +19,22 @@ Working on your first Pull Request? You can learn how from this *free* series,
 
 ## Submitting code
 
-Any code change should be submitted as a pull request. The description should explain what the code does and give steps to execute it.
+Any code change should be submitted as a pull request. The description should 
+explain what the code does and give steps to execute it.
 
 ## Code review process
 
-The bigger the pull request, the longer it will take to review and merge. Try to break down large pull requests in smaller chunks that are easier to review and merge.
-It is also always helpful to have some context for your pull request. What was the purpose? Why does it matter to you?
+The bigger the pull request, the longer it will take to review and merge. 
+Try to break down large pull requests in smaller chunks that are easier to 
+review and merge.
+It is also always helpful to have some context for your pull request. 
+What was the purpose? Why does it matter to you?
 
 ## Questions
 
 If you have any questions, create an [issue](https://wapitia.com/sievos/issues) 
-(protip: do a quick search first to see if someone else didn't ask the same question before!).
+(protip: do a quick search first to see if someone else didn't ask the 
+same question before!).
 
 ## Credits
 

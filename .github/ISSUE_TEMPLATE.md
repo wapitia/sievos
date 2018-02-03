@@ -18,8 +18,8 @@ First, replace the values in quotes below:
 -->
 ### Environment
 
-* LWJGL version: `M.m.r` 
-* LWJGL build #: `X`
+* Sievos/Wapitia version: `M.m.r` 
+* Sievos/Wapitia build #: `X`
 * Java version: `java.version`
 * Platform: `Linux|macOS|Windows`
 * Module: `core|binding name`
