@@ -52,6 +52,20 @@ class TestPartition {
   }
 
   @Test
+  def testBalR1 {
+    
+    println; println("testBalR1")
+//    tps.partViewTuples.map( case (part,str) => part)
+    List(tps.p5)    
+    .foreach( part => {
+          val br = part.skewR
+          println("%20s => balR=%s".format(part,br))
+      }
+    )
+  }
+
+  
+  @Test
   def testPart03 {
     
     println; println("testPart03 combineR")
@@ -79,4 +93,5 @@ class TestPartition {
     }
   }
 
+ 
 }
