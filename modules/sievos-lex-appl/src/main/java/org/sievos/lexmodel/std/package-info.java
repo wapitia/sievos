@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-present wapitia.com
+ * Copyright 2016-2018 wapitia.com
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -12,14 +12,14 @@
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * Neither the name of wapitia.com or the names of contributors may be used to
- * endorse or promote products derived from this software without specific
+ * Neither the name of wapitia.com or the names of contributors may be used to 
+ * endorse or promote products derived from this software without specific 
  * prior written permission.
  *
  * This software is provided "AS IS," without a warranty of any kind.
  * ALL EXPRESS OR IMPLIED CONDITIONS, REPRESENTATIONS AND WARRANTIES,
  * INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS FOR A
- * PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY EXCLUDED.
+ * PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY EXCLUDED. 
  * WAPITIA.COM ("WAPITIA") AND ITS LICENSORS SHALL NOT BE LIABLE FOR
  * ANY DAMAGES SUFFERED BY LICENSEE AS A RESULT OF USING, MODIFYING OR
  * DISTRIBUTING THIS SOFTWARE OR ITS DERIVATIVES. IN NO EVENT WILL WAPITIA OR
@@ -29,20 +29,8 @@
  * ARISING OUT OF THE USE OF OR INABILITY TO USE THIS SOFTWARE, EVEN IF
  * WAPITIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  */
-package org.sievos.lexmodel;
 
 /**
  *
  */
-public interface SievosLexTool {
-
-	static SievosCompileResult compile(final String expression) {
-		return compilerInstance.compile(expression);
-	}
-
-	// Injection should happen here
-	static org.sievos.lexmodel.std.StdCompiler compilerInstance =
-		new org.sievos.lexmodel.impl.sp1.SP1AntrlCompiler(
-			 org.sievos.lexmodel.impl.sp1.SP1NodeFactory.instance());
-
-}
+package org.sievos.lexmodel.std;

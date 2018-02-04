@@ -29,20 +29,54 @@
  * ARISING OUT OF THE USE OF OR INABILITY TO USE THIS SOFTWARE, EVEN IF
  * WAPITIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  */
-package org.sievos.lexmodel;
+package org.sievos.lexmodel.impl.sp1;
+
+import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.tree.ParseTree;
+import org.sievos.lex.SievosLexer;
+import org.sievos.lex.SievosParser;
+import org.sievos.lex.SievosVisitor;
+import org.sievos.lexmodel.sp1.CompositeFunctionLN;
+import org.sievos.lexmodel.sp1.SP1Node;
+import org.sievos.lexmodel.sp1.SP1NodeProducer;
+import org.sievos.lexmodel.std.StdCompiler;
+import org.sievos.lexmodel.std.StdResult;
 
 /**
  *
  */
-public interface SievosLexTool {
+public class SP1AntrlCompiler implements StdCompiler {
 
-	static SievosCompileResult compile(final String expression) {
-		return compilerInstance.compile(expression);
+	private final SievosVisitor<SP1Node> comp;
+
+	public SP1AntrlCompiler(final SP1NodeProducer nodeProducer) {
+		this.comp = new SP1AntlrVisitor(nodeProducer);
 	}
 
-	// Injection should happen here
-	static org.sievos.lexmodel.std.StdCompiler compilerInstance =
-		new org.sievos.lexmodel.impl.sp1.SP1AntrlCompiler(
-			 org.sievos.lexmodel.impl.sp1.SP1NodeFactory.instance());
+	/**
+	 *
+	 * @param expression
+	 * @return
+	 * @see org.sievos.lexmodel.std.StdCompiler#compile(java.lang.String)
+	 */
+	@Override
+	public StdResult compile(final String expression) {
+
+        final ParseTree tree = makeParseTree(expression);
+        final SP1Node answer = comp.visit(tree);
+        final CompositeFunctionLN f = (CompositeFunctionLN) answer;
+        final String answerStr = f.toString();
+        System.out.printf("%s = %s\n", expression, answerStr);
+        // TODO
+        return null;
+    }
+
+	public ParseTree makeParseTree(final String expression) {
+		final SievosLexer lexer = new SievosLexer(CharStreams.fromString(expression));
+        final SievosParser parser = new SievosParser(new CommonTokenStream(lexer));
+        final ParseTree tree = parser.fcall();
+		return tree;
+	}
 
 }

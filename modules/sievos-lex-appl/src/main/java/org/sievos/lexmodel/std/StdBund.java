@@ -29,20 +29,14 @@
  * ARISING OUT OF THE USE OF OR INABILITY TO USE THIS SOFTWARE, EVEN IF
  * WAPITIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  */
-package org.sievos.lexmodel;
+package org.sievos.lexmodel.std;
+
+import org.sievos.kern.TI;
 
 /**
  *
  */
-public interface SievosLexTool {
+public interface StdBund {
 
-	static SievosCompileResult compile(final String expression) {
-		return compilerInstance.compile(expression);
-	}
-
-	// Injection should happen here
-	static org.sievos.lexmodel.std.StdCompiler compilerInstance =
-		new org.sievos.lexmodel.impl.sp1.SP1AntrlCompiler(
-			 org.sievos.lexmodel.impl.sp1.SP1NodeFactory.instance());
-
+	TI[] asArray();
 }

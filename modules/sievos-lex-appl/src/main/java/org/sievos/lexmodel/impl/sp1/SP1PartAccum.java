@@ -29,20 +29,48 @@
  * ARISING OUT OF THE USE OF OR INABILITY TO USE THIS SOFTWARE, EVEN IF
  * WAPITIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  */
-package org.sievos.lexmodel;
+package org.sievos.lexmodel.impl.sp1;
+
+import org.sievos.kern.Part;
+import org.sievos.lexmodel.std.StdBund;
+import org.sievos.lexmodel.std.StdPart;
 
 /**
- *
+ * Partition of TBund accumulator for the SP1 Sievos expression tree.
  */
-public interface SievosLexTool {
+class SP1PartAccum {
 
-	static SievosCompileResult compile(final String expression) {
-		return compilerInstance.compile(expression);
+	Part<StdBund> part;
+
+	SP1PartAccum() {
+		// start with an empty partition
+		this.part = Part.apply();
 	}
 
-	// Injection should happen here
-	static org.sievos.lexmodel.std.StdCompiler compilerInstance =
-		new org.sievos.lexmodel.impl.sp1.SP1AntrlCompiler(
-			 org.sievos.lexmodel.impl.sp1.SP1NodeFactory.instance());
+	public void append(final StdBund addition) {
+		this.part = Part.apply(this.part, addition);
+	}
+
+	static class TPartImpl implements StdPart {
+
+		private final Part<StdBund> part;
+
+		TPartImpl(final Part<StdBund> part) {
+			this.part = part;
+		}
+
+		@Override
+		public Part<StdBund> asPartition() {
+			return this.part;
+		}
+	}
+
+	public TPartImpl asPart() {
+		return SP1PartAccum.asPart(part);
+	}
+
+	public static TPartImpl asPart(final Part<StdBund> state) {
+		return new TPartImpl(state);
+	}
 
 }

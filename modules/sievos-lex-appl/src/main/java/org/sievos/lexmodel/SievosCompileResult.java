@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-present wapitia.com
+ * Copyright 2016-2018 wapitia.com
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -34,15 +34,6 @@ package org.sievos.lexmodel;
 /**
  *
  */
-public interface SievosLexTool {
-
-	static SievosCompileResult compile(final String expression) {
-		return compilerInstance.compile(expression);
-	}
-
-	// Injection should happen here
-	static org.sievos.lexmodel.std.StdCompiler compilerInstance =
-		new org.sievos.lexmodel.impl.sp1.SP1AntrlCompiler(
-			 org.sievos.lexmodel.impl.sp1.SP1NodeFactory.instance());
+public interface SievosCompileResult {
 
 }
