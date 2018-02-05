@@ -42,9 +42,9 @@ import org.sievos.lexmodel.std.StdPartFunction;
  */
 public interface CompositeFunctionLN extends ExprLN {
 
-	@Override
-	Executable asExecutable();
+    @Override
+    Executable asExecutable();
 
-	StdPart asPart();
-	List<? extends StdPartFunction> getFuncList();
+    StdPart asPart();
+    List<? extends StdPartFunction> getFuncList();
 }

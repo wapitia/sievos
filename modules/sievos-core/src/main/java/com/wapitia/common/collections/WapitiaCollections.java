@@ -40,30 +40,30 @@ import java.util.function.Supplier;
 
 public interface WapitiaCollections {
 
-	/**
-	 * For the common pattern: Map<K,List<V>> this puts a new value
-	 * into that list in the map, creating a new List if needed.
-	 *
-	 * @param mapOfLists
-	 * @param key
-	 * @param listItem
-	 */
-	static <K,LV> void put(final Map<K,List<LV>> mapOfLists,
-		final K key, final LV listItem)
-	{
-		mapGetOrCreate(mapOfLists, key, ArrayList::new).add(listItem);
-	}
+    /**
+     * For the common pattern: Map<K,List<V>> this puts a new value
+     * into that list in the map, creating a new List if needed.
+     *
+     * @param mapOfLists
+     * @param key
+     * @param listItem
+     */
+    static <K,LV> void put(final Map<K,List<LV>> mapOfLists,
+        final K key, final LV listItem)
+    {
+        mapGetOrCreate(mapOfLists, key, ArrayList::new).add(listItem);
+    }
 
-	static <K,V> V mapGetOrCreate(final Map<K,V> map, final K key,
-		final Supplier<? extends V> vCtor)
-	{
-		return Optional.<V> ofNullable(map.get(key))
-			.orElseGet(() -> mapPut(map, key, vCtor.get()));
-	}
+    static <K,V> V mapGetOrCreate(final Map<K,V> map, final K key,
+        final Supplier<? extends V> vCtor)
+    {
+        return Optional.<V> ofNullable(map.get(key))
+            .orElseGet(() -> mapPut(map, key, vCtor.get()));
+    }
 
-	static <K,V> V mapPut(final Map<K,V> map, final K key, final V v) {
-		map.put(key, v);  // ignore results of map.put, which is the old value
-		return v;
-	}
+    static <K,V> V mapPut(final Map<K,V> map, final K key, final V v) {
+        map.put(key, v);  // ignore results of map.put, which is the old value
+        return v;
+    }
 
 }

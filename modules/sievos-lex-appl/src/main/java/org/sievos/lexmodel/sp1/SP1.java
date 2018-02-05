@@ -43,36 +43,36 @@ import org.sievos.lexmodel.std.StdPartFunction;
  */
 public interface SP1 {
 
-	public static final Executable FNULL = null;
+    public static final Executable FNULL = null;
 
-	public static final PartLN NULLPART = null;
-
-
-	public boolean isNullResult(PartLN part);
-
-	interface Compiler extends StdCompiler<PartLN> {
-
-		@Override
-		Executable compile(String expression);
-	}
+    public static final PartLN NULLPART = null;
 
 
-	interface Executable extends StdExecutable<PartLN> {
+    public boolean isNullResult(PartLN part);
 
-		/**
-		 * Execute this function, returning its result as some Sievos SP1
-		 * result derivative {@code R}
-		 *
-		 * @see org.sievos.lexmodel.SievosExecutable#execute()
-		 * @see SP1#Result
-		 */
-		@Override
-		public StdPart execute();
-	}
+    interface Compiler extends StdCompiler<PartLN> {
 
-	interface PartFunction extends StdPartFunction {
+        @Override
+        Executable compile(String expression);
+    }
 
-		@Override
-		StdBund execute(StdBund bund);
-	}
+
+    interface Executable extends StdExecutable<PartLN> {
+
+        /**
+         * Execute this function, returning its result as some Sievos SP1
+         * result derivative {@code R}
+         *
+         * @see org.sievos.lexmodel.SievosExecutable#execute()
+         * @see SP1#Result
+         */
+        @Override
+        public StdPart execute();
+    }
+
+    interface PartFunction extends StdPartFunction {
+
+        @Override
+        StdBund execute(StdBund bund);
+    }
 }

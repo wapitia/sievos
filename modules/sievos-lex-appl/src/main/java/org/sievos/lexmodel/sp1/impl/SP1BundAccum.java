@@ -43,57 +43,57 @@ import org.sievos.lexmodel.std.StdPart;
 
 class SP1BundAccum {
 
-	public static String tDispChar(final TI ti) {
-		return TI_DISP_MAP.get(ti);
-	}
+    public static String tDispChar(final TI ti) {
+        return TI_DISP_MAP.get(ti);
+    }
 
-	static EnumMap<TI,String> TI_DISP_MAP = new EnumMap<TI,String>(TI.class);
-	static {
-		TI_DISP_MAP.put(TI.F, "F");
-		TI_DISP_MAP.put(TI.T, "T");
-	}
+    static EnumMap<TI,String> TI_DISP_MAP = new EnumMap<TI,String>(TI.class);
+    static {
+        TI_DISP_MAP.put(TI.F, "F");
+        TI_DISP_MAP.put(TI.T, "T");
+    }
 
-	final BitSet bitset;
-	final int numBits;
+    final BitSet bitset;
+    final int numBits;
 
-	SP1BundAccum(final int numBits) {
-		this(numBits, new BitSet(numBits));
-	}
+    SP1BundAccum(final int numBits) {
+        this(numBits, new BitSet(numBits));
+    }
 
-	/**
-	 * @param bitSet
-	 */
-	public SP1BundAccum(final int numBits, final BitSet bitSet) {
-		this.numBits = numBits;
-		this.bitset = bitSet;
-	}
+    /**
+     * @param bitSet
+     */
+    public SP1BundAccum(final int numBits, final BitSet bitSet) {
+        this.numBits = numBits;
+        this.bitset = bitSet;
+    }
 
-	@Override
-	public String toString() {
-		return SP1BundAccum.bundleToString(bitset, numBits);
-	}
+    @Override
+    public String toString() {
+        return SP1BundAccum.bundleToString(bitset, numBits);
+    }
 
-	StdPart asPartition() {
-		final Part<StdBund> result = Part.apply(SP1BundAccum.asBund(bitset, numBits));
-		return () -> result;
-	}
+    StdPart asPartition() {
+        final Part<StdBund> result = Part.apply(SP1BundAccum.asBund(bitset, numBits));
+        return () -> result;
+    }
 
 
-	public static String bundleToString(final BitSet bitset, final int size) {
-		final StringBuilder bldr = new StringBuilder();
-		for (int ix = size-1; ix >= 0; --ix) {
-			bldr.append(tDispChar(TI.toTWhen(bitset.get(ix))));
-		}
-		return bldr.toString();
-	}
+    public static String bundleToString(final BitSet bitset, final int size) {
+        final StringBuilder bldr = new StringBuilder();
+        for (int ix = size-1; ix >= 0; --ix) {
+            bldr.append(tDispChar(TI.toTWhen(bitset.get(ix))));
+        }
+        return bldr.toString();
+    }
 
-	public static StdBund asBund(final BitSet bitset, final int size) {
-		final List<TI> tilist = new ArrayList<>();
-		for (int ix = size-1; ix >= 0; --ix) {
-			tilist.add(TI.toTWhen(bitset.get(ix)));
-		}
-		final StdBundImpl result = new StdBundImpl(tilist.toArray(new TI[size]));
-		return result;
-	}
+    public static StdBund asBund(final BitSet bitset, final int size) {
+        final List<TI> tilist = new ArrayList<>();
+        for (int ix = size-1; ix >= 0; --ix) {
+            tilist.add(TI.toTWhen(bitset.get(ix)));
+        }
+        final StdBundImpl result = new StdBundImpl(tilist.toArray(new TI[size]));
+        return result;
+    }
 
 }

@@ -33,6 +33,6 @@ package org.sievos.lexmodel.sp1;
 
 public interface BundLN extends SP1Node {
 
-	BundLN pipe(BundLN tbund);
+    BundLN pipe(BundLN tbund);
 
 }

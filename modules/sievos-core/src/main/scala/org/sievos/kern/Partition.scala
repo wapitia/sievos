@@ -74,13 +74,13 @@ trait Part[+T] {
    * Makes a new partition of two elements forming (this | Part(that))
    */
   def |+ [B >: T](that: B): Part[B]
-  
+
   def filter(filter: T => Boolean): Part[T] =
     filterMap(filter, t => t)
-  
+
   def map[U](map: T => U): Part[U] =
     filterMap(t => true, map)
-  
+
   /**
    * Filter the elements in this partition and map the ones
    * for which filter returns true into objects of type U,
@@ -92,7 +92,7 @@ trait Part[+T] {
    * Visit with no context.
    */
   def visit(tconsumer: T => Unit): Unit
-      
+
   /**
    * Visit each partition which can deliver items of type T to
    * the supplied consumer
@@ -113,9 +113,9 @@ trait Part[+T] {
    * Is this partition split into at least two partitions?
    */
   def isSplit: Boolean
-  
+
   def size: Int
-  
+
   def depth: Int
 
   /**
@@ -183,9 +183,9 @@ trait Part[+T] {
    * The resultant tree will be a LeafNode or SplitNode.
    */
   def append[B >: T](item: B, tcomb: (B,B) => B): Part[B]
-  
+
   def skewL: Part[T]
-  
+
   def skewR: Part[T]
 
 }
@@ -234,7 +234,7 @@ object Part {
    * The supplied partitions must be ones created here (that is, instances
    * of PartImpl) otherwise a runtime exception shall be thrown.
    */
-  def apply[B](left: Part[B], right: Part[B]): Part[B] = 
+  def apply[B](left: Part[B], right: Part[B]): Part[B] =
     (left,right) match {
       case (EmptyNode, _) => right
       case (_,EmptyNode)  => left
@@ -258,25 +258,25 @@ object Part {
 
     override def |+ [B >: T](that: B): Part[B] = Part(this,Part(that))
 
-    override def combineL[B >: T](tcomb: (B,B) => B): Part[B] = 
+    override def combineL[B >: T](tcomb: (B,B) => B): Part[B] =
       throw CombineNotSupportedException()
 
-    override def combineR[B >: T](tcomb: (B,B) => B): Part[B] = 
+    override def combineR[B >: T](tcomb: (B,B) => B): Part[B] =
       combineL[B](tcomb)
 
-    override def extractL: (T,Part[T]) = 
+    override def extractL: (T,Part[T]) =
       throw ExtractNotSupportedException()
 
-    override def extractR: (Part[T],T) = 
+    override def extractR: (Part[T],T) =
       throw ExtractNotSupportedException()
 
     override def visit(tconsumer: T => Unit): Unit
-      
-    override def ctxVisit(tconsumer: (T,PCTX) => Unit): Unit = 
+
+    override def ctxVisit(tconsumer: (T,PCTX) => Unit): Unit =
       ctxVisit(List[Int](), tconsumer)
-  
+
     override def skewL: Part[T] = this
-    
+
     override def skewR: Part[T] = this
 
     def ctxVisit(ctx: PCTX, tconsumer: (T,PCTX) => Unit): Unit
@@ -292,26 +292,26 @@ object Part {
   private case object EmptyNode extends PartImpl[Nothing] {
 
     override def isEmpty = true
-  
+
     override def size = 0
-    
+
     override def depth = 0
-    
+
     override def filterMap[U](filter: Nothing => Boolean, map: Nothing => U) =
       EmptyNode
-    
+
     override def visit(tconsumer: Nothing => Unit) {
     }
-      
+
     override def ctxVisit(ctx: PCTX, tconsumer: (Nothing,PCTX) => Unit) {
     }
 
     override def toString = "()"
 
-    override def prepend[B](item: B, NOT_USED: (B,B) => B): Part[B] = 
+    override def prepend[B](item: B, NOT_USED: (B,B) => B): Part[B] =
       Part(item)
 
-    override def append[B](item: B, NOT_USED: (B,B) => B): Part[B] = 
+    override def append[B](item: B, NOT_USED: (B,B) => B): Part[B] =
       Part(item)
   }
 
@@ -321,19 +321,19 @@ object Part {
   sealed private case class LeafNode[T](v: T) extends PartImpl[T] {
 
     override def isLeaf = true
-  
+
     override def size = 1
-    
+
     override def depth = 1
 
     override def filterMap[U](filter: T => Boolean, map: T => U) =
       if (filter(v)) Part(map(v))
       else           EmptyNode
-      
+
     override def visit(tconsumer: T => Unit) =
       tconsumer(v)
-      
-    override def ctxVisit(ctx: PCTX, tconsumer: (T,PCTX) => Unit) = 
+
+    override def ctxVisit(ctx: PCTX, tconsumer: (T,PCTX) => Unit) =
       tconsumer(v, ctx)
 
     override def toString = formatSpec.format(v.toString())
@@ -342,10 +342,10 @@ object Part {
 
     override def extractR: (Part[T],T) = (EmptyNode,v)
 
-    override def prepend[B >: T](item: B, tcomb: (B,B) => B): Part[B] = 
+    override def prepend[B >: T](item: B, tcomb: (B,B) => B): Part[B] =
       Part(tcomb(item, v))
 
-    override def append[B >: T](item: B, tcomb: (B,B) => B): Part[B] = 
+    override def append[B >: T](item: B, tcomb: (B,B) => B): Part[B] =
       Part(tcomb(v, item))
   }
 
@@ -359,20 +359,20 @@ object Part {
     override def isSplit = true
 
     override def size = left.size + right.size
-    
+
     override def depth = 1 + Math.max(left.depth, right.depth)
-    
+
     override def filterMap[U](filter: T => Boolean, map: T => U) = {
       val newleft = left.filterMap(filter, map)
       val newright = right.filterMap(filter, map)
       newleft | newright
     }
-      
+
     override def visit(tconsumer: T => Unit) {
       left.visit(tconsumer)
       right.visit(tconsumer)
     }
-      
+
     override def ctxVisit(ctx:PCTX, tconsumer: (T,PCTX) => Unit) {
       left.ctxVisit(0 :: ctx, tconsumer)
       right.ctxVisit(1 :: ctx, tconsumer)
@@ -388,10 +388,10 @@ object Part {
       (left | rl, value)
     }
 
-    override def prepend[B >: T](item: B, tcomb: (B,B) => B): Part[B] = 
+    override def prepend[B >: T](item: B, tcomb: (B,B) => B): Part[B] =
       left.prepend(item, tcomb) | right
 
-    override def append[B >: T](item: B, tcomb: (B,B) => B): Part[B] = 
+    override def append[B >: T](item: B, tcomb: (B,B) => B): Part[B] =
       left | right.append(item, tcomb)
 
     override def combineL[B >: T](tcomb: (B,B) => B): Part[B] = {
@@ -413,9 +413,9 @@ object Part {
         case (SplitNode(ll,lr), _) => Part(ll,Part(lr,rlbal))
         case (_, SplitNode(rl,rr)) => Part(Part(llbal,rl),rr)
         case _                     => this;
-      }      
+      }
     }
-    
+
     override def skewR: Part[T] = {
       val lrbal = left.skewR
       val rrbal = right.skewR
@@ -423,9 +423,9 @@ object Part {
         case (_, SplitNode(rl,rr)) => Part(Part(lrbal,rl),rr)
         case (SplitNode(ll,lr), _) => Part(ll,Part(lr,rrbal))
         case _                     => this;
-      }      
+      }
     }
-    
+
     override def subFormatSpec: String = "(%s)"
 
     override def toString : String = {
@@ -436,8 +436,8 @@ object Part {
   }
 
   abstract class PartitionException(msg: String) extends RuntimeException(msg)
-    
-  case class WrongApplyPartitionTypesException(left: Part[_], right: Part[_]) 
+
+  case class WrongApplyPartitionTypesException(left: Part[_], right: Part[_])
   extends PartitionException(
     "Unsupported Partition constructor Part(%s,%s)".format(
       left.getClass, right.getClass))

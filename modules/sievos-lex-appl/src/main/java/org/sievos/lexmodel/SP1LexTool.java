@@ -39,17 +39,17 @@ import org.sievos.lexmodel.sp1.SP1.Executable;
  */
 public interface SP1LexTool {
 
-	static Executable compile(final String expression)
-	{
-		final Executable res = compilerInstance.compile(expression);
-		return res;
-	}
+    static Executable compile(final String expression)
+    {
+        final Executable res = compilerInstance.compile(expression);
+        return res;
+    }
 
-	// Injection should happen here
-	static SP1.Compiler compilerInstance =
-//		org.sievos.lexmodel.sp1.impl.SP1AntrlCompiler.makeFcallCompiler(
-//			 org.sievos.lexmodel.sp1.impl.SP1NodeFactory.instance());
-		org.sievos.lexmodel.sp1.impl.SP1AntrlCompiler.makeExprCompiler(
-			 org.sievos.lexmodel.sp1.impl.SP1NodeFactory.instance());
+    // Injection should happen here
+    static SP1.Compiler compilerInstance =
+//        org.sievos.lexmodel.sp1.impl.SP1AntrlCompiler.makeFcallCompiler(
+//             org.sievos.lexmodel.sp1.impl.SP1NodeFactory.instance());
+        org.sievos.lexmodel.sp1.impl.SP1AntrlCompiler.makeExprCompiler(
+             org.sievos.lexmodel.sp1.impl.SP1NodeFactory.instance());
 
 }

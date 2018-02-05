@@ -80,44 +80,44 @@ import java.util.function.Function;
  */
 public class OptionalIterable<T,LINK> {
 
-	private final Function<LINK,T> getLinkValue;
-	private final Function<LINK,Optional<LINK>> nextInChain;
+    private final Function<LINK,T> getLinkValue;
+    private final Function<LINK,Optional<LINK>> nextInChain;
 
-	public OptionalIterable(
-		final Function<LINK,T> getLinkValue,
-		final Function<LINK,Optional<LINK>> nextInChain)
-	{
-		this.getLinkValue = Objects.requireNonNull(getLinkValue);
-		this.nextInChain = Objects.requireNonNull(nextInChain);
-	}
+    public OptionalIterable(
+        final Function<LINK,T> getLinkValue,
+        final Function<LINK,Optional<LINK>> nextInChain)
+    {
+        this.getLinkValue = Objects.requireNonNull(getLinkValue);
+        this.nextInChain = Objects.requireNonNull(nextInChain);
+    }
 
-	class OnDeckIter implements Iterator<T> {
+    class OnDeckIter implements Iterator<T> {
 
-		// Mutuble iteration state.
-		// while linkOnDeck is present the iterator has more items.
-		private Optional<LINK> linkOnDeck;
+        // Mutuble iteration state.
+        // while linkOnDeck is present the iterator has more items.
+        private Optional<LINK> linkOnDeck;
 
-		OnDeckIter(final LINK headLink) {
-			this.linkOnDeck = Optional.<LINK> of(headLink);
-		}
+        OnDeckIter(final LINK headLink) {
+            this.linkOnDeck = Optional.<LINK> of(headLink);
+        }
 
-		@Override
-		public boolean hasNext() {
-			return linkOnDeck.isPresent();
-		}
+        @Override
+        public boolean hasNext() {
+            return linkOnDeck.isPresent();
+        }
 
-		@Override
-		public T next() {
-			final LINK curLink = linkOnDeck.get();
-			final T result = OptionalIterable.this.getLinkValue.apply(curLink);
-			// advance to next
-			this.linkOnDeck = OptionalIterable.this.nextInChain.apply(curLink);
-			return result;
-		}
-	}
+        @Override
+        public T next() {
+            final LINK curLink = linkOnDeck.get();
+            final T result = OptionalIterable.this.getLinkValue.apply(curLink);
+            // advance to next
+            this.linkOnDeck = OptionalIterable.this.nextInChain.apply(curLink);
+            return result;
+        }
+    }
 
-	public  Iterator<T> iterator(final LINK initContainer) {
-		return new OnDeckIter(initContainer);
-	}
+    public  Iterator<T> iterator(final LINK initContainer) {
+        return new OnDeckIter(initContainer);
+    }
 
 }

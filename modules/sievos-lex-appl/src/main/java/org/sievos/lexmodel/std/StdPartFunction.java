@@ -37,5 +37,5 @@ package org.sievos.lexmodel.std;
  */
 public interface StdPartFunction {
 
-	StdBund execute(StdBund part);
+    StdBund execute(StdBund part);
 }

@@ -42,56 +42,56 @@ import org.sievos.lexmodel.std.StdBund;
  */
 public class StdBundImpl implements StdBund {
 
-	private final TI[] tiarray;
-	
-	StdBundImpl(final TI ... src) {
-		this.tiarray = new TI[src.length];
-		System.arraycopy(src, 0, tiarray, 0, src.length);
-	}
+    private final TI[] tiarray;
 
-	/**
-	 * Return a copy of this Bundle's array of TI states
-	 */
-	@Override
-	public TI[] asArray() {
-		final TI[] res = new TI[tiarray.length];
-		System.arraycopy(tiarray, 0, res, 0, tiarray.length);
-		return res;
-	}
-	
-	/**
-	 * Return this Bundle's TI states uncopied.
-	 * Implementers should not change the contents of this array even though 
-	 * possible as this class should remain unchanged.
-	 */
-	protected TI[] tiArray() {
-		return tiarray;
-	}
+    StdBundImpl(final TI ... src) {
+        this.tiarray = new TI[src.length];
+        System.arraycopy(src, 0, tiarray, 0, src.length);
+    }
 
-	@Override
-	public boolean equals(Object o) {
-		if (o == null || !(o instanceof StdBundImpl)) {
-			return false;
-		}
-		else if (this == o) {
-			return true;
-		}
-		else {
-			final StdBundImpl other = (StdBundImpl) o;
-			return this.tiarray.equals(other.tiarray);
-		}
-	}
-	
-	@Override
-	public int hashCode() {
-		return tiarray.hashCode();
-	}
-	
-	@Override
-	public String toString() {
-		return Arrays.asList(tiarray).stream()
-			.<String> map(Object::toString)
-			.collect(Collectors.joining());
-	}
-	
+    /**
+     * Return a copy of this Bundle's array of TI states
+     */
+    @Override
+    public TI[] asArray() {
+        final TI[] res = new TI[tiarray.length];
+        System.arraycopy(tiarray, 0, res, 0, tiarray.length);
+        return res;
+    }
+
+    /**
+     * Return this Bundle's TI states uncopied.
+     * Implementers should not change the contents of this array even though
+     * possible as this class should remain unchanged.
+     */
+    protected TI[] tiArray() {
+        return tiarray;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || !(o instanceof StdBundImpl)) {
+            return false;
+        }
+        else if (this == o) {
+            return true;
+        }
+        else {
+            final StdBundImpl other = (StdBundImpl) o;
+            return this.tiarray.equals(other.tiarray);
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return tiarray.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return Arrays.asList(tiarray).stream()
+            .<String> map(Object::toString)
+            .collect(Collectors.joining());
+    }
+
 }

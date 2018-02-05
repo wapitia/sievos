@@ -36,5 +36,5 @@ import org.sievos.lexmodel.sp1.SP1.Executable;
 
 public interface ExprLN extends SP1Node {
 
-	Executable asExecutable();
+    Executable asExecutable();
 }

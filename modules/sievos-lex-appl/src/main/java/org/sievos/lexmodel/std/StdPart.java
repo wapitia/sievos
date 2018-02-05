@@ -39,5 +39,5 @@ import org.sievos.kern.Part;
  */
 public interface StdPart {
 
-	Part<StdBund> partition();
+    Part<StdBund> partition();
 }

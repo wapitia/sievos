@@ -38,9 +38,9 @@ import org.sievos.lexmodel.SievosExecutable;
  *
  */
 public interface StdExecutable<OT>
-	extends SievosExecutable<OT,StdExecutable<OT>>
+    extends SievosExecutable<OT,StdExecutable<OT>>
 {
-	@Override
-	StdPart execute();
+    @Override
+    StdPart execute();
 
 }

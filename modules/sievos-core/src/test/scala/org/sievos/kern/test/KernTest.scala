@@ -12,9 +12,9 @@ import java.io.File
 
 
 class KernTest {
-  
+
   var testoutdir: File = _
-  
+
   @Before
   def mkTestOutEnv {
     testoutdir = new File("target/test-output")
@@ -32,7 +32,7 @@ class KernTest {
     ln2.foreach( n => print(n,pw))
     pw.close()
   }
-  
+
   def print(n:N, pw: PrintWriter) {
       val halfadd = z(r(z(n)))
       val q = csq(halfadd)
@@ -42,5 +42,5 @@ class KernTest {
 }
 
 object KernTest extends App {
-  
+
 }

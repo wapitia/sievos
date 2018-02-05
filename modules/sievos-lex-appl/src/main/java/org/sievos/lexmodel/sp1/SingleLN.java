@@ -35,5 +35,5 @@ import org.sievos.kern.TI;
 
 public interface SingleLN extends SP1Node {
 
-	TI getState();
+    TI getState();
 }

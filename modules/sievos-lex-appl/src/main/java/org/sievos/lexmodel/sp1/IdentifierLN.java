@@ -33,6 +33,6 @@ package org.sievos.lexmodel.sp1;
 
 public interface IdentifierLN extends SP1Node {
 
-	String getIdent();
+    String getIdent();
 
 }

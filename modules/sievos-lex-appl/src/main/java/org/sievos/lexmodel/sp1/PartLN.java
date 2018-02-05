@@ -36,5 +36,5 @@ import org.sievos.lexmodel.std.StdBund;
 
 public interface PartLN extends SP1Node {
 
-	Part<StdBund> asPart();
+    Part<StdBund> asPart();
 }

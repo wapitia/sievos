@@ -35,7 +35,7 @@ import Kern.{N}
 import TI.{F,T}
 
 object Logical {
-  
+
   def F0 = N(F,F,F)
   def F1 = N(F,F,T)
   def N0 = N(T,F,F)
@@ -44,5 +44,5 @@ object Logical {
   def N3 = N(F,T,T)
   def F2 = N(T,T,F)
   def F3 = N(T,T,T)
-  
+
 }

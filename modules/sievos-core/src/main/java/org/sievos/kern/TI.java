@@ -32,11 +32,11 @@
 package org.sievos.kern;
 
 public enum TI {
-	F,
-	T;
+    F,
+    T;
 
-	public static TI toTWhen(final boolean isT) {
-		return isT ? T : F;
-	}
+    public static TI toTWhen(final boolean isT) {
+        return isT ? T : F;
+    }
 
 }

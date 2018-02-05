@@ -41,35 +41,36 @@ import org.sievos.lexmodel.std.StdBund;
 
 class SP1KernPartFunction implements SP1.PartFunction {
 
-	private final String name;
-	private final Function<N,N> n2n;
+    private final String name;
+    private final Function<N,N> n2n;
 
-	public SP1KernPartFunction(String funcName, final Function<N,N> n2n) {
-		this.name = funcName;
-		this.n2n = n2n;
-	}
+    public SP1KernPartFunction(String funcName, final Function<N,N> n2n) {
+        this.name = funcName;
+        this.n2n = n2n;
+    }
 
-	public Kern.N bund2KernN(final StdBund bund) {
+    public Kern.N bund2KernN(final StdBund bund) {
 
-		final TI b = TI.F;
-		final TI y = TI.T;
-		final TI x = TI.T;
-		final Kern.N n = new Kern.N(b,y,x);
-		return n;
-	}
+        final TI b = TI.F;
+        final TI y = TI.T;
+        final TI x = TI.T;
+        final Kern.N n = new Kern.N(b,y,x);
+        return n;
+    }
 
-	public StdBund kern2Bund(final Kern.N n) {
-		final StdBundImpl result = new StdBundImpl(n.b(),n.y(),n.x());
-		return result;
-	}
+    public StdBund kern2Bund(final Kern.N n) {
+        final StdBundImpl result = new StdBundImpl(n.b(),n.y(),n.x());
+        return result;
+    }
 
-	@Override
-	public StdBund execute(final StdBund bund) {
-		return kern2Bund(n2n.apply(bund2KernN(bund)));
-	}
-	
-	public String toString() {
-		return name;
-	}
-	
+    @Override
+    public StdBund execute(final StdBund bund) {
+        return kern2Bund(n2n.apply(bund2KernN(bund)));
+    }
+
+    @Override
+    public String toString() {
+        return name;
+    }
+
 }

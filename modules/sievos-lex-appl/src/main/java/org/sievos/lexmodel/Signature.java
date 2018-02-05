@@ -39,67 +39,72 @@ import java.util.stream.Collectors;
  * Unnamed Function Type signature.
  * <p>
  * The signature is suitable for use as a Map key, so this
- * class is immutable and provides nicely overwritten 
- * equals and hashCode methods. 
+ * class is immutable and provides nicely overwritten
+ * equals and hashCode methods.
  */
 public class Signature {
-	
-	public static final NamedSignature[] EMPTY_PARAMETERS =
-		new NamedSignature[0];
 
-	private final Signature[] params;
+    public static final NamedSignature[] EMPTY_PARAMETERS =
+        new NamedSignature[0];
 
-	public Signature(final Signature[] params)
-	{
-		Objects.requireNonNull(params);
-		this.params = params;
-	}
-	
-	/**
-	 * Copy the signatures to an output array.
-	 * @return
-	 */
-	public Signature[] getParameters() {
-		final Signature[] result = new Signature[params.length];
-		System.arraycopy(params, 0, result, 0, params.length);
-		return result;
-	}
+    private final Signature[] params;
 
-	@Override
-	public boolean equals(final Object o) {
-		if (o == null || ! (o instanceof Signature)) {
-			return false;
-		}
-		else if (o == this) {
-			return true;
-		}
-		else {
-			final Signature other = (Signature) o;
-			return Arrays.equals(this.params, other.params);
-		}
-	}
+    public static Signature of(final Signature[] params) {
+        return new Signature(params);
+    }
 
-	@Override
-	public int hashCode() {
-		return params.hashCode();
-	}
+    public Signature(final Signature[] params)
+    {
+        Objects.requireNonNull(params);
+        this.params = params;
+    }
 
-	@Override
-	public String toString() {
-		
-		final StringBuilder bldr = new StringBuilder()
-			.append(Arrays.asList(params).stream()
-				.map(Object::toString)
-				.collect(Collectors.joining(",", "[", "]"))
-				);
-		return bldr.toString();
-	}
+    /**
+     * Copy the signatures to an output array.
+     * @return
+     */
+    public Signature[] getParameters() {
+        final Signature[] result = new Signature[params.length];
+        System.arraycopy(params, 0, result, 0, params.length);
+        return result;
+    }
 
-	/**
-	 * Protected direct interface to the parameters array, without copying them
-	 * first. Users should not change the contents of the array, even though they could.
-	 */
-	protected Signature[] parameters() {
-		return params;
-	}
+    @Override
+    public boolean equals(final Object o) {
+        if (o == null || ! (o instanceof Signature)) {
+            return false;
+        }
+        else if (o == this) {
+            return true;
+        }
+        else {
+            final Signature other = (Signature) o;
+            return Arrays.equals(this.params, other.params);
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return params.hashCode();
+    }
+
+    @Override
+    public String toString() {
+
+        final StringBuilder bldr = new StringBuilder()
+            .append(Arrays.asList(params).stream()
+                .map(Object::toString)
+                .collect(Collectors.joining(",", "[", "]"))
+                );
+        return bldr.toString();
+    }
+
+    /**
+     * Protected direct interface to the parameters array, without copying them
+     * first. Users should not change the contents of the array, even though
+     * they could.
+     */
+    protected Signature[] parameters() {
+        return params;
+    }
 }

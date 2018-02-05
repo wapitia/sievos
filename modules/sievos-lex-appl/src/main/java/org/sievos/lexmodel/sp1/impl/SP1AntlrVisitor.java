@@ -33,9 +33,6 @@ package org.sievos.lexmodel.sp1.impl;
 
 import static org.sievos.kern.TI.toTWhen;
 
-import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
-import org.antlr.v4.runtime.tree.ParseTree;
-import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 import org.sievos.kern.TI;
 import org.sievos.lex.SievosParser.Bund1Context;
 import org.sievos.lex.SievosParser.BundXContext;
@@ -55,121 +52,125 @@ import org.sievos.lexmodel.sp1.SP1Node;
 import org.sievos.lexmodel.sp1.SP1NodeProducer;
 import org.sievos.lexmodel.sp1.SingleLN;
 
+import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
+import org.antlr.v4.runtime.tree.ParseTree;
+import org.antlr.v4.runtime.tree.ParseTreeVisitor;
+
 public class SP1AntlrVisitor extends AbstractParseTreeVisitor<SP1Node>
-	implements ParseTreeVisitor<SP1Node>, SievosVisitor<SP1Node>
+    implements ParseTreeVisitor<SP1Node>, SievosVisitor<SP1Node>
 {
-	final SP1NodeProducer nodes;
+    final SP1NodeProducer nodes;
 
-	public SP1AntlrVisitor(final SP1NodeProducer nodeProducer) {
-		this.nodes = nodeProducer;
-	}
+    public SP1AntlrVisitor(final SP1NodeProducer nodeProducer) {
+        this.nodes = nodeProducer;
+    }
 
-	/*
-		@rule expr: ExprLN
-		         def funcallExpr(fcall: CompositeFunctionLN)
-	*/
-	@Override
-	public ExprLN visitFuncallExpr(final FuncallExprContext ctx) {
+    /*
+        @rule expr: ExprLN
+                 def funcallExpr(fcall: CompositeFunctionLN)
+    */
+    @Override
+    public ExprLN visitFuncallExpr(final FuncallExprContext ctx) {
 
-		final CompositeFunctionLN fcall = castVisit(ctx.fcall());
-//		return makeExpr(fcall);
-		return nodes.funcallExpr(fcall);
-	}
+        final CompositeFunctionLN fcall = castVisit(ctx.fcall());
+//        return makeExpr(fcall);
+        return nodes.funcallExpr(fcall);
+    }
 
-	/*
-	    @rule fcall: CompositeFunctionLN
-	             def funcall(part: BundLN, fname: IdentifierLN)
-	             def composite(fcall: CompositeFunctionLN, fname: IdentifierLN)
-	*/
-	@Override
-	public CompositeFunctionLN visitFuncall(final FuncallContext ctx) {
+    /*
+        @rule fcall: CompositeFunctionLN
+                 def funcall(part: BundLN, fname: IdentifierLN)
+                 def composite(fcall: CompositeFunctionLN, fname: IdentifierLN)
+    */
+    @Override
+    public CompositeFunctionLN visitFuncall(final FuncallContext ctx) {
 
-		final BundLN ptp = castVisit(ctx.part());
-		final IdentifierLN fnameName = castVisit(ctx.fname());
-//		return makeCompositeFunction(fnameName, ptp);
-		return nodes.funcall(ptp, fnameName);
-	}
+        final BundLN ptp = castVisit(ctx.part());
+        final IdentifierLN fnameName = castVisit(ctx.fname());
+//        return makeCompositeFunction(fnameName, ptp);
+        return nodes.funcall(ptp, fnameName);
+    }
 
-	@Override
-	public CompositeFunctionLN visitComposite(final CompositeContext ctx) {
+    @Override
+    public CompositeFunctionLN visitComposite(final CompositeContext ctx) {
 
-		final CompositeFunctionLN subfname = castVisit(ctx.fcall());
-		final IdentifierLN fnameName = castVisit(ctx.fname());
-//		return makeCompositeFunction(fnameName, subfname);
-		return nodes.composite(fnameName, subfname);
-	}
+        final CompositeFunctionLN subfname = castVisit(ctx.fcall());
+        final IdentifierLN fnameName = castVisit(ctx.fname());
+//        return makeCompositeFunction(fnameName, subfname);
+        return nodes.composite(fnameName, subfname);
+    }
 
-	/*
-		@rule part: BundLN
-		         def part1(bund: BundLN)
-		         def partX(part: BundLN, bund: BundLN)
-	 */
-	@Override
-	public BundLN visitPart1(final Part1Context ctx) {
+    /*
+        @rule part: BundLN
+                 def part1(bund: BundLN)
+                 def partX(part: BundLN, bund: BundLN)
+     */
+    @Override
+    public BundLN visitPart1(final Part1Context ctx) {
 
-		final BundLN tbund = castVisit(ctx.bund());
-		return nodes.part1(tbund);
-	}
+        final BundLN tbund = castVisit(ctx.bund());
+        return nodes.part1(tbund);
+    }
 
-	@Override
-	public BundLN visitPartX(final PartXContext ctx)
-	{
-		final BundLN tpart = castVisit(ctx.part());
-		final BundLN tbund = castVisit(ctx.bund());
-		return nodes.partX(tpart, tbund);
-	}
+    @Override
+    public BundLN visitPartX(final PartXContext ctx)
+    {
+        final BundLN tpart = castVisit(ctx.part());
+        final BundLN tbund = castVisit(ctx.bund());
+        return nodes.partX(tpart, tbund);
+    }
 
-	/*
-		@rule bund: BundLN
-		         def bund1(tline: SingleLN)
-		         def bundX(tline: SingleLN, bund: BundLN)
-	*/
-	@Override
-	public BundLN visitBund1(final Bund1Context ctx)
-	{
-		final SingleLN singNode = castVisit(ctx.tline());
-		return nodes.bund1(singNode);
-	}
+    /*
+        @rule bund: BundLN
+                 def bund1(tline: SingleLN)
+                 def bundX(tline: SingleLN, bund: BundLN)
+    */
+    @Override
+    public BundLN visitBund1(final Bund1Context ctx)
+    {
+        final SingleLN singNode = castVisit(ctx.tline());
+        return nodes.bund1(singNode);
+    }
 
-	@Override
-	public BundLN visitBundX(final BundXContext ctx)
-	{
-		final BundLN bundNode = castVisit(ctx.bund());
-		final SingleLN singNode = castVisit(ctx.tline());
-		return nodes.bundX(singNode, bundNode);
-	}
+    @Override
+    public BundLN visitBundX(final BundXContext ctx)
+    {
+        final BundLN bundNode = castVisit(ctx.bund());
+        final SingleLN singNode = castVisit(ctx.tline());
+        return nodes.bundX(singNode, bundNode);
+    }
 
-	/*
-	    @rule fname: IdentifierLN
-	             def identifier(id: String)
-	*/
-	@Override
-	public IdentifierLN visitIdentifier(final IdentifierContext ctx)
-	{
-		final String identString = ctx.IDENT().getText();
-		return nodes.identifier(identString);
-	}
+    /*
+        @rule fname: IdentifierLN
+                 def identifier(id: String)
+    */
+    @Override
+    public IdentifierLN visitIdentifier(final IdentifierContext ctx)
+    {
+        final String identString = ctx.IDENT().getText();
+        return nodes.identifier(identString);
+    }
 
-	/*
-		@rule tline: SingleLN
-		         def tline(ti: TI)
-	*/
-	@Override
-	public SingleLN visitTline(final TlineContext ctx)
-	{
-		final TI ti = toTWhen(ctx.T() != null);
-		return nodes.tline(ti);
-	}
+    /*
+        @rule tline: SingleLN
+                 def tline(ti: TI)
+    */
+    @Override
+    public SingleLN visitTline(final TlineContext ctx)
+    {
+        final TI ti = toTWhen(ctx.T() != null);
+        return nodes.tline(ti);
+    }
 
-	<T extends SP1Node> T
-	castVisit(final ParseTree parseTree)
-	{
-		if (parseTree == null) return null;
-		@SuppressWarnings("unchecked")
-		final ParseTreeVisitor<? extends T> thisAsTVisitor =
-			(ParseTreeVisitor<? extends T>) this;
-		final T result = parseTree.accept(thisAsTVisitor);
-		return result;
-	}
+    <T extends SP1Node> T
+    castVisit(final ParseTree parseTree)
+    {
+        if (parseTree == null) return null;
+        @SuppressWarnings("unchecked")
+        final ParseTreeVisitor<? extends T> thisAsTVisitor =
+            (ParseTreeVisitor<? extends T>) this;
+        final T result = parseTree.accept(thisAsTVisitor);
+        return result;
+    }
 
 }

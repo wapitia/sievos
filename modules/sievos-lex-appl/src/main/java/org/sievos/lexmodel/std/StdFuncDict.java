@@ -42,40 +42,40 @@ import org.sievos.lexmodel.NamedSignature;
  */
 public class StdFuncDict<OT> {
 
-	private final Map<NamedSignature, StdPartFunction> partFunctionMap;
+    private final Map<NamedSignature, StdPartFunction> partFunctionMap;
 
-	public StdFuncDict() {
-		this.partFunctionMap = new HashMap<NamedSignature, StdPartFunction>();
-	}
+    public StdFuncDict() {
+        this.partFunctionMap = new HashMap<NamedSignature, StdPartFunction>();
+    }
 
-	public void put(final NamedSignature sig, final StdPartFunction func) {
-		partFunctionMap.put(sig, func);
-	}
+    public void put(final NamedSignature sig, final StdPartFunction func) {
+        partFunctionMap.put(sig, func);
+    }
 
-	public <PF extends StdPartFunction> PF getPartFunction(final String name) {
-		return this.getPartFunction(NamedSignature.of(name));
-	}
+    public <PF extends StdPartFunction> PF getPartFunction(final String name) {
+        return this.getPartFunction(NamedSignature.of(name));
+    }
 
-	public <PF extends StdPartFunction> PF getPartFunction(final NamedSignature sig) {
-		@SuppressWarnings("unchecked")
-		final PF result = Optional
-			.ofNullable((PF) partFunctionMap.get(sig))
-			.orElseThrow(() -> new FunctionNotFoundException(sig));
-		return result;
-	}
+    public <PF extends StdPartFunction> PF getPartFunction(final NamedSignature sig) {
+        @SuppressWarnings("unchecked")
+        final PF result = Optional
+            .ofNullable((PF) partFunctionMap.get(sig))
+            .orElseThrow(() -> new FunctionNotFoundException(sig));
+        return result;
+    }
 
-	@SuppressWarnings("serial")
-	static class FunctionNotFoundException extends UnsupportedOperationException {
-		final NamedSignature func;
+    @SuppressWarnings("serial")
+    static class FunctionNotFoundException extends UnsupportedOperationException {
+        final NamedSignature func;
 
-		FunctionNotFoundException(final NamedSignature func) {
-			super(func.toString());
-			this.func = func;
-		}
+        FunctionNotFoundException(final NamedSignature func) {
+            super(func.toString());
+            this.func = func;
+        }
 
-		public NamedSignature getSignature() {
-			return func;
-		}
-	}
+        public NamedSignature getSignature() {
+            return func;
+        }
+    }
 
 }

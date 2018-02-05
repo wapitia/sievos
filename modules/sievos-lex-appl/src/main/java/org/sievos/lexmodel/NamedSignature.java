@@ -37,61 +37,66 @@ import java.util.Objects;
  * Named Function Type signature.
  * <p>
  * The signature is suitable for use as a Map key, so this
- * class is immutable and provides nicely overwritten 
- * equals and hashCode methods. 
+ * class is immutable and provides nicely overwritten
+ * equals and hashCode methods.
  */
 public class NamedSignature extends Signature {
 
-	public static NamedSignature of(final String funcName) {
-		return new NamedSignature(funcName, EMPTY_PARAMETERS);
-	}
+    public static NamedSignature of(final String funcName) {
+        return new NamedSignature(funcName, EMPTY_PARAMETERS);
+    }
 
-	private final String name;
+    public static NamedSignature of(final String funcName,
+            final NamedSignature[] params) {
+        return new NamedSignature(funcName, params);
+    }
 
-	public NamedSignature(final String name, final NamedSignature[] params)
-	{
-		super(params);
-		Objects.requireNonNull(name);
-		this.name = name;
-	}
+    private final String name;
 
-	public String getName() {
-		return name;
-	}
+    public NamedSignature(final String name, final NamedSignature[] params)
+    {
+        super(params);
+        Objects.requireNonNull(name);
+        this.name = name;
+    }
 
-	@Override
-	public boolean equals(final Object o) {
-		if (o == null || !(o instanceof NamedSignature)) {
-			return false;
-		}
-		else if (o == this) {
-			return true;
-		}
-		else {
-			final NamedSignature other = (NamedSignature) o;
-			return this.name.equals(other.name) &&
-					super.equals(other);
-		}
-	}
+    public String getName() {
+        return name;
+    }
 
-	@Override
-	public int hashCode() {
-		return 31 + (name.hashCode() << 5) + super.hashCode();
-	}
+    @Override
+    public boolean equals(final Object o) {
+        if (o == null || !(o instanceof NamedSignature)) {
+            return false;
+        }
+        else if (o == this) {
+            return true;
+        }
+        else {
+            final NamedSignature other = (NamedSignature) o;
+            return this.name.equals(other.name) &&
+                    super.equals(other);
+        }
+    }
 
-	@Override
-	public String toString() {
-		final String result;
-		if (parameters().length == 0) {
-			result = name;
-		}
-		else {
-			result = new StringBuilder()
-				.append(name)
-				.append(super.toString())
-				.toString();
-		}
-		return result;
-	}
+    @Override
+    public int hashCode() {
+        return 31 + (name.hashCode() << 5) + super.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        final String result;
+        if (parameters().length == 0) {
+            result = name;
+        }
+        else {
+            result = new StringBuilder()
+                .append(name)
+                .append(super.toString())
+                .toString();
+        }
+        return result;
+    }
 
 }

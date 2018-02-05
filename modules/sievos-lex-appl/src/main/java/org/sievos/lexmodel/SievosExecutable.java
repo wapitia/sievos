@@ -43,9 +43,9 @@ import org.sievos.lexmodel.std.StdPart;
  */
 public interface SievosExecutable<OT,XT extends SievosExecutable<OT,XT>>
 {
-	/**
-	 * Execute this bound expression, returning its result, always a 
-	 * standard partition.
-	 */
-	StdPart execute();
+    /**
+     * Execute this bound expression, returning its result, always a
+     * standard partition.
+     */
+    StdPart execute();
 }

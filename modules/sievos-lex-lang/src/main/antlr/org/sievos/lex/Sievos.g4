@@ -35,7 +35,7 @@ grammar Sievos;
 
     /*
        @uses {
-          SP1 => 
+          SP1 =>
             java.lang.String
             org.sievos.kern.TI
             org.sievos.lexmodel.sp1.ExprLN
@@ -44,13 +44,13 @@ grammar Sievos;
             org.sievos.lexmodel.sp1.BundLN
             org.sievos.lexmodel.sp1.SingleLN
        }
-        
-    */    
+
+    */
 
     /*
        @rule expr {
-         """ any Sievos expression, including function calls, 
-             partitions, bundles. 
+         """ any Sievos expression, including function calls,
+             partitions, bundles.
              """
          SP1 => expr: ExprLN
                 def funcallExpr(fcall: CompositeFunctionLN)
@@ -60,10 +60,10 @@ expr        : fcall             # funcallExpr
             ;
     /*
        @rule fcall {
-         """ a single FTFTuple or other FTFTuple stream representation 
+         """ a single FTFTuple or other FTFTuple stream representation
              which can be  applied against a composite functional block
              (<tuple>) <identifier>...
-    
+
              example: 'TFF r z'
              """
          SP1 => fcall: CompositeFunctionLN
@@ -78,7 +78,7 @@ fcall       : part fname        # funcall
     /*
        @rule part {
          """ a single Bund or other Partition representation which can be
-             applied against a composite functional block 
+             applied against a composite functional block
              """
          SP1 => part: BundLN
                 def part1(bund: BundLN)

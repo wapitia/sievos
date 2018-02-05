@@ -31,9 +31,6 @@
  */
 package org.sievos.lexmodel.sp1.impl;
 
-import org.antlr.v4.runtime.CharStreams;
-import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.tree.ParseTree;
 import org.sievos.lex.SievosLexer;
 import org.sievos.lex.SievosParser;
 import org.sievos.lex.SievosVisitor;
@@ -44,16 +41,20 @@ import org.sievos.lexmodel.sp1.SP1Node;
 import org.sievos.lexmodel.sp1.SP1NodeProducer;
 import org.sievos.lexmodel.std.StdPart;
 
+import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.tree.ParseTree;
+
 /**
  *
  */
 public class SP1AntrlCompiler<LNTYPE extends SP1Node> implements SP1.Compiler {
 
-	private final AbstractCallVisit<LNTYPE> bindVisit;
+    private final AbstractCallVisit<LNTYPE> bindVisit;
 
-//	private final SievosVisitor<SP1Node> comp;
+//    private final SievosVisitor<SP1Node> comp;
 
-//	pri
+//    pri
 
 
 //    def funcallExpr(fcall: CompositeFunctionLN)
@@ -61,32 +62,32 @@ public class SP1AntrlCompiler<LNTYPE extends SP1Node> implements SP1.Compiler {
 //*/
 //expr        : fcall             # funcallExpr
 
-	/**
-	 * @param instance
-	 * @return
-	 */
-	public static SP1AntrlCompiler<ExprLN> makeExprCompiler(
-		final SP1NodeProducer nodeProducer)
-	{
-		final BindExprVisit bindVisit = new BindExprVisit(
-			new SP1AntlrVisitor(nodeProducer));
-		return new SP1AntrlCompiler<ExprLN>(bindVisit);
-	}
+    /**
+     * @param instance
+     * @return
+     */
+    public static SP1AntrlCompiler<ExprLN> makeExprCompiler(
+        final SP1NodeProducer nodeProducer)
+    {
+        final BindExprVisit bindVisit = new BindExprVisit(
+            new SP1AntlrVisitor(nodeProducer));
+        return new SP1AntrlCompiler<ExprLN>(bindVisit);
+    }
 
-	public SP1AntrlCompiler(final AbstractCallVisit<LNTYPE> bindVisit) {
-		this.bindVisit = bindVisit;
-	}
+    public SP1AntrlCompiler(final AbstractCallVisit<LNTYPE> bindVisit) {
+        this.bindVisit = bindVisit;
+    }
 
-	/**
-	 *
-	 * @param expression
-	 * @return
-	 * @see org.sievos.lexmodel.std.StdCompiler#compile(java.lang.String)
-	 */
-	@Override
-	public SP1.Executable compile(final String expression) {
+    /**
+     *
+     * @param expression
+     * @return
+     * @see org.sievos.lexmodel.std.StdCompiler#compile(java.lang.String)
+     */
+    @Override
+    public SP1.Executable compile(final String expression) {
 
-		final SievosLexer lexer = new SievosLexer(CharStreams.fromString(expression));
+        final SievosLexer lexer = new SievosLexer(CharStreams.fromString(expression));
         final SievosParser parser = new SievosParser(new CommonTokenStream(lexer));
         final LNTYPE castVisit = bindVisit.castVisit(parser);
         final String answerStr = castVisit.toString();
@@ -95,79 +96,80 @@ public class SP1AntrlCompiler<LNTYPE extends SP1Node> implements SP1.Compiler {
         return result;
     }
 
-	public static abstract class AbstractCallVisit<LNTYPE extends SP1Node> {
+    public static abstract class AbstractCallVisit<LNTYPE extends SP1Node> {
 
-		final SievosVisitor<SP1Node> comp;
+        final SievosVisitor<SP1Node> comp;
 
-		protected AbstractCallVisit(final SievosVisitor<SP1Node> comp)
-		{
-			this.comp = comp;
-		}
+        protected AbstractCallVisit(final SievosVisitor<SP1Node> comp)
+        {
+            this.comp = comp;
+        }
 
-		public LNTYPE castVisit(final SievosParser parser) {
-			final ParseTree parseTree = getParseTree(parser);
-			final SP1Node answer = comp.visit(parseTree);
-	        @SuppressWarnings("unchecked")
-			final LNTYPE f = (LNTYPE) answer;
-	        return f;
-		}
+        public LNTYPE castVisit(final SievosParser parser) {
+            final ParseTree parseTree = getParseTree(parser);
+            final SP1Node answer = comp.visit(parseTree);
+            @SuppressWarnings("unchecked")
+            final LNTYPE f = (LNTYPE) answer;
+            return f;
+        }
 
-		public abstract Executable bindAsFunction(LNTYPE castVisit);
+        public abstract Executable bindAsFunction(LNTYPE castVisit);
 
-		public abstract ParseTree getParseTree(final SievosParser parser);
+        public abstract ParseTree getParseTree(final SievosParser parser);
 
-	}
-	
-	static abstract class FAbsImpl<SLNTYPE extends SP1Node> implements Executable {
-		final SLNTYPE expr;
+    }
 
-		protected FAbsImpl(final SLNTYPE expr) {
-			this.expr = expr;
-		}
+    static abstract class FAbsImpl<SLNTYPE extends SP1Node> implements Executable {
+        final SLNTYPE expr;
 
-		@Override
-		public StdPart execute() {
+        protected FAbsImpl(final SLNTYPE expr) {
+            this.expr = expr;
+        }
 
-			return concreteResult(expr);
-		}
-		
-		public String toString() {
-			return expr.toString(); 
-		}
-		
+        @Override
+        public StdPart execute() {
 
-		public abstract StdPart concreteResult(SLNTYPE expr);
+            return concreteResult(expr);
+        }
 
-	}
+        @Override
+        public String toString() {
+            return expr.toString();
+        }
 
-	public static class BindExprVisit extends AbstractCallVisit<ExprLN> {
 
-		BindExprVisit(final SievosVisitor<SP1Node> comp) {
-			super(comp);
-		}
+        public abstract StdPart concreteResult(SLNTYPE expr);
 
-		@Override
-		public Executable bindAsFunction(final ExprLN expr) {
-			return new FImpl(expr);
-		}
+    }
 
-		@Override
-		public ParseTree getParseTree(final SievosParser parser) {
-			return parser.expr();
-		}
+    public static class BindExprVisit extends AbstractCallVisit<ExprLN> {
 
-		static class FImpl extends FAbsImpl<ExprLN> {
+        BindExprVisit(final SievosVisitor<SP1Node> comp) {
+            super(comp);
+        }
 
-			public FImpl(final ExprLN expr) {
-				super(expr);
-			}
+        @Override
+        public Executable bindAsFunction(final ExprLN expr) {
+            return new FImpl(expr);
+        }
 
-			@Override
-			public StdPart concreteResult(final ExprLN expr) {
-				StdPart result = expr.asExecutable().execute();
-				return result;
-			}
-			
-		}
-	}
+        @Override
+        public ParseTree getParseTree(final SievosParser parser) {
+            return parser.expr();
+        }
+
+        static class FImpl extends FAbsImpl<ExprLN> {
+
+            public FImpl(final ExprLN expr) {
+                super(expr);
+            }
+
+            @Override
+            public StdPart concreteResult(final ExprLN expr) {
+                StdPart result = expr.asExecutable().execute();
+                return result;
+            }
+
+        }
+    }
 }

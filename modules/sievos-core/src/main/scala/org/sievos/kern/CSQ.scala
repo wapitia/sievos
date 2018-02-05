@@ -39,7 +39,7 @@ import CSQ.num;
 case class CSQ(c:TI,s:TI,q:TI) {
 
   override def toString = "%d%d;%d".format(num(c),num(s),num(q));
-      
+
 }
 
 object CSQ {
