@@ -74,12 +74,30 @@ trait Part[+T] {
    * Makes a new partition of two elements forming (this | Part(that))
    */
   def |+ [B >: T](that: B): Part[B]
+  
+  def filter(filter: T => Boolean): Part[T] =
+    filterMap(filter, t => t)
+  
+  def map[U](map: T => U): Part[U] =
+    filterMap(t => true, map)
+  
+  /**
+   * Filter the elements in this partition and map the ones
+   * for which filter returns true into objects of type U,
+   * and return a new Part with the same structure as this one.
+   */
+  def filterMap[U](filter: T => Boolean, map: T => U): Part[U]
 
+  /**
+   * Visit with no context.
+   */
+  def visit(tconsumer: T => Unit): Unit
+      
   /**
    * Visit each partition which can deliver items of type T to
    * the supplied consumer
    */
-  def visit(tconsumer: (T,PCTX) => Unit): Unit
+  def ctxVisit(tconsumer: (T,PCTX) => Unit): Unit
 
   /**
    * Is this partition empty?
@@ -252,14 +270,16 @@ object Part {
     override def extractR: (Part[T],T) = 
       throw ExtractNotSupportedException()
 
-    override def visit(tconsumer: (T,PCTX) => Unit): Unit = 
-      visit(List[Int](), tconsumer)
+    override def visit(tconsumer: T => Unit): Unit
+      
+    override def ctxVisit(tconsumer: (T,PCTX) => Unit): Unit = 
+      ctxVisit(List[Int](), tconsumer)
   
     override def skewL: Part[T] = this
     
     override def skewR: Part[T] = this
 
-    def visit(ctx: PCTX, tconsumer: (T,PCTX) => Unit): Unit
+    def ctxVisit(ctx: PCTX, tconsumer: (T,PCTX) => Unit): Unit
 
     def formatSpec = "%s"
 
@@ -277,7 +297,13 @@ object Part {
     
     override def depth = 0
     
-    override def visit(ctx: PCTX, tconsumer: (Nothing,PCTX) => Unit) {
+    override def filterMap[U](filter: Nothing => Boolean, map: Nothing => U) =
+      EmptyNode
+    
+    override def visit(tconsumer: Nothing => Unit) {
+    }
+      
+    override def ctxVisit(ctx: PCTX, tconsumer: (Nothing,PCTX) => Unit) {
     }
 
     override def toString = "()"
@@ -300,8 +326,15 @@ object Part {
     
     override def depth = 1
 
-    override def visit(ctx: PCTX, tconsumer: (T,PCTX) => Unit) = 
-      tconsumer(v, ctx);
+    override def filterMap[U](filter: T => Boolean, map: T => U) =
+      if (filter(v)) Part(map(v))
+      else           EmptyNode
+      
+    override def visit(tconsumer: T => Unit) =
+      tconsumer(v)
+      
+    override def ctxVisit(ctx: PCTX, tconsumer: (T,PCTX) => Unit) = 
+      tconsumer(v, ctx)
 
     override def toString = formatSpec.format(v.toString())
 
@@ -329,9 +362,20 @@ object Part {
     
     override def depth = 1 + Math.max(left.depth, right.depth)
     
-    override def visit(ctx:PCTX, tconsumer: (T,PCTX) => Unit) {
-      left.visit(0 :: ctx, tconsumer)
-      right.visit(1 :: ctx, tconsumer)
+    override def filterMap[U](filter: T => Boolean, map: T => U) = {
+      val newleft = left.filterMap(filter, map)
+      val newright = right.filterMap(filter, map)
+      newleft | newright
+    }
+      
+    override def visit(tconsumer: T => Unit) {
+      left.visit(tconsumer)
+      right.visit(tconsumer)
+    }
+      
+    override def ctxVisit(ctx:PCTX, tconsumer: (T,PCTX) => Unit) {
+      left.ctxVisit(0 :: ctx, tconsumer)
+      right.ctxVisit(1 :: ctx, tconsumer)
     }
 
     override def extractL: (T,Part[T]) = {

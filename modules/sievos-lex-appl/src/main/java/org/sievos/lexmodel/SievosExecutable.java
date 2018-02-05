@@ -29,20 +29,22 @@
  * ARISING OUT OF THE USE OF OR INABILITY TO USE THIS SOFTWARE, EVEN IF
  * WAPITIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  */
-
-package org.sievos.lexmodel.std;
-
-import org.sievos.lexmodel.SievosResult;
+package org.sievos.lexmodel;
 
 /**
+ * Abstract model of a Sievos function, one which may be executed to
+ * produce some result type of SievosResult.
+ * That executed result may yield a concrete result or another
+ * SievosFunction (or both?), recursively.
  *
+ * @see SievosResult
  */
-public interface StdResult<OT>
-	extends SievosResult<OT,StdResult<OT>,StdExecutable<OT>>
+public interface SievosExecutable<OT,
+	RT extends SievosResult<OT,RT,XT>,
+	XT extends SievosExecutable<OT,RT, XT>>
 {
-	@Override
-	OT prtResult();
-
-	@Override
-	StdExecutable<OT> fnResult();
+	/**
+	 * Execute this bound expression, returning its result
+	 */
+	RT execute();
 }

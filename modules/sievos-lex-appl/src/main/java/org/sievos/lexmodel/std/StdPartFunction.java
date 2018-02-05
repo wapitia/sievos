@@ -29,20 +29,13 @@
  * ARISING OUT OF THE USE OF OR INABILITY TO USE THIS SOFTWARE, EVEN IF
  * WAPITIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  */
-
 package org.sievos.lexmodel.std;
 
-import org.sievos.lexmodel.SievosResult;
-
 /**
- *
+ * A function that has the  implementation to take a single Standard
+ * Partition as input, execute against it producing some Standard Result
  */
-public interface StdResult<OT>
-	extends SievosResult<OT,StdResult<OT>,StdExecutable<OT>>
-{
-	@Override
-	OT prtResult();
+public interface StdPartFunction {
 
-	@Override
-	StdExecutable<OT> fnResult();
+	StdBund execute(StdBund part);
 }

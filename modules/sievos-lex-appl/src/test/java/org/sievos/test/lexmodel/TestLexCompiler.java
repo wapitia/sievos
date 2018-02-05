@@ -1,7 +1,15 @@
 package org.sievos.test.lexmodel;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Function;
+
 import org.junit.Test;
-import org.sievos.lexmodel.SievosLexTool;
+import org.sievos.lexmodel.SP1LexTool;
+import org.sievos.lexmodel.sp1.SP1.Executable;
+import org.sievos.lexmodel.sp1.SP1.Result;
+
 
 /**
  *
@@ -11,11 +19,23 @@ public class TestLexCompiler {
 	@Test
 	public void testSimple() {
 
-		SievosLexTool.compile("TTF r");
-		SievosLexTool.compile("FTT r z");
-		SievosLexTool.compile("FFF r");
-		SievosLexTool.compile("TTT z");
-		SievosLexTool.compile("TFT r");
-		SievosLexTool.compile("TFF z");
+		final List<String> expressions = Arrays.<String> asList(
+			"TTF r",
+			"FTT r z",
+			"FFF r",
+			"TTT z",
+			"TFT r",
+			"TFF z");
+		expressions.forEach(funcCompare);
 	}
+
+	Function<String,Executable> compileFunc = (s) -> SP1LexTool.compile(s);
+
+	Consumer<String> funcCompare = (s) -> {
+		final Executable apply = compileFunc.apply(s);
+		final Result result = apply.execute();
+		System.out.println(String.format("%-20s -> %s -> %s",
+			s, apply.toString(), result.toString()));
+	};
+
 }

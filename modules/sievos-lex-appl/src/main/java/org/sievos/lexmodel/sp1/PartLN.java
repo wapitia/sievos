@@ -31,6 +31,10 @@
  */
 package org.sievos.lexmodel.sp1;
 
-public interface CompExprLN extends SP1Node, ExprLN {
+import org.sievos.kern.Part;
+import org.sievos.lexmodel.std.StdBund;
 
+public interface PartLN extends SP1Node {
+
+	Part<StdBund> asPart();
 }

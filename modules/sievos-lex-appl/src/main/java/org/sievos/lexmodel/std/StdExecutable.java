@@ -29,11 +29,18 @@
  * ARISING OUT OF THE USE OF OR INABILITY TO USE THIS SOFTWARE, EVEN IF
  * WAPITIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  */
-package org.sievos.lexmodel;
+
+package org.sievos.lexmodel.std;
+
+import org.sievos.lexmodel.SievosExecutable;
 
 /**
  *
  */
-public interface SievosCompileResult {
+public interface StdExecutable<OT>
+	extends SievosExecutable<OT,StdResult<OT>,StdExecutable<OT>>
+{
+	@Override
+	StdResult<OT> execute();
 
 }

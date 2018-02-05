@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-present wapitia.com
+ * Copyright 2016-2018 wapitia.com
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -29,48 +29,80 @@
  * ARISING OUT OF THE USE OF OR INABILITY TO USE THIS SOFTWARE, EVEN IF
  * WAPITIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  */
-package org.sievos.lexmodel.impl.sp1;
 
-import org.sievos.kern.Part;
-import org.sievos.lexmodel.std.StdBund;
-import org.sievos.lexmodel.std.StdPart;
+package org.sievos.lexmodel;
+
+import java.util.Arrays;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
- * Partition of TBund accumulator for the SP1 Sievos expression tree.
+ * Named Function Type signature
  */
-class SP1PartAccum {
+public class NFT {
 
-	Part<StdBund> part;
-
-	SP1PartAccum() {
-		// start with an empty partition
-		this.part = Part.apply();
+	public static NFT of(final String funcName) {
+		return new NFT(funcName, EMPTY_PARAMETERS);
 	}
 
-	public void append(final StdBund addition) {
-		this.part = Part.apply(this.part, addition);
+	static final NFT[] EMPTY_PARAMETERS =
+		new NFT[0];
+
+	private final String name;
+	private final NFT[] params;
+
+	public NFT(final String name, final NFT[] params)
+	{
+		Objects.requireNonNull(name);
+		Objects.requireNonNull(params);
+		this.name = name;
+		this.params = params;
 	}
 
-	static class TPartImpl implements StdPart {
+	public String getName() {
+		return name;
+	}
 
-		private final Part<StdBund> part;
+	public NFT[] getParameters() {
+		return params;
+	}
 
-		TPartImpl(final Part<StdBund> part) {
-			this.part = part;
+	@Override
+	public boolean equals(final Object o) {
+		if (o == null || o.getClass() != this.getClass()) {
+			return false;
 		}
-
-		@Override
-		public Part<StdBund> asPartition() {
-			return this.part;
+		else if (o == this) {
+			return true;
+		}
+		else {
+			final NFT other = (NFT) o;
+			return this.name.equals(other.name) &&
+				Arrays.equals(this.params, other.params);
 		}
 	}
 
-	public TPartImpl asPart() {
-		return SP1PartAccum.asPart(part);
+	@Override
+	public int hashCode() {
+		return Objects.hash(name, params);
 	}
 
-	public static TPartImpl asPart(final Part<StdBund> state) {
-		return new TPartImpl(state);
+	@Override
+	public String toString() {
+		final String result;
+		if (params.length == 0) {
+			result = name;
+		}
+		else {
+			final StringBuilder bldr = new StringBuilder()
+				.append(name)
+				.append(Arrays.asList(params).stream()
+					.map(Object::toString)
+					.collect(Collectors.joining(",", "[", "]"))
+					);
+			result = bldr.toString();
+		}
+		return result;
 	}
 
 }

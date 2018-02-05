@@ -38,21 +38,21 @@ import org.sievos.kern.TI;
  */
 public interface SP1NodeProducer {
 
-	TBundLN bund1(TSingleLN singNode);
+	BundLN bund1(SingleLN singNode);
 
 	IdentifierLN identifier(String identString);
 
-	TSingleLN tline(TI ti);
+	SingleLN tline(TI ti);
 
-	TBundLN bundX(TSingleLN singNode, TBundLN bundNode);
+	BundLN bundX(SingleLN singNode, BundLN bundNode);
 
-	TBundLN part1(TBundLN tbund);
+	BundLN part1(BundLN tbund);
 
-	TBundLN partX(TBundLN tpart, TBundLN tbund);
+	BundLN partX(BundLN tpart, BundLN tbund);
 
 	ExprLN funcallExpr(CompositeFunctionLN fcall);
 
-	CompositeFunctionLN funcall(TBundLN ptp, IdentifierLN fnameName);
+	CompositeFunctionLN funcall(BundLN ptp, IdentifierLN fnameName);
 
 	CompositeFunctionLN composite(IdentifierLN fnameName,
 		CompositeFunctionLN subfname);

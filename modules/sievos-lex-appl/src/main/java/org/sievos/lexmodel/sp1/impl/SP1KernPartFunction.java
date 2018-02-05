@@ -30,19 +30,42 @@
  * WAPITIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  */
 
-package org.sievos.lexmodel.std;
+package org.sievos.lexmodel.sp1.impl;
 
-import org.sievos.lexmodel.SievosResult;
+import java.util.function.Function;
 
-/**
- *
- */
-public interface StdResult<OT>
-	extends SievosResult<OT,StdResult<OT>,StdExecutable<OT>>
-{
+import org.sievos.kern.Kern;
+import org.sievos.kern.Kern.N;
+import org.sievos.kern.TI;
+import org.sievos.lexmodel.sp1.SP1;
+import org.sievos.lexmodel.sp1.impl.SP1NodeFactory.StdBundImpl;
+import org.sievos.lexmodel.std.StdBund;
+
+class SP1KernPartFunction implements SP1.PartFunction {
+
+	private final Function<N,N> n2n;
+
+	public SP1KernPartFunction(final Function<N,N> n2n) {
+		this.n2n = n2n;
+	}
+
+	public Kern.N bund2KernN(final StdBund bund) {
+
+		final TI b = TI.F;
+		final TI y = TI.T;
+		final TI x = TI.T;
+		final Kern.N n = new Kern.N(b,y,x);
+		return n;
+	}
+
+	public StdBund kern2Bund(final Kern.N n) {
+		final StdBundImpl result = new StdBundImpl(n.b(),n.y(),n.x());
+		return result;
+	}
+
 	@Override
-	OT prtResult();
+	public StdBund execute(final StdBund bund) {
+		return kern2Bund(n2n.apply(bund2KernN(bund)));
+	}
 
-	@Override
-	StdExecutable<OT> fnResult();
 }

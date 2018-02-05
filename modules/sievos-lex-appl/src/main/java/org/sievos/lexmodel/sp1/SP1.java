@@ -31,20 +31,73 @@
  */
 package org.sievos.lexmodel.sp1;
 
-import java.util.List;
-
-import org.sievos.lexmodel.sp1.SP1.Executable;
-import org.sievos.lexmodel.std.StdPart;
+import org.sievos.lexmodel.std.StdBund;
+import org.sievos.lexmodel.std.StdCompiler;
+import org.sievos.lexmodel.std.StdExecutable;
 import org.sievos.lexmodel.std.StdPartFunction;
+import org.sievos.lexmodel.std.StdResult;
 
 /**
- * A composite function, suitable for evaluation
+ * In the SP1 system, all static results are some type of partition,
+ * returned as a {@link PartLN}
  */
-public interface CompositeFunctionLN extends ExprLN {
+public interface SP1 {
 
-	@Override
-	Executable asExecutable();
+	public static final Executable FNULL = null;
 
-	StdPart asPart();
-	List<? extends StdPartFunction> getFuncList();
+	public static final PartLN NULLPART = null;
+
+
+	public boolean isNullResult(PartLN part);
+
+	interface Compiler extends StdCompiler<PartLN> {
+
+		@Override
+		Executable compile(String expression);
+	}
+
+	interface Result extends StdResult<PartLN> {
+
+		/**
+		 * Concrete result of a Sievos function execution.
+		 * If this is an invalid or null result, or if it is an unbound
+		 * function result (i.e. fnResult has the value) then
+		 * this returns a Null PartLN result, one for which
+		 * {@code isNullResult} returns true.
+		 *
+		 * @see Executable#execute()
+		 * @see SP1#isNullResult(PartLN)
+		 */
+		@Override
+		PartLN prtResult();
+
+		/**
+		 * Function result of a Sievos function execution.
+		 * If the result is, in fact, some concrete result, then this object
+		 * shall return itself again, recursively.
+		 *
+		 * @see Executable#execute()
+		 */
+		@Override
+		Executable fnResult();
+	}
+
+	interface Executable extends StdExecutable<PartLN> {
+
+		/**
+		 * Execute this function, returning its result as some Sievos SP1
+		 * result derivative {@code R}
+		 *
+		 * @see org.sievos.lexmodel.SievosExecutable#execute()
+		 * @see SP1#Result
+		 */
+		@Override
+		public Result execute();
+	}
+
+	interface PartFunction extends StdPartFunction {
+
+		@Override
+		StdBund execute(StdBund bund);
+	}
 }

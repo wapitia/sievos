@@ -32,8 +32,8 @@ class TestPartition {
   def testPart01 {
     
     println; println("testPart01")
-    tps.p1.visit( (i: String, pc: List[Int]) => println(i) )
-    tps.p2.visit( (i: String, pc: List[Int]) => println(i) )
+    tps.p1.ctxVisit( (i: String, pc: List[Int]) => println(i) )
+    tps.p2.ctxVisit( (i: String, pc: List[Int]) => println(i) )
   }
   
   @Test

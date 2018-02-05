@@ -12,14 +12,14 @@
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * Neither the name of wapitia.com or the names of contributors may be used to
- * endorse or promote products derived from this software without specific
+ * Neither the name of wapitia.com or the names of contributors may be used to 
+ * endorse or promote products derived from this software without specific 
  * prior written permission.
  *
  * This software is provided "AS IS," without a warranty of any kind.
  * ALL EXPRESS OR IMPLIED CONDITIONS, REPRESENTATIONS AND WARRANTIES,
  * INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS FOR A
- * PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY EXCLUDED.
+ * PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY EXCLUDED. 
  * WAPITIA.COM ("WAPITIA") AND ITS LICENSORS SHALL NOT BE LIABLE FOR
  * ANY DAMAGES SUFFERED BY LICENSEE AS A RESULT OF USING, MODIFYING OR
  * DISTRIBUTING THIS SOFTWARE OR ITS DERIVATIVES. IN NO EVENT WILL WAPITIA OR
@@ -30,19 +30,7 @@
  * WAPITIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  */
 
-package org.sievos.lexmodel.std;
-
-import org.sievos.lexmodel.SievosResult;
-
 /**
  *
  */
-public interface StdResult<OT>
-	extends SievosResult<OT,StdResult<OT>,StdExecutable<OT>>
-{
-	@Override
-	OT prtResult();
-
-	@Override
-	StdExecutable<OT> fnResult();
-}
+package org.sievos.lexmodel.sp1.impl;

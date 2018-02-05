@@ -31,18 +31,25 @@
  */
 package org.sievos.lexmodel;
 
+import org.sievos.lexmodel.sp1.SP1;
+import org.sievos.lexmodel.sp1.SP1.Executable;
+
 /**
  *
  */
-public interface SievosLexTool {
+public interface SP1LexTool {
 
-	static SievosCompileResult compile(final String expression) {
-		return compilerInstance.compile(expression);
+	static Executable compile(final String expression)
+	{
+		final Executable res = compilerInstance.compile(expression);
+		return res;
 	}
 
 	// Injection should happen here
-	static org.sievos.lexmodel.std.StdCompiler compilerInstance =
-		new org.sievos.lexmodel.impl.sp1.SP1AntrlCompiler(
-			 org.sievos.lexmodel.impl.sp1.SP1NodeFactory.instance());
+	static SP1.Compiler compilerInstance =
+//		org.sievos.lexmodel.sp1.impl.SP1AntrlCompiler.makeFcallCompiler(
+//			 org.sievos.lexmodel.sp1.impl.SP1NodeFactory.instance());
+		org.sievos.lexmodel.sp1.impl.SP1AntrlCompiler.makeExprCompiler(
+			 org.sievos.lexmodel.sp1.impl.SP1NodeFactory.instance());
 
 }

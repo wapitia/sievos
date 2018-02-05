@@ -34,8 +34,8 @@ package org.sievos.lexmodel.std;
 /**
  *
  */
-public interface StdCompiler {
+public interface StdCompiler<OT> {
 
-	StdResult compile(String expression);
+	StdExecutable<OT> compile(String expression);
 
 }

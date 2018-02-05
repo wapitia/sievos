@@ -29,7 +29,7 @@
  * ARISING OUT OF THE USE OF OR INABILITY TO USE THIS SOFTWARE, EVEN IF
  * WAPITIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  */
-package org.sievos.lexmodel.impl.sp1;
+package org.sievos.lexmodel.sp1.impl;
 
 import static org.sievos.kern.TI.toTWhen;
 
@@ -47,13 +47,13 @@ import org.sievos.lex.SievosParser.Part1Context;
 import org.sievos.lex.SievosParser.PartXContext;
 import org.sievos.lex.SievosParser.TlineContext;
 import org.sievos.lex.SievosVisitor;
+import org.sievos.lexmodel.sp1.BundLN;
 import org.sievos.lexmodel.sp1.CompositeFunctionLN;
 import org.sievos.lexmodel.sp1.ExprLN;
 import org.sievos.lexmodel.sp1.IdentifierLN;
 import org.sievos.lexmodel.sp1.SP1Node;
 import org.sievos.lexmodel.sp1.SP1NodeProducer;
-import org.sievos.lexmodel.sp1.TBundLN;
-import org.sievos.lexmodel.sp1.TSingleLN;
+import org.sievos.lexmodel.sp1.SingleLN;
 
 public class SP1AntlrVisitor extends AbstractParseTreeVisitor<SP1Node>
 	implements ParseTreeVisitor<SP1Node>, SievosVisitor<SP1Node>
@@ -78,13 +78,13 @@ public class SP1AntlrVisitor extends AbstractParseTreeVisitor<SP1Node>
 
 	/*
 	    @rule fcall: CompositeFunctionLN
-	             def funcall(part: TBundLN, fname: IdentifierLN)
+	             def funcall(part: BundLN, fname: IdentifierLN)
 	             def composite(fcall: CompositeFunctionLN, fname: IdentifierLN)
 	*/
 	@Override
 	public CompositeFunctionLN visitFuncall(final FuncallContext ctx) {
 
-		final TBundLN ptp = castVisit(ctx.part());
+		final BundLN ptp = castVisit(ctx.part());
 		final IdentifierLN fnameName = castVisit(ctx.fname());
 //		return makeCompositeFunction(fnameName, ptp);
 		return nodes.funcall(ptp, fnameName);
@@ -100,42 +100,42 @@ public class SP1AntlrVisitor extends AbstractParseTreeVisitor<SP1Node>
 	}
 
 	/*
-		@rule part: TBundLN
-		         def part1(bund: TBundLN)
-		         def partX(part: TBundLN, bund: TBundLN)
+		@rule part: BundLN
+		         def part1(bund: BundLN)
+		         def partX(part: BundLN, bund: BundLN)
 	 */
 	@Override
-	public TBundLN visitPart1(final Part1Context ctx) {
+	public BundLN visitPart1(final Part1Context ctx) {
 
-		final TBundLN tbund = castVisit(ctx.bund());
+		final BundLN tbund = castVisit(ctx.bund());
 		return nodes.part1(tbund);
 	}
 
 	@Override
-	public TBundLN visitPartX(final PartXContext ctx)
+	public BundLN visitPartX(final PartXContext ctx)
 	{
-		final TBundLN tpart = castVisit(ctx.part());
-		final TBundLN tbund = castVisit(ctx.bund());
+		final BundLN tpart = castVisit(ctx.part());
+		final BundLN tbund = castVisit(ctx.bund());
 		return nodes.partX(tpart, tbund);
 	}
 
 	/*
-		@rule bund: TBundLN
-		         def bund1(tline: TSingleLN)
-		         def bundX(tline: TSingleLN, bund: TBundLN)
+		@rule bund: BundLN
+		         def bund1(tline: SingleLN)
+		         def bundX(tline: SingleLN, bund: BundLN)
 	*/
 	@Override
-	public TBundLN visitBund1(final Bund1Context ctx)
+	public BundLN visitBund1(final Bund1Context ctx)
 	{
-		final TSingleLN singNode = castVisit(ctx.tline());
+		final SingleLN singNode = castVisit(ctx.tline());
 		return nodes.bund1(singNode);
 	}
 
 	@Override
-	public TBundLN visitBundX(final BundXContext ctx)
+	public BundLN visitBundX(final BundXContext ctx)
 	{
-		final TBundLN bundNode = castVisit(ctx.bund());
-		final TSingleLN singNode = castVisit(ctx.tline());
+		final BundLN bundNode = castVisit(ctx.bund());
+		final SingleLN singNode = castVisit(ctx.tline());
 		return nodes.bundX(singNode, bundNode);
 	}
 
@@ -151,11 +151,11 @@ public class SP1AntlrVisitor extends AbstractParseTreeVisitor<SP1Node>
 	}
 
 	/*
-		@rule tline: TSingleLN
+		@rule tline: SingleLN
 		         def tline(ti: TI)
 	*/
 	@Override
-	public TSingleLN visitTline(final TlineContext ctx)
+	public SingleLN visitTline(final TlineContext ctx)
 	{
 		final TI ti = toTWhen(ctx.T() != null);
 		return nodes.tline(ti);

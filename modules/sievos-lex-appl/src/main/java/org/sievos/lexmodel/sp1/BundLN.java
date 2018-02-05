@@ -31,7 +31,8 @@
  */
 package org.sievos.lexmodel.sp1;
 
-public interface TPartLN extends SP1Node {
+public interface BundLN extends SP1Node {
 
-//		TI getState();
+	BundLN pipe(BundLN tbund);
+
 }

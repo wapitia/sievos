@@ -29,20 +29,35 @@
  * ARISING OUT OF THE USE OF OR INABILITY TO USE THIS SOFTWARE, EVEN IF
  * WAPITIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  */
-
-package org.sievos.lexmodel.std;
-
-import org.sievos.lexmodel.SievosResult;
+package org.sievos.lexmodel;
 
 /**
+ * The result of the evaluation of a compiled Sievos statement.
  *
+ * @param <OT>
+ * @param <RT>
+ * @param <XT>
  */
-public interface StdResult<OT>
-	extends SievosResult<OT,StdResult<OT>,StdExecutable<OT>>
+public interface SievosResult<OT,
+	RT extends SievosResult<OT,RT,XT>,
+	XT extends SievosExecutable<OT,RT,XT>>
 {
-	@Override
+	/**
+	 * Concrete result of a Sievos function execution.
+	 * If this is an invalid or null result, or if it is an unbound
+	 * function result (i.e. fnResult has the value) then
+	 * this returns a Null OT result.
+	 *
+	 * @see SievosExecutable#execute()
+	 */
 	OT prtResult();
 
-	@Override
-	StdExecutable<OT> fnResult();
+	/**
+	 * Function result of a Sievos function execution.
+	 * If the result is, in fact, some concrete result, then this object
+	 * shall return itself again, recursively.
+	 *
+	 * @see SievosExecutable#execute()
+	 */
+	XT fnResult();
 }

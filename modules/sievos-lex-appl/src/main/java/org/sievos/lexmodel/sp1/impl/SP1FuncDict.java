@@ -29,10 +29,53 @@
  * ARISING OUT OF THE USE OF OR INABILITY TO USE THIS SOFTWARE, EVEN IF
  * WAPITIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  */
-package org.sievos.lexmodel.sp1;
 
-public interface TBundLN extends SP1Node {
+package org.sievos.lexmodel.sp1.impl;
 
-	TBundLN pipe(TBundLN tbund);
+import java.util.function.Function;
 
+import org.sievos.kern.Kern;
+import org.sievos.kern.Kern.N;
+import org.sievos.lexmodel.NFT;
+import org.sievos.lexmodel.sp1.PartLN;
+import org.sievos.lexmodel.std.StdFuncDict;
+
+class SP1FuncDict extends StdFuncDict<PartLN> {
+
+	private SP1KernPartFunction makeKPF(final Function<N,N> func) {
+		return new SP1KernPartFunction(func);
+	}
+
+	SP1FuncDict() {
+		// TODO: Flexible library lookup of functions
+		put(NFT.of("r"), makeKPF(Kern::r));
+		put(NFT.of("z"), makeKPF(Kern::z));
+	}
+
+//	<PF extends StdPartFunction<PartLN>> PF getPartFunction(final String name) {
+//		return this.getPartFunction(NFT.of(name));
+//	}
+//
+//	<PF extends StdPartFunction<PartLN>> PF getPartFunction(final NFT sig) {
+//		@SuppressWarnings("unchecked")
+//		final PF result = Optional
+//			.ofNullable((PF) partFunctionMap.get(sig))
+//			.orElseThrow(() -> new FunctionNotFoundException(sig));
+//		return result;
+//	}
+
+
+//	@SuppressWarnings("serial")
+//	static class FunctionNotFoundException extends UnsupportedOperationException {
+//		final NFT func;
+//
+//		FunctionNotFoundException(final NFT func) {
+//			super(func.toString());
+//			this.func = func;
+//		}
+//
+//		public NFT getSignature() {
+//			return func;
+//		}
+//	}
 }

@@ -35,13 +35,14 @@ grammar Sievos;
 
     /*
        @uses {
+          SP1 => 
             java.lang.String
             org.sievos.kern.TI
             org.sievos.lexmodel.sp1.ExprLN
             org.sievos.lexmodel.sp1.CompositeFunctionLN
             org.sievos.lexmodel.sp1.IdentifierLN
-            org.sievos.lexmodel.sp1.TBundLN
-            org.sievos.lexmodel.sp1.TSingleLN
+            org.sievos.lexmodel.sp1.BundLN
+            org.sievos.lexmodel.sp1.SingleLN
        }
         
     */    
@@ -66,7 +67,7 @@ expr        : fcall             # funcallExpr
              example: 'TFF r z'
              """
          SP1 => fcall: CompositeFunctionLN
-                def funcall(part: TBundLN, fname: IdentifierLN)
+                def funcall(part: BundLN, fname: IdentifierLN)
                 def composite(fcall: CompositeFunctionLN, fname: IdentifierLN)
        }
     */
@@ -79,9 +80,9 @@ fcall       : part fname        # funcall
          """ a single Bund or other Partition representation which can be
              applied against a composite functional block 
              """
-         SP1 => part: TBundLN
-                def part1(bund: TBundLN)
-                def partX(part: TBundLN, bund: TBundLN)
+         SP1 => part: BundLN
+                def part1(bund: BundLN)
+                def partX(part: BundLN, bund: BundLN)
        }
     */
 part        : bund              # part1
@@ -92,9 +93,9 @@ part        : bund              # part1
        @rule bund {
          """ an ordered list of tlines called a bundle
              """
-         SP1 => bund: TBundLN
-                def bund1(tline: TSingleLN)
-                def bundX(tline: TSingleLN, bund: TBundLN)
+         SP1 => bund: BundLN
+                def bund1(tline: SingleLN)
+                def bundX(tline: SingleLN, bund: BundLN)
        }
     */
 bund        : tline             # bund1
@@ -115,7 +116,7 @@ fname       : IDENT             # identifier
     /*
        @rule tline {
          """ T or F equates to some TI value """
-         SP1 => tline: TSingleLN
+         SP1 => tline: SingleLN
                 def tline(ti: TI)
        }
     */

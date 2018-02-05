@@ -29,11 +29,11 @@
  * ARISING OUT OF THE USE OF OR INABILITY TO USE THIS SOFTWARE, EVEN IF
  * WAPITIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  */
-package org.sievos.lexmodel.sp1;
+package org.sievos.lexmodel.std;
 
-import org.sievos.kern.TI;
+/**
+ *
+ */
+public interface StdModel {
 
-public interface TSingleLN extends SP1Node {
-
-	TI getState();
 }

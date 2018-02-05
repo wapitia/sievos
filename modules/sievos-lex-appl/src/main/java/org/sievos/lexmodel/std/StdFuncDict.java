@@ -29,20 +29,53 @@
  * ARISING OUT OF THE USE OF OR INABILITY TO USE THIS SOFTWARE, EVEN IF
  * WAPITIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  */
-
 package org.sievos.lexmodel.std;
 
-import org.sievos.lexmodel.SievosResult;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
+import org.sievos.lexmodel.NFT;
 
 /**
  *
  */
-public interface StdResult<OT>
-	extends SievosResult<OT,StdResult<OT>,StdExecutable<OT>>
-{
-	@Override
-	OT prtResult();
+public class StdFuncDict<OT> {
 
-	@Override
-	StdExecutable<OT> fnResult();
+	private final Map<NFT, StdPartFunction> partFunctionMap;
+
+	public StdFuncDict() {
+		this.partFunctionMap = new HashMap<NFT, StdPartFunction>();
+	}
+
+	public void put(final NFT sig, final StdPartFunction func) {
+		partFunctionMap.put(sig, func);
+	}
+
+	public <PF extends StdPartFunction> PF getPartFunction(final String name) {
+		return this.getPartFunction(NFT.of(name));
+	}
+
+	public <PF extends StdPartFunction> PF getPartFunction(final NFT sig) {
+		@SuppressWarnings("unchecked")
+		final PF result = Optional
+			.ofNullable((PF) partFunctionMap.get(sig))
+			.orElseThrow(() -> new FunctionNotFoundException(sig));
+		return result;
+	}
+
+	@SuppressWarnings("serial")
+	static class FunctionNotFoundException extends UnsupportedOperationException {
+		final NFT func;
+
+		FunctionNotFoundException(final NFT func) {
+			super(func.toString());
+			this.func = func;
+		}
+
+		public NFT getSignature() {
+			return func;
+		}
+	}
+
 }

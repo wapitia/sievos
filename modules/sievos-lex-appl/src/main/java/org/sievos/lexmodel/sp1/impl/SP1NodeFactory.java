@@ -29,7 +29,7 @@
  * ARISING OUT OF THE USE OF OR INABILITY TO USE THIS SOFTWARE, EVEN IF
  * WAPITIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  */
-package org.sievos.lexmodel.impl.sp1;
+package org.sievos.lexmodel.sp1.impl;
 
 import java.util.ArrayList;
 import java.util.BitSet;
@@ -38,16 +38,20 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
+import org.sievos.kern.Part;
 import org.sievos.kern.TI;
-import org.sievos.lexmodel.sp1.CompExprLN;
+import org.sievos.lexmodel.sp1.BundLN;
 import org.sievos.lexmodel.sp1.CompositeFunctionLN;
 import org.sievos.lexmodel.sp1.ExprLN;
 import org.sievos.lexmodel.sp1.IdentifierLN;
+import org.sievos.lexmodel.sp1.PartLN;
+import org.sievos.lexmodel.sp1.SP1;
+import org.sievos.lexmodel.sp1.SP1.Executable;
 import org.sievos.lexmodel.sp1.SP1Node;
 import org.sievos.lexmodel.sp1.SP1NodeProducer;
-import org.sievos.lexmodel.sp1.TBundLN;
-import org.sievos.lexmodel.sp1.TPartLN;
-import org.sievos.lexmodel.sp1.TSingleLN;
+import org.sievos.lexmodel.sp1.SingleLN;
+import org.sievos.lexmodel.std.StdBund;
+import org.sievos.lexmodel.std.StdPart;
 
 import com.wapitia.common.collections.OptionalIterable;
 
@@ -58,6 +62,8 @@ import com.wapitia.common.collections.OptionalIterable;
  */
 public class SP1NodeFactory implements SP1NodeProducer {
 
+	static SP1FuncDict funcDictInstance = new SP1FuncDict();
+
 	// The SP1NodeProducer API
 
 	@Override
@@ -66,11 +72,11 @@ public class SP1NodeFactory implements SP1NodeProducer {
 	}
 
 	@Override
-	public CompositeFunctionLN funcall(final TBundLN ptp,
+	public CompositeFunctionLN funcall(final BundLN ptp,
 		final IdentifierLN fnameName)
 	{
 		// TODO: Smarter than cast?
-		return makeCompositeFunction(fnameName, (TBundImpl) ptp);
+		return makeCompositeFunction(fnameName, (BundImpl) ptp);
 	}
 
 	@Override
@@ -82,24 +88,24 @@ public class SP1NodeFactory implements SP1NodeProducer {
 	}
 
 	@Override
-	public TBundLN part1(final TBundLN tbund) {
+	public BundLN part1(final BundLN tbund) {
 		return tbund;
 	}
 
 	@Override
-	public TBundLN partX(final TBundLN tpart, final TBundLN tbund) {
+	public BundLN partX(final BundLN tpart, final BundLN tbund) {
 		return makePart(tpart, tbund);
 	}
 
 	@Override
-	public TBundLN bund1(final TSingleLN singNode) {
+	public BundLN bund1(final SingleLN singNode) {
 		return makeTBundle(singNode);
 	}
 
 	@Override
-	public TBundLN bundX(final TSingleLN singNode, final TBundLN bundNode) {
+	public BundLN bundX(final SingleLN singNode, final BundLN bundNode) {
 		// TODO: Smarter than cast?
-		return makeTBundle(singNode, (TBundImpl) bundNode);
+		return makeTBundle(singNode, (BundImpl) bundNode);
 	}
 
 	@Override
@@ -108,7 +114,7 @@ public class SP1NodeFactory implements SP1NodeProducer {
 	}
 
 	@Override
-	public TSingleLN tline(final TI ti) {
+	public SingleLN tline(final TI ti) {
 		return makeTSingle(ti);
 	}
 
@@ -134,11 +140,11 @@ public class SP1NodeFactory implements SP1NodeProducer {
 		}
 	}
 
-	private static class TSingleImpl extends SP1Base implements TSingleLN {
+	private static class SingleImpl extends SP1Base implements SingleLN {
 
 		private final TI state;
 
-		public TSingleImpl(final TI state) {
+		public SingleImpl(final TI state) {
 			this.state = state;
 		}
 
@@ -154,27 +160,24 @@ public class SP1NodeFactory implements SP1NodeProducer {
 
 	}
 
-	private static class TPartImpl extends SP1Base implements TPartLN {
-	}
-
-	private static class TBundImpl extends TSingleImpl implements TBundLN, Iterable<TI>
+	private static class BundImpl extends SingleImpl implements BundLN, Iterable<TI>
 	{
 
-		static final OptionalIterable<TI,TBundImpl> iter =
-			new OptionalIterable<TI,TBundImpl>(
-				TBundImpl::getState, TBundImpl::getNext);
+		static final OptionalIterable<TI,BundImpl> iter =
+			new OptionalIterable<TI,BundImpl>(
+				BundImpl::getState, BundImpl::getNext);
 
-		private final Optional<TBundImpl> next;
+		private final Optional<BundImpl> next;
 
-		public TBundImpl(final TI state,
-			final Optional<TBundImpl> next)
+		public BundImpl(final TI state,
+			final Optional<BundImpl> next)
 		{
 			super(state);
 			this.next = next;
 		}
 
 
-		public Optional<TBundImpl> getNext() {
+		public Optional<BundImpl> getNext() {
 			return next;
 		}
 
@@ -202,7 +205,7 @@ public class SP1NodeFactory implements SP1NodeProducer {
 		}
 
 		public int size() {
-			return 1 + next.map(TBundImpl::size).orElse(0);
+			return 1 + next.map(BundImpl::size).orElse(0);
 		}
 
 		void setbitR(final BitSet bitset, final int ix) {
@@ -219,40 +222,112 @@ public class SP1NodeFactory implements SP1NodeProducer {
 		}
 
 		@Override
-		public TBundLN pipe(final TBundLN tbund) {
+		public BundLN pipe(final BundLN tbund) {
 			// TODO Auto-generated method stub
 			return null;
 		}
 
 	}
 
-	private static class ExprImpl implements ExprLN
+	private static abstract class ExprImpl implements ExprLN
 	{
+		@Override
+		public abstract Executable asExecutable();
 
 	}
 
-	private static class CompExprImpl implements CompExprLN {
 
-		CompositeFunctionLN compfunc;
+	private static class PartImpl implements PartLN
+	{
+		private final Part<StdBund> part;
 
-		public CompExprImpl(final CompositeFunctionLN compfunc) {
-			this.compfunc = compfunc;
+		PartImpl(final Part<StdBund> part) {
+			this.part = part;
 		}
 
+		@Override
+		public Part<StdBund> asPart() {
+			return part;
+		}
 	}
 
-	private static class CompositeFunctionImpl implements CompositeFunctionLN {
+	/**
+	 * Compile a result by applying each bundle in the supplied partition
+	 * to each of the functions in the list of functions composit-wise.
+	 */
+	static class CompResult implements SP1.Result {
 
-		private final List<String> funcList;
+		final PartLN res;
+
+		CompResult(final StdPart stdPart, final List<SP1.PartFunction> funcs) {
+
+			final Part<StdBund> part = stdPart.asPartition();
+			final Part<StdBund> result = part.<StdBund> filterMap(
+				bund -> true, bund -> bund);
+			// TODO
+			this.res = null;
+		}
+
+		StdBund composeBund(final StdBund bund, final List<SP1.PartFunction> funcs) {
+			StdBund accumBund = bund;
+			for (final SP1.PartFunction pf : funcs) {
+				accumBund = pf.execute(accumBund);
+			}
+			return accumBund;
+		}
+
+		@Override
+		public PartLN prtResult() {
+			return res;
+		}
+
+		@Override
+		public Executable fnResult() {
+			return SP1.FNULL;
+		}
+	};
+
+	public static class StdBundImpl implements StdBund {
+
+		private final TI[] tiarray;
+		StdBundImpl(final TI ... src) {
+			this.tiarray = new TI[src.length];
+			System.arraycopy(src, 0, tiarray, 0, src.length);
+		}
+
+		@Override
+		public TI[] asArray() {
+			return tiarray;
+		}
+	}
+
+
+	private static class CompositeFunctionImpl extends ExprImpl
+	implements CompositeFunctionLN
+	{
+
+		private final List<SP1.PartFunction> funcList;
 		private final SP1BundAccum tuple;
 
-		CompositeFunctionImpl(final List<String> funcList, final SP1BundAccum tuple) {
+		CompositeFunctionImpl(final List<SP1.PartFunction> funcList, final SP1BundAccum tuple) {
 			this.funcList = new ArrayList<>(funcList);
 			this.tuple = tuple;
 		}
 
+
 		@Override
-		public List<String> getFuncList() {
+		public Executable asExecutable() {
+			return () -> new CompResult(asPart(), funcList);
+		}
+
+
+		@Override
+		public StdPart asPart() {
+			return tuple.asPartition();
+		}
+
+		@Override
+		public List<SP1.PartFunction> getFuncList() {
 			return funcList;
 		}
 
@@ -274,54 +349,59 @@ public class SP1NodeFactory implements SP1NodeProducer {
 			}
 			return bldr.toString();
 		}
+
+
 	}
 
 	static IdentifierImpl makeIdentifier(final String ident) {
 		return new IdentifierImpl(ident);
 	}
 
-	static TSingleLN makeTSingle(final TI ti) {
-		return new TSingleImpl(ti);
+	static SingleLN makeTSingle(final TI ti) {
+		return new SingleImpl(ti);
 	}
 
-	static CompExprLN makeExpr(final CompositeFunctionLN compfunc) {
-		return new CompExprImpl(compfunc);
+	static ExprLN makeExpr(final CompositeFunctionLN compfunc) {
+		return compfunc;
 	}
 
 
-	static TBundLN makeTBundle(final TSingleLN singNode)
+	static BundLN makeTBundle(final SingleLN singNode)
 	{
-		return new TBundImpl(singNode.getState(), Optional.empty());
+		return new BundImpl(singNode.getState(), Optional.empty());
 	}
 
-	static TBundLN makePart(final TBundLN tpart, final TBundLN tbund) {
-		final TBundLN result = tpart.pipe(tbund);
+	static BundLN makePart(final BundLN tpart, final BundLN tbund) {
+		final BundLN result = tpart.pipe(tbund);
 		return result;
 	}
 
 
-	static TBundLN makeTBundle(final TSingleLN singNode,
-		final TBundImpl tupNode)
+	static BundLN makeTBundle(final SingleLN singNode,
+		final BundImpl tupNode)
 	{
-		return new TBundImpl(singNode.getState(), Optional.of(tupNode));
+		return new BundImpl(singNode.getState(), Optional.of(tupNode));
 	}
 
 	static CompositeFunctionLN makeCompositeFunction(
 		final IdentifierLN identNode,
-		final TBundImpl ptp)
+		final BundImpl ptp)
 	{
 		final String identName = identNode.getIdent();
 		final SP1BundAccum tuple = ptp.makeBundAccum();
-		final List<String> slist = Collections.<String> singletonList(identName);
+		final SP1.PartFunction func = funcDictInstance.getPartFunction(identName);
+		final List<SP1.PartFunction> slist = Collections.<SP1.PartFunction>
+		singletonList(func);
 		return new CompositeFunctionImpl(slist, tuple);
 	}
 
 	static CompositeFunctionLN makeCompositeFunction(
 		final IdentifierLN funcName, final CompositeFunctionImpl tupNode) {
 		final String identName = funcName.getIdent();
-		final List<String> funcList = tupNode.getFuncList();
-		final List<String> newList = new ArrayList<>(funcList.size() + 1);
-		newList.add(identName);
+		final SP1.PartFunction partFunction = funcDictInstance.getPartFunction(identName);
+		final List<SP1.PartFunction> funcList = tupNode.getFuncList();
+		final List<SP1.PartFunction> newList = new ArrayList<>(funcList.size() + 1);
+		newList.add(partFunction);
 		newList.addAll(funcList);
 
 		final SP1BundAccum tuple = tupNode.getTuple();

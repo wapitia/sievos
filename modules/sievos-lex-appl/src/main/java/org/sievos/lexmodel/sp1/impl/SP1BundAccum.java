@@ -29,15 +29,18 @@
  * ARISING OUT OF THE USE OF OR INABILITY TO USE THIS SOFTWARE, EVEN IF
  * WAPITIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  */
-package org.sievos.lexmodel.impl.sp1;
+package org.sievos.lexmodel.sp1.impl;
 
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.EnumMap;
 import java.util.List;
 
+import org.sievos.kern.Part;
 import org.sievos.kern.TI;
+import org.sievos.lexmodel.sp1.impl.SP1NodeFactory.StdBundImpl;
 import org.sievos.lexmodel.std.StdBund;
+import org.sievos.lexmodel.std.StdPart;
 
 class SP1BundAccum {
 
@@ -71,9 +74,11 @@ class SP1BundAccum {
 		return SP1BundAccum.bundleToString(bitset, numBits);
 	}
 
-	public StdBund asBund() {
-		return SP1BundAccum.asBund(bitset, numBits);
+	StdPart asPartition() {
+		final Part<StdBund> result = Part.apply(SP1BundAccum.asBund(bitset, numBits));
+		return () -> result;
 	}
+
 
 	public static String bundleToString(final BitSet bitset, final int size) {
 		final StringBuilder bldr = new StringBuilder();
@@ -88,20 +93,8 @@ class SP1BundAccum {
 		for (int ix = size-1; ix >= 0; --ix) {
 			tilist.add(TI.toTWhen(bitset.get(ix)));
 		}
-		final TBundImpl result = new TBundImpl(tilist.toArray(new TI[size]));
+		final StdBundImpl result = new StdBundImpl(tilist.toArray(new TI[size]));
 		return result;
-	}
-
-	static class TBundImpl implements StdBund {
-		private final TI[] tiarray;
-		TBundImpl(final TI[] src) {
-			this.tiarray = new TI[src.length];
-			System.arraycopy(src, 0, tiarray, 0, src.length);
-		}
-		@Override
-		public TI[] asArray() {
-			return tiarray;
-		}
 	}
 
 }
