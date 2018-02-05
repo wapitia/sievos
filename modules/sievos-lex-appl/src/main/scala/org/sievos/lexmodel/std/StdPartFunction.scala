@@ -29,4 +29,14 @@
  * ARISING OUT OF THE USE OF OR INABILITY TO USE THIS SOFTWARE, EVEN IF
  * WAPITIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  */
-package org.sievos.lexmodel.sp1;
+package org.sievos.lexmodel.std;
+
+/**
+ * A function that has the  implementation to take a single Standard
+ * Bundle as input, execute against it producing some Standard Bundle
+ * as a result.
+ */
+trait StdPartFunction {
+
+    def execute(bundle: StdBund): StdBund
+}

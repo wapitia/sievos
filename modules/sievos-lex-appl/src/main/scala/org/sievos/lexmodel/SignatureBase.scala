@@ -29,4 +29,20 @@
  * ARISING OUT OF THE USE OF OR INABILITY TO USE THIS SOFTWARE, EVEN IF
  * WAPITIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  */
-package org.sievos.lexmodel.sp1;
+package org.sievos.lexmodel
+
+import java.util.{Objects}
+
+abstract class SignatureBase(parameters: Array[SignatureBase]) {
+
+  Objects.requireNonNull(parameters)
+
+  def getParameters: Array[SignatureBase] = parameters.clone()
+}
+
+
+object SignatureBase {
+
+  val EMPTY_PARAMETERS = Array[SignatureBase]()
+        
+}

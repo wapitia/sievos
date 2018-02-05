@@ -63,7 +63,7 @@ public interface SP1 {
          * Execute this function, returning its result as some Sievos SP1
          * result derivative {@code R}
          *
-         * @see org.sievos.lexmodel.SievosExecutable#execute()
+         * @see org.sievos.lexmodel.Executable#execute()
          * @see SP1#Result
          */
         @Override

@@ -29,9 +29,9 @@
  * ARISING OUT OF THE USE OF OR INABILITY TO USE THIS SOFTWARE, EVEN IF
  * WAPITIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  */
-package org.sievos.lexmodel;
+package org.sievos.lexmodel
 
-import java.util.Objects;
+import java.util.Objects
 
 /**
  * Named Function Type signature.
@@ -40,63 +40,25 @@ import java.util.Objects;
  * class is immutable and provides nicely overwritten
  * equals and hashCode methods.
  */
-public class NamedSignature extends Signature {
+case class NamedSignature(name: String, parameters: Array[SignatureBase]) 
+  extends SignatureBase(parameters) 
+{
+  
+  Objects.requireNonNull(name)
+  
+  override def toString: String = {
+    if (parameters.length == 0) name
+    else                        name + super.toString
+  }
 
-    public static NamedSignature of(final String funcName) {
-        return new NamedSignature(funcName, EMPTY_PARAMETERS);
-    }
+}
 
-    public static NamedSignature of(final String funcName,
-            final NamedSignature[] params) {
-        return new NamedSignature(funcName, params);
-    }
-
-    private final String name;
-
-    public NamedSignature(final String name, final NamedSignature[] params)
-    {
-        super(params);
-        Objects.requireNonNull(name);
-        this.name = name;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    @Override
-    public boolean equals(final Object o) {
-        if (o == null || !(o instanceof NamedSignature)) {
-            return false;
-        }
-        else if (o == this) {
-            return true;
-        }
-        else {
-            final NamedSignature other = (NamedSignature) o;
-            return this.name.equals(other.name) &&
-                    super.equals(other);
-        }
-    }
-
-    @Override
-    public int hashCode() {
-        return 31 + (name.hashCode() << 5) + super.hashCode();
-    }
-
-    @Override
-    public String toString() {
-        final String result;
-        if (parameters().length == 0) {
-            result = name;
-        }
-        else {
-            result = new StringBuilder()
-                .append(name)
-                .append(super.toString())
-                .toString();
-        }
-        return result;
-    }
-
+object NamedSignature {
+  
+    def apply(name: String) =
+        new NamedSignature(name, SignatureBase.EMPTY_PARAMETERS)
+    
+    def apply(name: String, parameters: Array[SignatureBase]) = 
+      new NamedSignature(name, parameters)
+  
 }

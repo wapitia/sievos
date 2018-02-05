@@ -32,13 +32,13 @@
 
 package org.sievos.lexmodel.std;
 
-import org.sievos.lexmodel.SievosExecutable;
+import org.sievos.lexmodel.Executable;
 
 /**
  *
  */
 public interface StdExecutable<OT>
-    extends SievosExecutable<OT,StdExecutable<OT>>
+    extends Executable<OT,StdExecutable<OT>>
 {
     @Override
     StdPart execute();

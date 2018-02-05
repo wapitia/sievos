@@ -73,7 +73,6 @@ public class SP1AntlrVisitor extends AbstractParseTreeVisitor<SP1Node>
     public ExprLN visitFuncallExpr(final FuncallExprContext ctx) {
 
         final CompositeFunctionLN fcall = castVisit(ctx.fcall());
-//        return makeExpr(fcall);
         return nodes.funcallExpr(fcall);
     }
 
@@ -87,7 +86,6 @@ public class SP1AntlrVisitor extends AbstractParseTreeVisitor<SP1Node>
 
         final BundLN ptp = castVisit(ctx.part());
         final IdentifierLN fnameName = castVisit(ctx.fname());
-//        return makeCompositeFunction(fnameName, ptp);
         return nodes.funcall(ptp, fnameName);
     }
 
@@ -96,7 +94,6 @@ public class SP1AntlrVisitor extends AbstractParseTreeVisitor<SP1Node>
 
         final CompositeFunctionLN subfname = castVisit(ctx.fcall());
         final IdentifierLN fnameName = castVisit(ctx.fname());
-//        return makeCompositeFunction(fnameName, subfname);
         return nodes.composite(fnameName, subfname);
     }
 

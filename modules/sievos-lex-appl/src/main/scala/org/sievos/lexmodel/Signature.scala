@@ -29,13 +29,21 @@
  * ARISING OUT OF THE USE OF OR INABILITY TO USE THIS SOFTWARE, EVEN IF
  * WAPITIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  */
-package org.sievos.lexmodel.std;
+package org.sievos.lexmodel
 
 /**
- * A function that has the  implementation to take a single Standard
- * Partition as input, execute against it producing some Standard Result
+ * Unnamed Function Type signature.
+ * <p>
+ * The signature is suitable for use as a Map key, so this
+ * class is immutable and provides nicely overwritten
+ * equals and hashCode methods.
  */
-public interface StdPartFunction {
+case class Signature(parameters: Array[SignatureBase]) extends SignatureBase(parameters) 
 
-    StdBund execute(StdBund part);
+object SignatureX {
+  
+  def apply() = new Signature(SignatureBase.EMPTY_PARAMETERS)
+
+  def apply(p: SignatureBase) = new Signature(Array[SignatureBase](p))
+  
 }

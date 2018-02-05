@@ -53,7 +53,7 @@ public class StdFuncDict<OT> {
     }
 
     public <PF extends StdPartFunction> PF getPartFunction(final String name) {
-        return this.getPartFunction(NamedSignature.of(name));
+        return this.getPartFunction(NamedSignature.apply(name));
     }
 
     public <PF extends StdPartFunction> PF getPartFunction(final NamedSignature sig) {

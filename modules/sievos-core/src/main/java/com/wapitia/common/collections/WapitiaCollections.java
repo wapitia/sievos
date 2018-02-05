@@ -36,14 +36,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public interface WapitiaCollections {
 
     /**
-     * Put a key/value pair into a Map-List having the common usage pattern:
-     * {@code Map<K,List<V>> }
-     * this puts a new value into that list in the map, creating a new
+     * Put a key/value pair into a Map-List structure having the
+     * common usage pattern:  {@code Map<K,List<V>> }
+     *
+     * This puts a new value into that list in the map, creating a new
      * ArrayList for the key's list, if needed.
      * This prevents the developer from having to deal with nulls,
      * since this function does it.
@@ -59,6 +61,24 @@ public interface WapitiaCollections {
         final K key, final LV listItem)
     {
         mapGetOrCreate(mapOfLists, key, ArrayList::new).add(listItem);
+    }
+
+    /**
+     * Apply some action consumer on every item in a Map-List's entry.
+     * If that entry does not exist, nothing happens.
+     *
+     * @param <K> map's key type
+     * @param <LV> list's value's type
+     *
+     * @param mapOfLists
+     * @param key
+     * @param action
+     */
+    static <K,LV> void forEach(final Map<K,List<LV>> mapOfLists,
+            final K key, final Consumer<LV> action)
+    {
+        Optional.<List<LV>> ofNullable(mapOfLists.get(key))
+                .ifPresent(list -> list.forEach(action));
     }
 
     /**
@@ -78,6 +98,7 @@ public interface WapitiaCollections {
      *
      * @param <K> Map's key type
      * @param <V> Map's value type
+     *
      * @param map Mutable map. The key entry will be added to the map
      *            if it does not yet exist
      * @param key s key to the value's entry in the map

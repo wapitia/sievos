@@ -41,7 +41,7 @@ import org.sievos.lexmodel.std.StdPart;
  *
  * @see SievosResult
  */
-public interface SievosExecutable<OT,XT extends SievosExecutable<OT,XT>>
+public interface Executable<OT,XT extends Executable<OT,XT>>
 {
     /**
      * Execute this bound expression, returning its result, always a

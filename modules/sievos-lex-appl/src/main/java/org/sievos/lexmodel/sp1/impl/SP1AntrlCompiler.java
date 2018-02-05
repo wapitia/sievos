@@ -52,16 +52,6 @@ public class SP1AntrlCompiler<LNTYPE extends SP1Node> implements SP1.Compiler {
 
     private final AbstractCallVisit<LNTYPE> bindVisit;
 
-//    private final SievosVisitor<SP1Node> comp;
-
-//    pri
-
-
-//    def funcallExpr(fcall: CompositeFunctionLN)
-//}
-//*/
-//expr        : fcall             # funcallExpr
-
     /**
      * @param instance
      * @return
@@ -94,29 +84,6 @@ public class SP1AntrlCompiler<LNTYPE extends SP1Node> implements SP1.Compiler {
         System.out.printf("%s = %s\n", expression, answerStr);
         final Executable result = bindVisit.bindAsFunction(castVisit);
         return result;
-    }
-
-    public static abstract class AbstractCallVisit<LNTYPE extends SP1Node> {
-
-        final SievosVisitor<SP1Node> comp;
-
-        protected AbstractCallVisit(final SievosVisitor<SP1Node> comp)
-        {
-            this.comp = comp;
-        }
-
-        public LNTYPE castVisit(final SievosParser parser) {
-            final ParseTree parseTree = getParseTree(parser);
-            final SP1Node answer = comp.visit(parseTree);
-            @SuppressWarnings("unchecked")
-            final LNTYPE f = (LNTYPE) answer;
-            return f;
-        }
-
-        public abstract Executable bindAsFunction(LNTYPE castVisit);
-
-        public abstract ParseTree getParseTree(final SievosParser parser);
-
     }
 
     static abstract class FAbsImpl<SLNTYPE extends SP1Node> implements Executable {
