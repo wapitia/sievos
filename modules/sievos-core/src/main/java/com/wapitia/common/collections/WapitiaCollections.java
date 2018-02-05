@@ -41,12 +41,19 @@ import java.util.function.Supplier;
 public interface WapitiaCollections {
 
     /**
-     * For the common pattern: Map<K,List<V>> this puts a new value
-     * into that list in the map, creating a new List if needed.
+     * Put a key/value pair into a Map-List having the common usage pattern:
+     * {@code Map<K,List<V>> }
+     * this puts a new value into that list in the map, creating a new
+     * ArrayList for the key's list, if needed.
+     * This prevents the developer from having to deal with nulls,
+     * since this function does it.
      *
-     * @param mapOfLists
-     * @param key
-     * @param listItem
+     * @param <K> map's key type
+     * @param <LV> list's value's type.
+     *
+     * @param mapOfLists mutable  Map of Lists: {@code Map<K,List<LV>> }
+     * @param key key into the Map
+     * @param listItem item to add to the key entry's list value.
      */
     static <K,LV> void put(final Map<K,List<LV>> mapOfLists,
         final K key, final LV listItem)
@@ -54,16 +61,54 @@ public interface WapitiaCollections {
         mapGetOrCreate(mapOfLists, key, ArrayList::new).add(listItem);
     }
 
+    /**
+     * Fetches a value from the supplied map, creating a value on the fly
+     * if the map hadn't already contained it.
+     *
+     * <p>
+     * The attempt is first made to get the value out of the map and return it.
+     * If the value already exists, the supplied map is not changed and the
+     * value supplier never gets called.
+     *
+     * If the value does not yet contain this value (that is when
+     * {@link Map#get} returns null), then the supplied value supplier is
+     * invoked, and the value from that supplier is both added to the map
+     * at the K entry and then returned.
+     * .
+     *
+     * @param <K> Map's key type
+     * @param <V> Map's value type
+     * @param map Mutable map. The key entry will be added to the map
+     *            if it does not yet exist
+     * @param key s key to the value's entry in the map
+     * @param newValueSupplier provider of the default value if it already
+     *        doesn't exist in the map
+     * @return the value from the map, which may have been newly inserted
+     *         here
+     */
     static <K,V> V mapGetOrCreate(final Map<K,V> map, final K key,
-        final Supplier<? extends V> vCtor)
+        final Supplier<? extends V> newValueSupplier)
     {
         return Optional.<V> ofNullable(map.get(key))
-            .orElseGet(() -> mapPut(map, key, vCtor.get()));
+            .orElseGet(() -> mapPut(map, key, newValueSupplier.get()));
     }
 
-    static <K,V> V mapPut(final Map<K,V> map, final K key, final V v) {
-        map.put(key, v);  // ignore results of map.put, which is the old value
-        return v;
+    /**
+     * Put a new value '{@code item}' into the supplied map at the entry
+     * given by {@code key}.
+     * Any existing value in the map is replaced and discarded.
+     * The new value is returned.
+     *
+     * @param <K> Map's key type
+     * @param <V> Map's value type
+     * @param map the container to alter
+     * @param key the key of the map entry to change or add.
+     * @param item new key's value for the map
+     * @return item
+     */
+    static <K,V> V mapPut(final Map<K,V> map, final K key, final V item) {
+        map.put(key, item);  // ignore results of map.put, the old value
+        return item;
     }
 
 }
