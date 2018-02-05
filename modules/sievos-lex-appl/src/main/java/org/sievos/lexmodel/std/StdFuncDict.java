@@ -35,28 +35,28 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import org.sievos.lexmodel.NFT;
+import org.sievos.lexmodel.NamedSignature;
 
 /**
  *
  */
 public class StdFuncDict<OT> {
 
-	private final Map<NFT, StdPartFunction> partFunctionMap;
+	private final Map<NamedSignature, StdPartFunction> partFunctionMap;
 
 	public StdFuncDict() {
-		this.partFunctionMap = new HashMap<NFT, StdPartFunction>();
+		this.partFunctionMap = new HashMap<NamedSignature, StdPartFunction>();
 	}
 
-	public void put(final NFT sig, final StdPartFunction func) {
+	public void put(final NamedSignature sig, final StdPartFunction func) {
 		partFunctionMap.put(sig, func);
 	}
 
 	public <PF extends StdPartFunction> PF getPartFunction(final String name) {
-		return this.getPartFunction(NFT.of(name));
+		return this.getPartFunction(NamedSignature.of(name));
 	}
 
-	public <PF extends StdPartFunction> PF getPartFunction(final NFT sig) {
+	public <PF extends StdPartFunction> PF getPartFunction(final NamedSignature sig) {
 		@SuppressWarnings("unchecked")
 		final PF result = Optional
 			.ofNullable((PF) partFunctionMap.get(sig))
@@ -66,14 +66,14 @@ public class StdFuncDict<OT> {
 
 	@SuppressWarnings("serial")
 	static class FunctionNotFoundException extends UnsupportedOperationException {
-		final NFT func;
+		final NamedSignature func;
 
-		FunctionNotFoundException(final NFT func) {
+		FunctionNotFoundException(final NamedSignature func) {
 			super(func.toString());
 			this.func = func;
 		}
 
-		public NFT getSignature() {
+		public NamedSignature getSignature() {
 			return func;
 		}
 	}

@@ -29,7 +29,6 @@
  * ARISING OUT OF THE USE OF OR INABILITY TO USE THIS SOFTWARE, EVEN IF
  * WAPITIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  */
-
 package org.sievos.lexmodel.sp1.impl;
 
 import java.util.function.Function;
@@ -38,14 +37,15 @@ import org.sievos.kern.Kern;
 import org.sievos.kern.Kern.N;
 import org.sievos.kern.TI;
 import org.sievos.lexmodel.sp1.SP1;
-import org.sievos.lexmodel.sp1.impl.SP1NodeFactory.StdBundImpl;
 import org.sievos.lexmodel.std.StdBund;
 
 class SP1KernPartFunction implements SP1.PartFunction {
 
+	private final String name;
 	private final Function<N,N> n2n;
 
-	public SP1KernPartFunction(final Function<N,N> n2n) {
+	public SP1KernPartFunction(String funcName, final Function<N,N> n2n) {
+		this.name = funcName;
 		this.n2n = n2n;
 	}
 
@@ -67,5 +67,9 @@ class SP1KernPartFunction implements SP1.PartFunction {
 	public StdBund execute(final StdBund bund) {
 		return kern2Bund(n2n.apply(bund2KernN(bund)));
 	}
-
+	
+	public String toString() {
+		return name;
+	}
+	
 }

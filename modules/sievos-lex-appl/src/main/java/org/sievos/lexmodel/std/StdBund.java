@@ -34,7 +34,8 @@ package org.sievos.lexmodel.std;
 import org.sievos.kern.TI;
 
 /**
- *
+ * Standard Bundle Interface can deliver its TI bundle 
+ * as an array of TI states.
  */
 public interface StdBund {
 

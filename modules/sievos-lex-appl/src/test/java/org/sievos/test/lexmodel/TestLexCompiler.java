@@ -8,7 +8,7 @@ import java.util.function.Function;
 import org.junit.Test;
 import org.sievos.lexmodel.SP1LexTool;
 import org.sievos.lexmodel.sp1.SP1.Executable;
-import org.sievos.lexmodel.sp1.SP1.Result;
+import org.sievos.lexmodel.std.StdPart;
 
 
 /**
@@ -33,7 +33,7 @@ public class TestLexCompiler {
 
 	Consumer<String> funcCompare = (s) -> {
 		final Executable apply = compileFunc.apply(s);
-		final Result result = apply.execute();
+		final StdPart result = apply.execute();
 		System.out.println(String.format("%-20s -> %s -> %s",
 			s, apply.toString(), result.toString()));
 	};

@@ -38,12 +38,11 @@ import org.sievos.lex.SievosLexer;
 import org.sievos.lex.SievosParser;
 import org.sievos.lex.SievosVisitor;
 import org.sievos.lexmodel.sp1.ExprLN;
-import org.sievos.lexmodel.sp1.PartLN;
 import org.sievos.lexmodel.sp1.SP1;
 import org.sievos.lexmodel.sp1.SP1.Executable;
-import org.sievos.lexmodel.sp1.SP1.Result;
 import org.sievos.lexmodel.sp1.SP1Node;
 import org.sievos.lexmodel.sp1.SP1NodeProducer;
+import org.sievos.lexmodel.std.StdPart;
 
 /**
  *
@@ -117,35 +116,27 @@ public class SP1AntrlCompiler<LNTYPE extends SP1Node> implements SP1.Compiler {
 
 		public abstract ParseTree getParseTree(final SievosParser parser);
 
-		static abstract class FAbsImpl<SLNTYPE extends SP1Node> implements Executable {
-			final SLNTYPE expr;
+	}
+	
+	static abstract class FAbsImpl<SLNTYPE extends SP1Node> implements Executable {
+		final SLNTYPE expr;
 
-			protected FAbsImpl(final SLNTYPE expr) {
-				this.expr = expr;
-			}
-
-			@Override
-			public Result execute() {
-
-				final Result res = new Result() {
-
-					@Override
-					public PartLN prtResult() {
-						return concreteResult(expr);
-					}
-
-					@Override
-					public Executable fnResult() {
-						return FAbsImpl.this;
-					}
-
-				};
-				return res;
-			}
-
-			public abstract PartLN concreteResult(SLNTYPE expr);
-
+		protected FAbsImpl(final SLNTYPE expr) {
+			this.expr = expr;
 		}
+
+		@Override
+		public StdPart execute() {
+
+			return concreteResult(expr);
+		}
+		
+		public String toString() {
+			return expr.toString(); 
+		}
+		
+
+		public abstract StdPart concreteResult(SLNTYPE expr);
 
 	}
 
@@ -172,11 +163,11 @@ public class SP1AntrlCompiler<LNTYPE extends SP1Node> implements SP1.Compiler {
 			}
 
 			@Override
-			public PartLN concreteResult(final ExprLN expr) {
-				// TODO Auto-generated method stub
-				return null;
+			public StdPart concreteResult(final ExprLN expr) {
+				StdPart result = expr.asExecutable().execute();
+				return result;
 			}
-
+			
 		}
 	}
 }

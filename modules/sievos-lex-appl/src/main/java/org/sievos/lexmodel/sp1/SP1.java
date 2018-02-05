@@ -34,8 +34,8 @@ package org.sievos.lexmodel.sp1;
 import org.sievos.lexmodel.std.StdBund;
 import org.sievos.lexmodel.std.StdCompiler;
 import org.sievos.lexmodel.std.StdExecutable;
+import org.sievos.lexmodel.std.StdPart;
 import org.sievos.lexmodel.std.StdPartFunction;
-import org.sievos.lexmodel.std.StdResult;
 
 /**
  * In the SP1 system, all static results are some type of partition,
@@ -56,31 +56,6 @@ public interface SP1 {
 		Executable compile(String expression);
 	}
 
-	interface Result extends StdResult<PartLN> {
-
-		/**
-		 * Concrete result of a Sievos function execution.
-		 * If this is an invalid or null result, or if it is an unbound
-		 * function result (i.e. fnResult has the value) then
-		 * this returns a Null PartLN result, one for which
-		 * {@code isNullResult} returns true.
-		 *
-		 * @see Executable#execute()
-		 * @see SP1#isNullResult(PartLN)
-		 */
-		@Override
-		PartLN prtResult();
-
-		/**
-		 * Function result of a Sievos function execution.
-		 * If the result is, in fact, some concrete result, then this object
-		 * shall return itself again, recursively.
-		 *
-		 * @see Executable#execute()
-		 */
-		@Override
-		Executable fnResult();
-	}
 
 	interface Executable extends StdExecutable<PartLN> {
 
@@ -92,7 +67,7 @@ public interface SP1 {
 		 * @see SP1#Result
 		 */
 		@Override
-		public Result execute();
+		public StdPart execute();
 	}
 
 	interface PartFunction extends StdPartFunction {

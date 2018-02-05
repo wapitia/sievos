@@ -29,80 +29,69 @@
  * ARISING OUT OF THE USE OF OR INABILITY TO USE THIS SOFTWARE, EVEN IF
  * WAPITIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  */
-
-package org.sievos.lexmodel;
+package org.sievos.lexmodel.sp1.impl;
 
 import java.util.Arrays;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
+import org.sievos.kern.TI;
+import org.sievos.lexmodel.std.StdBund;
+
 /**
- * Named Function Type signature
+ * Basic StdBund implementation
  */
-public class NFT {
+public class StdBundImpl implements StdBund {
 
-	public static NFT of(final String funcName) {
-		return new NFT(funcName, EMPTY_PARAMETERS);
+	private final TI[] tiarray;
+	
+	StdBundImpl(final TI ... src) {
+		this.tiarray = new TI[src.length];
+		System.arraycopy(src, 0, tiarray, 0, src.length);
 	}
 
-	static final NFT[] EMPTY_PARAMETERS =
-		new NFT[0];
-
-	private final String name;
-	private final NFT[] params;
-
-	public NFT(final String name, final NFT[] params)
-	{
-		Objects.requireNonNull(name);
-		Objects.requireNonNull(params);
-		this.name = name;
-		this.params = params;
+	/**
+	 * Return a copy of this Bundle's array of TI states
+	 */
+	@Override
+	public TI[] asArray() {
+		final TI[] res = new TI[tiarray.length];
+		System.arraycopy(tiarray, 0, res, 0, tiarray.length);
+		return res;
 	}
-
-	public String getName() {
-		return name;
-	}
-
-	public NFT[] getParameters() {
-		return params;
+	
+	/**
+	 * Return this Bundle's TI states uncopied.
+	 * Implementers should not change the contents of this array even though 
+	 * possible as this class should remain unchanged.
+	 */
+	protected TI[] tiArray() {
+		return tiarray;
 	}
 
 	@Override
-	public boolean equals(final Object o) {
-		if (o == null || o.getClass() != this.getClass()) {
+	public boolean equals(Object o) {
+		if (o == null || !(o instanceof StdBundImpl)) {
 			return false;
 		}
-		else if (o == this) {
+		else if (this == o) {
 			return true;
 		}
 		else {
-			final NFT other = (NFT) o;
-			return this.name.equals(other.name) &&
-				Arrays.equals(this.params, other.params);
+			final StdBundImpl other = (StdBundImpl) o;
+			return this.tiarray.equals(other.tiarray);
 		}
 	}
-
+	
 	@Override
 	public int hashCode() {
-		return Objects.hash(name, params);
+		return tiarray.hashCode();
 	}
-
+	
 	@Override
 	public String toString() {
-		final String result;
-		if (params.length == 0) {
-			result = name;
-		}
-		else {
-			final StringBuilder bldr = new StringBuilder()
-				.append(name)
-				.append(Arrays.asList(params).stream()
-					.map(Object::toString)
-					.collect(Collectors.joining(",", "[", "]"))
-					);
-			result = bldr.toString();
-		}
-		return result;
+		return Arrays.asList(tiarray).stream()
+			.<String> map(Object::toString)
+			.collect(Collectors.joining());
 	}
-
+	
 }

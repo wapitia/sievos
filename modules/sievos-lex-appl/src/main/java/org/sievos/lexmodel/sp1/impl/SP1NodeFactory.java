@@ -38,19 +38,16 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
-import org.sievos.kern.Part;
 import org.sievos.kern.TI;
 import org.sievos.lexmodel.sp1.BundLN;
 import org.sievos.lexmodel.sp1.CompositeFunctionLN;
 import org.sievos.lexmodel.sp1.ExprLN;
 import org.sievos.lexmodel.sp1.IdentifierLN;
-import org.sievos.lexmodel.sp1.PartLN;
 import org.sievos.lexmodel.sp1.SP1;
 import org.sievos.lexmodel.sp1.SP1.Executable;
 import org.sievos.lexmodel.sp1.SP1Node;
 import org.sievos.lexmodel.sp1.SP1NodeProducer;
 import org.sievos.lexmodel.sp1.SingleLN;
-import org.sievos.lexmodel.std.StdBund;
 import org.sievos.lexmodel.std.StdPart;
 
 import com.wapitia.common.collections.OptionalIterable;
@@ -62,7 +59,7 @@ import com.wapitia.common.collections.OptionalIterable;
  */
 public class SP1NodeFactory implements SP1NodeProducer {
 
-	static SP1FuncDict funcDictInstance = new SP1FuncDict();
+	static SP1FuncDict funcDict = new SP1FuncDict();
 
 	// The SP1NodeProducer API
 
@@ -237,71 +234,6 @@ public class SP1NodeFactory implements SP1NodeProducer {
 	}
 
 
-	private static class PartImpl implements PartLN
-	{
-		private final Part<StdBund> part;
-
-		PartImpl(final Part<StdBund> part) {
-			this.part = part;
-		}
-
-		@Override
-		public Part<StdBund> asPart() {
-			return part;
-		}
-	}
-
-	/**
-	 * Compile a result by applying each bundle in the supplied partition
-	 * to each of the functions in the list of functions composit-wise.
-	 */
-	static class CompResult implements SP1.Result {
-
-		final PartLN res;
-
-		CompResult(final StdPart stdPart, final List<SP1.PartFunction> funcs) {
-
-			final Part<StdBund> part = stdPart.asPartition();
-			final Part<StdBund> result = part.<StdBund> filterMap(
-				bund -> true, bund -> bund);
-			// TODO
-			this.res = null;
-		}
-
-		StdBund composeBund(final StdBund bund, final List<SP1.PartFunction> funcs) {
-			StdBund accumBund = bund;
-			for (final SP1.PartFunction pf : funcs) {
-				accumBund = pf.execute(accumBund);
-			}
-			return accumBund;
-		}
-
-		@Override
-		public PartLN prtResult() {
-			return res;
-		}
-
-		@Override
-		public Executable fnResult() {
-			return SP1.FNULL;
-		}
-	};
-
-	public static class StdBundImpl implements StdBund {
-
-		private final TI[] tiarray;
-		StdBundImpl(final TI ... src) {
-			this.tiarray = new TI[src.length];
-			System.arraycopy(src, 0, tiarray, 0, src.length);
-		}
-
-		@Override
-		public TI[] asArray() {
-			return tiarray;
-		}
-	}
-
-
 	private static class CompositeFunctionImpl extends ExprImpl
 	implements CompositeFunctionLN
 	{
@@ -314,10 +246,9 @@ public class SP1NodeFactory implements SP1NodeProducer {
 			this.tuple = tuple;
 		}
 
-
 		@Override
-		public Executable asExecutable() {
-			return () -> new CompResult(asPart(), funcList);
+		public SP1.Executable asExecutable() {
+			return new CompositeExecutable(asPart(), funcList);
 		}
 
 
@@ -389,18 +320,20 @@ public class SP1NodeFactory implements SP1NodeProducer {
 	{
 		final String identName = identNode.getIdent();
 		final SP1BundAccum tuple = ptp.makeBundAccum();
-		final SP1.PartFunction func = funcDictInstance.getPartFunction(identName);
-		final List<SP1.PartFunction> slist = Collections.<SP1.PartFunction>
-		singletonList(func);
+		final SP1.PartFunction func = funcDict.getPartFunction(identName);
+		final List<SP1.PartFunction> slist = Collections
+				.<SP1.PartFunction> singletonList(func);
 		return new CompositeFunctionImpl(slist, tuple);
 	}
 
 	static CompositeFunctionLN makeCompositeFunction(
 		final IdentifierLN funcName, final CompositeFunctionImpl tupNode) {
 		final String identName = funcName.getIdent();
-		final SP1.PartFunction partFunction = funcDictInstance.getPartFunction(identName);
+		final SP1.PartFunction partFunction = 
+				funcDict.getPartFunction(identName);
 		final List<SP1.PartFunction> funcList = tupNode.getFuncList();
-		final List<SP1.PartFunction> newList = new ArrayList<>(funcList.size() + 1);
+		final List<SP1.PartFunction> newList = 
+				new ArrayList<>(funcList.size() + 1);
 		newList.add(partFunction);
 		newList.addAll(funcList);
 

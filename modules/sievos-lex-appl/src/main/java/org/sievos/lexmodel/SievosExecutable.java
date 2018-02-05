@@ -31,6 +31,8 @@
  */
 package org.sievos.lexmodel;
 
+import org.sievos.lexmodel.std.StdPart;
+
 /**
  * Abstract model of a Sievos function, one which may be executed to
  * produce some result type of SievosResult.
@@ -39,12 +41,11 @@ package org.sievos.lexmodel;
  *
  * @see SievosResult
  */
-public interface SievosExecutable<OT,
-	RT extends SievosResult<OT,RT,XT>,
-	XT extends SievosExecutable<OT,RT, XT>>
+public interface SievosExecutable<OT,XT extends SievosExecutable<OT,XT>>
 {
 	/**
-	 * Execute this bound expression, returning its result
+	 * Execute this bound expression, returning its result, always a 
+	 * standard partition.
 	 */
-	RT execute();
+	StdPart execute();
 }

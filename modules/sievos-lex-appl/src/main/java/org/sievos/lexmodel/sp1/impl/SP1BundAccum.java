@@ -38,7 +38,6 @@ import java.util.List;
 
 import org.sievos.kern.Part;
 import org.sievos.kern.TI;
-import org.sievos.lexmodel.sp1.impl.SP1NodeFactory.StdBundImpl;
 import org.sievos.lexmodel.std.StdBund;
 import org.sievos.lexmodel.std.StdPart;
 

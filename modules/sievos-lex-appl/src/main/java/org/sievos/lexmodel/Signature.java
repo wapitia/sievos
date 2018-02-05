@@ -31,33 +31,75 @@
  */
 package org.sievos.lexmodel;
 
+import java.util.Arrays;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
 /**
- * The result of the evaluation of a compiled Sievos statement.
- *
- * @param <OT>
- * @param <RT>
- * @param <XT>
+ * Unnamed Function Type signature.
+ * <p>
+ * The signature is suitable for use as a Map key, so this
+ * class is immutable and provides nicely overwritten 
+ * equals and hashCode methods. 
  */
-public interface SievosResult<OT,
-	RT extends SievosResult<OT,RT,XT>,
-	XT extends SievosExecutable<OT,RT,XT>>
-{
+public class Signature {
+	
+	public static final NamedSignature[] EMPTY_PARAMETERS =
+		new NamedSignature[0];
+
+	private final Signature[] params;
+
+	public Signature(final Signature[] params)
+	{
+		Objects.requireNonNull(params);
+		this.params = params;
+	}
+	
 	/**
-	 * Concrete result of a Sievos function execution.
-	 * If this is an invalid or null result, or if it is an unbound
-	 * function result (i.e. fnResult has the value) then
-	 * this returns a Null OT result.
-	 *
-	 * @see SievosExecutable#execute()
+	 * Copy the signatures to an output array.
+	 * @return
 	 */
-	OT prtResult();
+	public Signature[] getParameters() {
+		final Signature[] result = new Signature[params.length];
+		System.arraycopy(params, 0, result, 0, params.length);
+		return result;
+	}
+
+	@Override
+	public boolean equals(final Object o) {
+		if (o == null || ! (o instanceof Signature)) {
+			return false;
+		}
+		else if (o == this) {
+			return true;
+		}
+		else {
+			final Signature other = (Signature) o;
+			return Arrays.equals(this.params, other.params);
+		}
+	}
+
+	@Override
+	public int hashCode() {
+		return params.hashCode();
+	}
+
+	@Override
+	public String toString() {
+		
+		final StringBuilder bldr = new StringBuilder()
+			.append(Arrays.asList(params).stream()
+				.map(Object::toString)
+				.collect(Collectors.joining(",", "[", "]"))
+				);
+		return bldr.toString();
+	}
 
 	/**
-	 * Function result of a Sievos function execution.
-	 * If the result is, in fact, some concrete result, then this object
-	 * shall return itself again, recursively.
-	 *
-	 * @see SievosExecutable#execute()
+	 * Protected direct interface to the parameters array, without copying them
+	 * first. Users should not change the contents of the array, even though they could.
 	 */
-	XT fnResult();
+	protected Signature[] parameters() {
+		return params;
+	}
 }
