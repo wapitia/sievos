@@ -49,7 +49,7 @@ public interface WapitiaCollections {
      * since this function does it.
      *
      * @param <K> map's key type
-     * @param <LV> list's value's type.
+     * @param <LV> list's value's type
      *
      * @param mapOfLists mutable  Map of Lists: {@code Map<K,List<LV>> }
      * @param key key into the Map
