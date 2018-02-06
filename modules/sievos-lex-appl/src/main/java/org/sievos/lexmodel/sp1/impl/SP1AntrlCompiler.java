@@ -67,48 +67,68 @@ public class SP1AntrlCompiler<N extends SP1Node,R> implements StdCompiler<R> {
         	(final ExprLN n) -> n);
     }
 
-	private final SievosVisitor<SP1Node> antlrCompiler;
+	private final SievosVisitor<SP1Node> antlrVisitor;
     // the goal being some parse tree
     private final Function<SievosParser,ParseTree> goalOfParser;
     private final Function<SP1Node,N> narrowNode;
-    private final Function<N,R> nodeToResult;
+    private final Function<N,R> finishResult;
 
     // Fully loaded constructor
-    protected SP1AntrlCompiler(
+    public SP1AntrlCompiler(
     	final SievosVisitor<SP1Node> antlrCompiler,
     	final Function<SievosParser,ParseTree> goalOfParser,
         final Function<SP1Node,N> narrowNodeFunc,
         final Function<N,R> nodeToResult)
     {
-    	this.antlrCompiler = antlrCompiler;
+    	this.antlrVisitor = antlrCompiler;
         this.goalOfParser = goalOfParser;
         this.narrowNode = narrowNodeFunc;
-        this.nodeToResult = nodeToResult;
+        this.finishResult = nodeToResult;
     }
 
     /**
-     *
-     * @param expression
-     * @return
-     * @see org.sievos.lexmodel.std.StdCompiler#compile(java.lang.String)
+     * Compile the Sievos expression and return its result
      */
     @Override
     public R compile(final String expression) {
-
     	// one-shot use for these things, i guess
-        final CodePointCharStream cpcinput = CharStreams.fromString(expression);
-		final SievosLexer lexer = new SievosLexer(cpcinput);
+		final SievosLexer lexer = createLexer(expression);
+        final SievosParser parser = createParser(lexer);
+		return walkAndFinish(parser);
+    }
+
+	public static SievosParser createParser(final SievosLexer lexer) {
         final CommonTokenStream tokens = new CommonTokenStream(lexer);
 		final SievosParser parser = new SievosParser(tokens);
+		return parser;
+	}
 
-        // get the parsed tree from a parser goal such as parser.expr()
+	public static SievosLexer createLexer(final String expression) {
+		final CodePointCharStream cpcinput = CharStreams.fromString(expression);
+		final SievosLexer lexer = new SievosLexer(cpcinput);
+		return lexer;
+	}
+
+    /**
+     * Visit the parsed sievos expression and return its result
+     */
+	public R walkAndFinish(final SievosParser parser) {
+		// get the parsed tree from a parser goal such as parser.expr()
         final ParseTree parseTree = goalOfParser.apply(parser);
-   		final SP1Node answer = antlrCompiler.visit(parseTree);
-        final N node = narrowNode.apply(answer);
-        final String answerStr = node.toString();
-        System.out.printf("%s = %s\n", expression, answerStr);
-        final R executable  = nodeToResult.apply(node) ;
-        return executable;
-    }
+   		return walkGoalAndFinish(parseTree);
+	}
+
+	public R walkGoalAndFinish(final ParseTree parseTree) {
+		final N node = visitAndReduce(parseTree);
+        final R result  = finishResult.apply(node) ;
+        System.out.printf("compile result: %s\n", result);
+        return result;
+	}
+
+	public N visitAndReduce(final ParseTree parseTree) {
+		final SP1Node rawVisitedNode = antlrVisitor.visit(parseTree);
+        final N node = narrowNode.apply(rawVisitedNode);
+        return node;
+	}
 
 }
