@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-present wapitia.com
+ * Copyright 2016-2018 wapitia.com
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -29,10 +29,49 @@
  * ARISING OUT OF THE USE OF OR INABILITY TO USE THIS SOFTWARE, EVEN IF
  * WAPITIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  */
-package org.sievos.lexmodel.std;
+package org.sievos.lexmodel.sp1.antlr;
 
-public interface StdCompiler<R> {
+import java.util.function.Function;
 
-    R compile(String expression);
+import org.sievos.kern.Kern;
+//import org.sievos.kern.Kern$.N;
+import org.sievos.kern.TI;
+import org.sievos.lexmodel.sp1.impl.StdBundImpl;
+import org.sievos.lexmodel.std.StdBund;
+import org.sievos.lexmodel.std.StdPartFunction;
+
+class SP1KernPartFunction implements StdPartFunction {
+
+    private final String name;
+    private final Function<Kern.N,Kern.N> n2n;
+
+    public SP1KernPartFunction(final String funcName, final Function<Kern.N,Kern.N> n2n) {
+        this.name = funcName;
+        this.n2n = n2n;
+    }
+
+    public Kern.N bund2KernN(final StdBund bund) {
+
+        final TI b = TI.F;
+        final TI y = TI.T;
+        final TI x = TI.T;
+        final Kern.N n = new Kern.N(b,y,x);
+        return n;
+    }
+
+    public StdBund kern2Bund(final Kern.N n) {
+        final StdBundImpl result = StdBundImpl.apply(n.b(),n.y(),n.x());
+        return result;
+    }
+
+    @Override
+    public StdBund execute(final StdBund bund) {
+        return kern2Bund(n2n.apply(bund2KernN(bund)));
+    }
+
+    @Override
+    public String toString() {
+        return name;
+    }
 
 }

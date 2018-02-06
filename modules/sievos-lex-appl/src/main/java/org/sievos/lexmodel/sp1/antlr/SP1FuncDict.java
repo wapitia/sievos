@@ -29,48 +29,26 @@
  * ARISING OUT OF THE USE OF OR INABILITY TO USE THIS SOFTWARE, EVEN IF
  * WAPITIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  */
-package org.sievos.lexmodel.sp1.impl;
+
+package org.sievos.lexmodel.sp1.antlr;
 
 import java.util.function.Function;
 
 import org.sievos.kern.Kern;
-//import org.sievos.kern.Kern$.N;
-import org.sievos.kern.TI;
-import org.sievos.lexmodel.std.StdBund;
-import org.sievos.lexmodel.std.StdPartFunction;
+import org.sievos.kern.Kern.N;
+import org.sievos.lexmodel.NamedSignature;
+import org.sievos.lexmodel.std.StdFuncDict;
 
-class SP1KernPartFunction implements StdPartFunction {
+class SP1FuncDict extends StdFuncDict {
 
-    private final String name;
-    private final Function<Kern.N,Kern.N> n2n;
-
-    public SP1KernPartFunction(final String funcName, final Function<Kern.N,Kern.N> n2n) {
-        this.name = funcName;
-        this.n2n = n2n;
+    private void putKPF(final String name, final Function<N,N> func) {
+        put(NamedSignature.apply(name), new SP1KernPartFunction(name, func));
     }
 
-    public Kern.N bund2KernN(final StdBund bund) {
-
-        final TI b = TI.F;
-        final TI y = TI.T;
-        final TI x = TI.T;
-        final Kern.N n = new Kern.N(b,y,x);
-        return n;
-    }
-
-    public StdBund kern2Bund(final Kern.N n) {
-        final StdBundImpl result = StdBundImpl.apply(n.b(),n.y(),n.x());
-        return result;
-    }
-
-    @Override
-    public StdBund execute(final StdBund bund) {
-        return kern2Bund(n2n.apply(bund2KernN(bund)));
-    }
-
-    @Override
-    public String toString() {
-        return name;
+    SP1FuncDict() {
+        // TODO: Flexible library lookup of functions
+        putKPF("r", Kern::r);
+        putKPF("z", Kern::z);
     }
 
 }

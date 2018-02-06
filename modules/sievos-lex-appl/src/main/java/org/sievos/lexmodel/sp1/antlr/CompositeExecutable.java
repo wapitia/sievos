@@ -1,9 +1,10 @@
-package org.sievos.lexmodel.sp1.impl;
+package org.sievos.lexmodel.sp1.antlr;
 
 import java.util.List;
 
 import org.sievos.kern.Part;
 import org.sievos.lexmodel.Executable;
+import org.sievos.lexmodel.sp1.impl.StdPartImpl;
 import org.sievos.lexmodel.std.StdBund;
 import org.sievos.lexmodel.std.StdPartFunction;
 import org.sievos.lexmodel.std.StdPartProvider;

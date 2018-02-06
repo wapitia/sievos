@@ -31,9 +31,6 @@
  */
 package org.sievos.lexmodel.sp1;
 
-/**
- * Base Sievos ANTLR Visitor result type
- */
 public interface SP1Node {
 
 }

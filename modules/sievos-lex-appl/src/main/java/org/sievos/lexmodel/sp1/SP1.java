@@ -32,6 +32,7 @@
 package org.sievos.lexmodel.sp1;
 
 import org.sievos.lexmodel.Executable;
+import org.sievos.lexmodel.std.StdGenerator;
 
 /**
  * In the SP1 system, all static results are some type of partition,
@@ -39,6 +40,16 @@ import org.sievos.lexmodel.Executable;
  */
 public interface SP1 {
 
-    public static final Executable FNULL = null;
+    /**
+     * Make compiler that takes a Sievos "expr" goal and produces some
+     * Executable from it.
+     */
+    static StdGenerator<Executable> makeExprCompiler() {
+
+        // Injection should happen here
+        return org.sievos.lexmodel.sp1.antlr.SP1AntlrUtil
+                .instance()
+                .makeExprCompiler();
+    }
 
 }

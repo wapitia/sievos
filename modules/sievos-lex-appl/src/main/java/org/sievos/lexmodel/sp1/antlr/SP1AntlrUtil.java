@@ -29,7 +29,7 @@
  * ARISING OUT OF THE USE OF OR INABILITY TO USE THIS SOFTWARE, EVEN IF
  * WAPITIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  */
-package org.sievos.lexmodel.sp1.impl;
+package org.sievos.lexmodel.sp1.antlr;
 
 import java.util.ArrayList;
 import java.util.BitSet;
@@ -39,6 +39,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.sievos.kern.TI;
+import org.sievos.lex.SievosParser;
+import org.sievos.lexmodel.Executable;
 import org.sievos.lexmodel.sp1.BundLN;
 import org.sievos.lexmodel.sp1.CompositeFunctionLN;
 import org.sievos.lexmodel.sp1.ExprLN;
@@ -46,6 +48,8 @@ import org.sievos.lexmodel.sp1.IdentifierLN;
 import org.sievos.lexmodel.sp1.SP1Node;
 import org.sievos.lexmodel.sp1.SP1NodeProducer;
 import org.sievos.lexmodel.sp1.SingleLN;
+import org.sievos.lexmodel.sp1.impl.StdPartImpl;
+import org.sievos.lexmodel.std.StdGenerator;
 import org.sievos.lexmodel.std.StdPartFunction;
 import org.sievos.lexmodel.std.StdPartProvider;
 
@@ -56,11 +60,23 @@ import com.wapitia.common.collections.OptionalIterable;
  * for the SievosLex parsers to compile expressions
  *
  */
-public class SP1NodeFactory implements SP1NodeProducer {
+public class SP1AntlrUtil implements SP1NodeProducer {
 
     static SP1FuncDict funcDict = new SP1FuncDict();
 
     // The SP1NodeProducer API
+
+    public StdGenerator<Executable> makeExprCompiler() {
+
+        final SP1AntlrVisitor comp = new SP1AntlrVisitor(this);
+        // ExprLN is both the result from the parse tree visit as well
+        // as the result executable, making these supplied functions easy
+        return new SP1AntlrGenerator<ExprLN,Executable>(comp,
+            SievosParser::expr,
+            (final SP1Node n) -> (ExprLN) n,
+            (final ExprLN n) -> n);
+
+    }
 
     @Override
     public ExprLN funcallExpr(final CompositeFunctionLN fcall) {
@@ -342,13 +358,13 @@ public class SP1NodeFactory implements SP1NodeProducer {
     /**
      * @return
      */
-    public static SP1NodeProducer instance() {
+    public static SP1AntlrUtil instance() {
         return instance;
     }
 
-    static SP1NodeProducer instance = new SP1NodeFactory();
+    static SP1AntlrUtil instance = new SP1AntlrUtil();
 
     // constructor is private as this is a singleton instance
-    protected SP1NodeFactory() {}
+    protected SP1AntlrUtil() {}
 
 }

@@ -29,23 +29,10 @@
  * ARISING OUT OF THE USE OF OR INABILITY TO USE THIS SOFTWARE, EVEN IF
  * WAPITIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  */
-package org.sievos.lexmodel;
+package org.sievos.lexmodel.std;
 
-import org.sievos.lexmodel.std.StdGenerator;
+public interface StdGenerator<R> {
 
-/**
- *
- */
-public interface SP1LexTool {
-
-    static Executable compile(final String expression)
-    {
-        final Executable res = compilerInstance.compile(expression);
-        return res;
-    }
-
-    // Injection should happen here
-    static StdGenerator<Executable> compilerInstance =
-        org.sievos.lexmodel.sp1.SP1.makeExprCompiler();
+    R compile(String expression);
 
 }

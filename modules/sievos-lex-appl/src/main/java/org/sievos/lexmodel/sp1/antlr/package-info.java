@@ -30,25 +30,8 @@
  * WAPITIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  */
 
-package org.sievos.lexmodel.sp1.impl;
-
-import java.util.function.Function;
-
-import org.sievos.kern.Kern;
-import org.sievos.kern.Kern.N;
-import org.sievos.lexmodel.NamedSignature;
-import org.sievos.lexmodel.std.StdFuncDict;
-
-class SP1FuncDict extends StdFuncDict {
-
-    private void putKPF(final String name, final Function<N,N> func) {
-        put(NamedSignature.apply(name), new SP1KernPartFunction(name, func));
-    }
-
-    SP1FuncDict() {
-        // TODO: Flexible library lookup of functions
-        putKPF("r", Kern::r);
-        putKPF("z", Kern::z);
-    }
-
-}
+/**
+ * The Antlr Parsing tool implementation package of the Sievos language
+ * which targets the SP1 implementation.
+ */
+package org.sievos.lexmodel.sp1.antlr;

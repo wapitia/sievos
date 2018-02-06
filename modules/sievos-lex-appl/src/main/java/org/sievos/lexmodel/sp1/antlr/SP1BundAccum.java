@@ -29,7 +29,7 @@
  * ARISING OUT OF THE USE OF OR INABILITY TO USE THIS SOFTWARE, EVEN IF
  * WAPITIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  */
-package org.sievos.lexmodel.sp1.impl;
+package org.sievos.lexmodel.sp1.antlr;
 
 import java.util.ArrayList;
 import java.util.BitSet;
@@ -38,6 +38,7 @@ import java.util.List;
 
 import org.sievos.kern.Part;
 import org.sievos.kern.TI;
+import org.sievos.lexmodel.sp1.impl.StdBundImpl;
 import org.sievos.lexmodel.std.StdBund;
 import org.sievos.lexmodel.std.StdPartProvider;
 

@@ -29,7 +29,7 @@
  * ARISING OUT OF THE USE OF OR INABILITY TO USE THIS SOFTWARE, EVEN IF
  * WAPITIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  */
-package org.sievos.lexmodel.sp1.impl;
+package org.sievos.lexmodel.sp1.antlr;
 
 import static org.sievos.kern.TI.toTWhen;
 

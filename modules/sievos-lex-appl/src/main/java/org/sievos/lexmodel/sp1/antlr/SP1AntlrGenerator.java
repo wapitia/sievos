@@ -29,18 +29,15 @@
  * ARISING OUT OF THE USE OF OR INABILITY TO USE THIS SOFTWARE, EVEN IF
  * WAPITIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  */
-package org.sievos.lexmodel.sp1.impl;
+package org.sievos.lexmodel.sp1.antlr;
 
  import java.util.function.Function;
 
 import org.sievos.lex.SievosLexer;
 import org.sievos.lex.SievosParser;
 import org.sievos.lex.SievosVisitor;
-import org.sievos.lexmodel.Executable;
-import org.sievos.lexmodel.sp1.ExprLN;
 import org.sievos.lexmodel.sp1.SP1Node;
-import org.sievos.lexmodel.sp1.SP1NodeProducer;
-import org.sievos.lexmodel.std.StdCompiler;
+import org.sievos.lexmodel.std.StdGenerator;
 
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CodePointCharStream;
@@ -48,25 +45,10 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 
 /**
- *
+ * Abstraction for the Antlr parsing, visit, and compilation of
+ * a Sievos language goal.
  */
-public class SP1AntrlCompiler<N extends SP1Node,R> implements StdCompiler<R> {
-
-    /**
-     * Make compiler that takes a Sievos "expr" goal and produces some
-     * Executable from it.
-     */
-    public static SP1AntrlCompiler<ExprLN,Executable> makeExprCompiler(
-        final SP1NodeProducer nodeProducer)
-    {
-        final SP1AntlrVisitor comp = new SP1AntlrVisitor(nodeProducer);
-        // ExprLN is both the result from the parse tree visit as well
-        // as the result executable, making these supplied functions easy
-        return new SP1AntrlCompiler<ExprLN,Executable>(comp,
-            SievosParser::expr,
-            (final SP1Node n) -> (ExprLN) n,
-            (final ExprLN n) -> n);
-    }
+public class SP1AntlrGenerator<N extends SP1Node,R> implements StdGenerator<R> {
 
     private final SievosVisitor<SP1Node> antlrVisitor;
     // the goal being some parse tree
@@ -75,7 +57,7 @@ public class SP1AntrlCompiler<N extends SP1Node,R> implements StdCompiler<R> {
     private final Function<N,R> finishResult;
 
     // Fully loaded constructor
-    public SP1AntrlCompiler(
+    public SP1AntlrGenerator(
         final SievosVisitor<SP1Node> antlrCompiler,
         final Function<SievosParser,ParseTree> goalOfParser,
         final Function<SP1Node,N> narrowNodeFunc,
