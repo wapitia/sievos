@@ -18,17 +18,19 @@ public class CompositeExecutable implements Executable {
     final StdPartProvider inputPart;
     final List<StdPartFunction> funcList;
 
-    CompositeExecutable(final StdPartProvider inputPart, final List<StdPartFunction> funcList) {
+    CompositeExecutable(final StdPartProvider inputPart,
+            final List<StdPartFunction> funcList)
+    {
         this.inputPart = inputPart;
         this.funcList = funcList;
-
     }
 
     @Override
     public StdPartImpl execute() {
 
         final Part<StdBund> part = inputPart.partition();
-        final Part<StdBund> resultPart = part.map(bund -> composeEachBund(bund));
+        final Part<StdBund> resultPart =
+                part.map(bund -> composeEachBund(bund));
         final StdPartImpl result = new StdPartImpl(resultPart);
         return result;
     }

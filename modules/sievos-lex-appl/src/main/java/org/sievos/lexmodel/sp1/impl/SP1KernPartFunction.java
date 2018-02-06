@@ -59,7 +59,7 @@ class SP1KernPartFunction implements StdPartFunction {
     }
 
     public StdBund kern2Bund(final Kern.N n) {
-        final StdBundImpl result = new StdBundImpl(n.b(),n.y(),n.x());
+        final StdBundImpl result = StdBundImpl.apply(n.b(),n.y(),n.x());
         return result;
     }
 

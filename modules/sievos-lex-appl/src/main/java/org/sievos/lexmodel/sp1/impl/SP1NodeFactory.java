@@ -246,7 +246,7 @@ public class SP1NodeFactory implements SP1NodeProducer {
         public StdPartProvider execute() {
             final CompositeExecutable exec = new CompositeExecutable(asPart(), funcList);
             final StdPartImpl result = exec.execute();
-			return result;
+            return result;
         }
 
 

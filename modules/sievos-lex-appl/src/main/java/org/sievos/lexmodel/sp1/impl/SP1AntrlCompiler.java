@@ -31,12 +31,8 @@
  */
 package org.sievos.lexmodel.sp1.impl;
 
-import java.util.function.Function;
+ import java.util.function.Function;
 
-import org.antlr.v4.runtime.CharStreams;
-import org.antlr.v4.runtime.CodePointCharStream;
-import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.tree.ParseTree;
 import org.sievos.lex.SievosLexer;
 import org.sievos.lex.SievosParser;
 import org.sievos.lex.SievosVisitor;
@@ -46,28 +42,33 @@ import org.sievos.lexmodel.sp1.SP1Node;
 import org.sievos.lexmodel.sp1.SP1NodeProducer;
 import org.sievos.lexmodel.std.StdCompiler;
 
+import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.CodePointCharStream;
+import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.tree.ParseTree;
+
 /**
  *
  */
 public class SP1AntrlCompiler<N extends SP1Node,R> implements StdCompiler<R> {
 
     /**
-     * Make compiler that takes a Sieveos "expr" goal and produces some
+     * Make compiler that takes a Sievos "expr" goal and produces some
      * Executable from it.
      */
     public static SP1AntrlCompiler<ExprLN,Executable> makeExprCompiler(
         final SP1NodeProducer nodeProducer)
     {
-		final SP1AntlrVisitor comp = new SP1AntlrVisitor(nodeProducer);
-		// ExprLN is both the result from the parse tree visit as well
-		// as the result executable, making these supplied functions easy
+        final SP1AntlrVisitor comp = new SP1AntlrVisitor(nodeProducer);
+        // ExprLN is both the result from the parse tree visit as well
+        // as the result executable, making these supplied functions easy
         return new SP1AntrlCompiler<ExprLN,Executable>(comp,
-        	SievosParser::expr,
-        	(final SP1Node n) -> (ExprLN) n,
-        	(final ExprLN n) -> n);
+            SievosParser::expr,
+            (final SP1Node n) -> (ExprLN) n,
+            (final ExprLN n) -> n);
     }
 
-	private final SievosVisitor<SP1Node> antlrVisitor;
+    private final SievosVisitor<SP1Node> antlrVisitor;
     // the goal being some parse tree
     private final Function<SievosParser,ParseTree> goalOfParser;
     private final Function<SP1Node,N> narrowNode;
@@ -75,12 +76,12 @@ public class SP1AntrlCompiler<N extends SP1Node,R> implements StdCompiler<R> {
 
     // Fully loaded constructor
     public SP1AntrlCompiler(
-    	final SievosVisitor<SP1Node> antlrCompiler,
-    	final Function<SievosParser,ParseTree> goalOfParser,
+        final SievosVisitor<SP1Node> antlrCompiler,
+        final Function<SievosParser,ParseTree> goalOfParser,
         final Function<SP1Node,N> narrowNodeFunc,
         final Function<N,R> nodeToResult)
     {
-    	this.antlrVisitor = antlrCompiler;
+        this.antlrVisitor = antlrCompiler;
         this.goalOfParser = goalOfParser;
         this.narrowNode = narrowNodeFunc;
         this.finishResult = nodeToResult;
@@ -91,44 +92,44 @@ public class SP1AntrlCompiler<N extends SP1Node,R> implements StdCompiler<R> {
      */
     @Override
     public R compile(final String expression) {
-    	// one-shot use for these things, i guess
-		final SievosLexer lexer = createLexer(expression);
+        // one-shot use for these things, i guess
+        final SievosLexer lexer = createLexer(expression);
         final SievosParser parser = createParser(lexer);
-		return walkAndFinish(parser);
+        return walkAndFinish(parser);
     }
 
-	public static SievosParser createParser(final SievosLexer lexer) {
+    public static SievosParser createParser(final SievosLexer lexer) {
         final CommonTokenStream tokens = new CommonTokenStream(lexer);
-		final SievosParser parser = new SievosParser(tokens);
-		return parser;
-	}
+        final SievosParser parser = new SievosParser(tokens);
+        return parser;
+    }
 
-	public static SievosLexer createLexer(final String expression) {
-		final CodePointCharStream cpcinput = CharStreams.fromString(expression);
-		final SievosLexer lexer = new SievosLexer(cpcinput);
-		return lexer;
-	}
+    public static SievosLexer createLexer(final String expression) {
+        final CodePointCharStream cpcinput = CharStreams.fromString(expression);
+        final SievosLexer lexer = new SievosLexer(cpcinput);
+        return lexer;
+    }
 
     /**
      * Visit the parsed sievos expression and return its result
      */
-	public R walkAndFinish(final SievosParser parser) {
-		// get the parsed tree from a parser goal such as parser.expr()
+    public R walkAndFinish(final SievosParser parser) {
+        // get the parsed tree from a parser goal such as parser.expr()
         final ParseTree parseTree = goalOfParser.apply(parser);
-   		return walkGoalAndFinish(parseTree);
-	}
+           return walkGoalAndFinish(parseTree);
+    }
 
-	public R walkGoalAndFinish(final ParseTree parseTree) {
-		final N node = visitAndReduce(parseTree);
+    public R walkGoalAndFinish(final ParseTree parseTree) {
+        final N node = visitAndReduce(parseTree);
         final R result  = finishResult.apply(node) ;
         System.out.printf("compile result: %s\n", result);
         return result;
-	}
+    }
 
-	public N visitAndReduce(final ParseTree parseTree) {
-		final SP1Node rawVisitedNode = antlrVisitor.visit(parseTree);
+    public N visitAndReduce(final ParseTree parseTree) {
+        final SP1Node rawVisitedNode = antlrVisitor.visit(parseTree);
         final N node = narrowNode.apply(rawVisitedNode);
         return node;
-	}
+    }
 
 }

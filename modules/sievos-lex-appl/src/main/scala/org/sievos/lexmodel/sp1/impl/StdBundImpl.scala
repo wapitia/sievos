@@ -29,69 +29,31 @@
  * ARISING OUT OF THE USE OF OR INABILITY TO USE THIS SOFTWARE, EVEN IF
  * WAPITIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  */
-package org.sievos.lexmodel.sp1.impl;
+package org.sievos.lexmodel
+package sp1.impl
 
-import java.util.Arrays;
-import java.util.stream.Collectors;
-
-import org.sievos.kern.TI;
-import org.sievos.lexmodel.std.StdBund;
+import org.sievos.kern.TI
+import org.sievos.lexmodel.std.StdBund
 
 /**
  * Basic StdBund implementation
  */
-public class StdBundImpl implements StdBund {
-
-    private final TI[] tiarray;
-
-    StdBundImpl(final TI ... src) {
-        this.tiarray = new TI[src.length];
-        System.arraycopy(src, 0, tiarray, 0, src.length);
-    }
+case class StdBundImpl(tiarray: Array[TI]) extends StdBund {
 
     /**
      * Return a copy of this Bundle's array of TI states
      */
-    @Override
-    public TI[] asArray() {
-        final TI[] res = new TI[tiarray.length];
-        System.arraycopy(tiarray, 0, res, 0, tiarray.length);
-        return res;
+    override def asArray: Array[TI] = tiarray.clone()
+
+    override def toString: String =  {
+      val sstream: Stream[String] = tiarray.toStream.map(f => f.toString)
+      sstream.mkString
     }
 
-    /**
-     * Return this Bundle's TI states uncopied.
-     * Implementers should not change the contents of this array even though
-     * possible as this class should remain unchanged.
-     */
-    protected TI[] tiArray() {
-        return tiarray;
-    }
+}
 
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || !(o instanceof StdBundImpl)) {
-            return false;
-        }
-        else if (this == o) {
-            return true;
-        }
-        else {
-            final StdBundImpl other = (StdBundImpl) o;
-            return this.tiarray.equals(other.tiarray);
-        }
-    }
-
-    @Override
-    public int hashCode() {
-        return tiarray.hashCode();
-    }
-
-    @Override
-    public String toString() {
-        return Arrays.asList(tiarray).stream()
-            .<String> map(Object::toString)
-            .collect(Collectors.joining());
-    }
-
+object StdBundImpl {
+  
+  // standard 3-bundle
+  def apply(t1: TI, t2: TI, t3: TI) = new StdBundImpl(Array(t1,t2,t3))
 }
