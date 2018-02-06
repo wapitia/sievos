@@ -43,12 +43,11 @@ import org.sievos.lexmodel.sp1.BundLN;
 import org.sievos.lexmodel.sp1.CompositeFunctionLN;
 import org.sievos.lexmodel.sp1.ExprLN;
 import org.sievos.lexmodel.sp1.IdentifierLN;
-import org.sievos.lexmodel.sp1.SP1;
-import org.sievos.lexmodel.sp1.SP1.Executable;
 import org.sievos.lexmodel.sp1.SP1Node;
 import org.sievos.lexmodel.sp1.SP1NodeProducer;
 import org.sievos.lexmodel.sp1.SingleLN;
-import org.sievos.lexmodel.std.StdPart;
+import org.sievos.lexmodel.std.StdPartFunction;
+import org.sievos.lexmodel.std.StdPartProvider;
 
 import com.wapitia.common.collections.OptionalIterable;
 
@@ -228,9 +227,6 @@ public class SP1NodeFactory implements SP1NodeProducer {
 
     private static abstract class ExprImpl implements ExprLN
     {
-        @Override
-        public abstract Executable asExecutable();
-
     }
 
 
@@ -238,27 +234,29 @@ public class SP1NodeFactory implements SP1NodeProducer {
     implements CompositeFunctionLN
     {
 
-        private final List<SP1.PartFunction> funcList;
+        private final List<StdPartFunction> funcList;
         private final SP1BundAccum tuple;
 
-        CompositeFunctionImpl(final List<SP1.PartFunction> funcList, final SP1BundAccum tuple) {
+        CompositeFunctionImpl(final List<StdPartFunction> funcList, final SP1BundAccum tuple) {
             this.funcList = new ArrayList<>(funcList);
             this.tuple = tuple;
         }
 
         @Override
-        public SP1.Executable asExecutable() {
-            return new CompositeExecutable(asPart(), funcList);
+        public StdPartProvider execute() {
+            final CompositeExecutable exec = new CompositeExecutable(asPart(), funcList);
+            final StdPartImpl result = exec.execute();
+			return result;
         }
 
 
         @Override
-        public StdPart asPart() {
+        public StdPartProvider asPart() {
             return tuple.asPartition();
         }
 
         @Override
-        public List<SP1.PartFunction> getFuncList() {
+        public List<StdPartFunction> getFuncList() {
             return funcList;
         }
 
@@ -320,19 +318,19 @@ public class SP1NodeFactory implements SP1NodeProducer {
     {
         final String identName = identNode.getIdent();
         final SP1BundAccum tuple = ptp.makeBundAccum();
-        final SP1.PartFunction func = funcDict.getPartFunction(identName);
-        final List<SP1.PartFunction> slist = Collections
-                .<SP1.PartFunction> singletonList(func);
+        final StdPartFunction func = funcDict.getPartFunction(identName);
+        final List<StdPartFunction> slist = Collections
+                .<StdPartFunction> singletonList(func);
         return new CompositeFunctionImpl(slist, tuple);
     }
 
     static CompositeFunctionLN makeCompositeFunction(
         final IdentifierLN funcName, final CompositeFunctionImpl tupNode) {
         final String identName = funcName.getIdent();
-        final SP1.PartFunction partFunction =
+        final StdPartFunction partFunction =
                 funcDict.getPartFunction(identName);
-        final List<SP1.PartFunction> funcList = tupNode.getFuncList();
-        final List<SP1.PartFunction> newList =
+        final List<StdPartFunction> funcList = tupNode.getFuncList();
+        final List<StdPartFunction> newList =
                 new ArrayList<>(funcList.size() + 1);
         newList.add(partFunction);
         newList.addAll(funcList);

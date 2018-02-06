@@ -33,10 +33,9 @@ package org.sievos.lexmodel
 package sp1.impl
 
 import org.sievos.kern.Part
-import org.sievos.lexmodel.std.StdBund
-import org.sievos.lexmodel.std.StdPart
+import org.sievos.lexmodel.std.{StdBund, StdPartProvider}
 
-case class StdPartImpl(partition: Part[StdBund]) extends StdPart {
+case class StdPartImpl(partition: Part[StdBund]) extends StdPartProvider {
 
   // print the raw Part string, instead of wrapping this in StdPartImpl('')
   override def toString = partition.toString 

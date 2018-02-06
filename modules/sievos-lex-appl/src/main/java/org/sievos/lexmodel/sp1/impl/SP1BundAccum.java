@@ -39,7 +39,7 @@ import java.util.List;
 import org.sievos.kern.Part;
 import org.sievos.kern.TI;
 import org.sievos.lexmodel.std.StdBund;
-import org.sievos.lexmodel.std.StdPart;
+import org.sievos.lexmodel.std.StdPartProvider;
 
 class SP1BundAccum {
 
@@ -73,7 +73,7 @@ class SP1BundAccum {
         return SP1BundAccum.bundleToString(bitset, numBits);
     }
 
-    StdPart asPartition() {
+    StdPartProvider asPartition() {
         final Part<StdBund> result = Part.apply(SP1BundAccum.asBund(bitset, numBits));
         return () -> result;
     }

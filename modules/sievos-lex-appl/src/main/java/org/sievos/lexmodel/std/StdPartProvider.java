@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2018 wapitia.com
+ * Copyright 2016-present wapitia.com
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -29,18 +29,15 @@
  * ARISING OUT OF THE USE OF OR INABILITY TO USE THIS SOFTWARE, EVEN IF
  * WAPITIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  */
-
 package org.sievos.lexmodel.std;
 
-import org.sievos.lexmodel.Executable;
+// Part is a Scala Trait and Object
+import org.sievos.kern.Part;
 
 /**
- *
+ * Wraps a partition of bundles, {@code Part<StdBund> }
  */
-public interface StdExecutable<OT>
-    extends Executable<OT,StdExecutable<OT>>
-{
-    @Override
-    StdPart execute();
+public interface StdPartProvider {
 
+    Part<StdBund> partition();
 }

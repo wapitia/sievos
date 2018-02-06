@@ -31,41 +31,59 @@
  */
 package org.sievos.lexmodel.sp1.impl;
 
+import java.util.function.Function;
+
+import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.CodePointCharStream;
+import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.tree.ParseTree;
 import org.sievos.lex.SievosLexer;
 import org.sievos.lex.SievosParser;
 import org.sievos.lex.SievosVisitor;
+import org.sievos.lexmodel.Executable;
 import org.sievos.lexmodel.sp1.ExprLN;
-import org.sievos.lexmodel.sp1.SP1;
-import org.sievos.lexmodel.sp1.SP1.Executable;
 import org.sievos.lexmodel.sp1.SP1Node;
 import org.sievos.lexmodel.sp1.SP1NodeProducer;
-import org.sievos.lexmodel.std.StdPart;
-
-import org.antlr.v4.runtime.CharStreams;
-import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.tree.ParseTree;
+import org.sievos.lexmodel.std.StdCompiler;
 
 /**
  *
  */
-public class SP1AntrlCompiler<LNTYPE extends SP1Node> implements SP1.Compiler {
-
-    private final AbstractCallVisit<LNTYPE> bindVisit;
+public class SP1AntrlCompiler<N extends SP1Node,R> implements StdCompiler<R> {
 
     /**
-     * @param instance
-     * @return
+     * Make compiler that takes a Sieveos "expr" goal and produces some
+     * Executable from it.
      */
-    public static SP1AntrlCompiler<ExprLN> makeExprCompiler(
+    public static SP1AntrlCompiler<ExprLN,Executable> makeExprCompiler(
         final SP1NodeProducer nodeProducer)
     {
-        final BindExprVisit bindVisit = new BindExprVisit(
-            new SP1AntlrVisitor(nodeProducer));
-        return new SP1AntrlCompiler<ExprLN>(bindVisit);
+		final SP1AntlrVisitor comp = new SP1AntlrVisitor(nodeProducer);
+		// ExprLN is both the result from the parse tree visit as well
+		// as the result executable, making these supplied functions easy
+        return new SP1AntrlCompiler<ExprLN,Executable>(comp,
+        	SievosParser::expr,
+        	(final SP1Node n) -> (ExprLN) n,
+        	(final ExprLN n) -> n);
     }
 
-    public SP1AntrlCompiler(final AbstractCallVisit<LNTYPE> bindVisit) {
-        this.bindVisit = bindVisit;
+	private final SievosVisitor<SP1Node> antlrCompiler;
+    // the goal being some parse tree
+    private final Function<SievosParser,ParseTree> goalOfParser;
+    private final Function<SP1Node,N> narrowNode;
+    private final Function<N,R> nodeToResult;
+
+    // Fully loaded constructor
+    protected SP1AntrlCompiler(
+    	final SievosVisitor<SP1Node> antlrCompiler,
+    	final Function<SievosParser,ParseTree> goalOfParser,
+        final Function<SP1Node,N> narrowNodeFunc,
+        final Function<N,R> nodeToResult)
+    {
+    	this.antlrCompiler = antlrCompiler;
+        this.goalOfParser = goalOfParser;
+        this.narrowNode = narrowNodeFunc;
+        this.nodeToResult = nodeToResult;
     }
 
     /**
@@ -75,68 +93,22 @@ public class SP1AntrlCompiler<LNTYPE extends SP1Node> implements SP1.Compiler {
      * @see org.sievos.lexmodel.std.StdCompiler#compile(java.lang.String)
      */
     @Override
-    public SP1.Executable compile(final String expression) {
+    public R compile(final String expression) {
 
-        final SievosLexer lexer = new SievosLexer(CharStreams.fromString(expression));
-        final SievosParser parser = new SievosParser(new CommonTokenStream(lexer));
-        final LNTYPE castVisit = bindVisit.castVisit(parser);
-        final String answerStr = castVisit.toString();
+    	// one-shot use for these things, i guess
+        final CodePointCharStream cpcinput = CharStreams.fromString(expression);
+		final SievosLexer lexer = new SievosLexer(cpcinput);
+        final CommonTokenStream tokens = new CommonTokenStream(lexer);
+		final SievosParser parser = new SievosParser(tokens);
+
+        // get the parsed tree from a parser goal such as parser.expr()
+        final ParseTree parseTree = goalOfParser.apply(parser);
+   		final SP1Node answer = antlrCompiler.visit(parseTree);
+        final N node = narrowNode.apply(answer);
+        final String answerStr = node.toString();
         System.out.printf("%s = %s\n", expression, answerStr);
-        final Executable result = bindVisit.bindAsFunction(castVisit);
-        return result;
+        final R executable  = nodeToResult.apply(node) ;
+        return executable;
     }
 
-    static abstract class FAbsImpl<SLNTYPE extends SP1Node> implements Executable {
-        final SLNTYPE expr;
-
-        protected FAbsImpl(final SLNTYPE expr) {
-            this.expr = expr;
-        }
-
-        @Override
-        public StdPart execute() {
-
-            return concreteResult(expr);
-        }
-
-        @Override
-        public String toString() {
-            return expr.toString();
-        }
-
-
-        public abstract StdPart concreteResult(SLNTYPE expr);
-
-    }
-
-    public static class BindExprVisit extends AbstractCallVisit<ExprLN> {
-
-        BindExprVisit(final SievosVisitor<SP1Node> comp) {
-            super(comp);
-        }
-
-        @Override
-        public Executable bindAsFunction(final ExprLN expr) {
-            return new FImpl(expr);
-        }
-
-        @Override
-        public ParseTree getParseTree(final SievosParser parser) {
-            return parser.expr();
-        }
-
-        static class FImpl extends FAbsImpl<ExprLN> {
-
-            public FImpl(final ExprLN expr) {
-                super(expr);
-            }
-
-            @Override
-            public StdPart concreteResult(final ExprLN expr) {
-                StdPart result = expr.asExecutable().execute();
-                return result;
-            }
-
-        }
-    }
 }

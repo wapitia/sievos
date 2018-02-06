@@ -37,10 +37,9 @@ import java.util.function.Function;
 import org.sievos.kern.Kern;
 import org.sievos.kern.Kern.N;
 import org.sievos.lexmodel.NamedSignature;
-import org.sievos.lexmodel.sp1.PartLN;
 import org.sievos.lexmodel.std.StdFuncDict;
 
-class SP1FuncDict extends StdFuncDict<PartLN> {
+class SP1FuncDict extends StdFuncDict {
 
     private void putKPF(final String name, final Function<N,N> func) {
         put(NamedSignature.apply(name), new SP1KernPartFunction(name, func));

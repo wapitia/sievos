@@ -31,21 +31,18 @@
  */
 package org.sievos.lexmodel;
 
-import org.sievos.lexmodel.std.StdPart;
+import org.sievos.lexmodel.std.StdPartProvider;
 
 /**
- * Abstract model of a Sievos function, one which may be executed to
- * produce some result type of SievosResult.
- * That executed result may yield a concrete result or another
- * SievosFunction (or both?), recursively.
- *
- * @see SievosResult
+ * Executable producing some standard part
  */
-public interface Executable<OT,XT extends Executable<OT,XT>>
+public interface Executable
 {
     /**
      * Execute this bound expression, returning its result, always a
      * standard partition.
      */
-    StdPart execute();
+    StdPartProvider execute();
+    // TODO:    Part<TI[]> execute()
+
 }

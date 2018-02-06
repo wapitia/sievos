@@ -34,17 +34,17 @@ package org.sievos.lexmodel.sp1.impl;
 import java.util.function.Function;
 
 import org.sievos.kern.Kern;
-import org.sievos.kern.Kern.N;
+//import org.sievos.kern.Kern$.N;
 import org.sievos.kern.TI;
-import org.sievos.lexmodel.sp1.SP1;
 import org.sievos.lexmodel.std.StdBund;
+import org.sievos.lexmodel.std.StdPartFunction;
 
-class SP1KernPartFunction implements SP1.PartFunction {
+class SP1KernPartFunction implements StdPartFunction {
 
     private final String name;
-    private final Function<N,N> n2n;
+    private final Function<Kern.N,Kern.N> n2n;
 
-    public SP1KernPartFunction(String funcName, final Function<N,N> n2n) {
+    public SP1KernPartFunction(final String funcName, final Function<Kern.N,Kern.N> n2n) {
         this.name = funcName;
         this.n2n = n2n;
     }

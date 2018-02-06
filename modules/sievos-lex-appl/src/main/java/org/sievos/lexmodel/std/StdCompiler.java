@@ -31,11 +31,8 @@
  */
 package org.sievos.lexmodel.std;
 
-/**
- *
- */
-public interface StdCompiler<OT> {
+public interface StdCompiler<R> {
 
-    StdExecutable<OT> compile(String expression);
+    R compile(String expression);
 
 }

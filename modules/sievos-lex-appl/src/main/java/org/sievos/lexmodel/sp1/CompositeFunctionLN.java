@@ -33,18 +33,14 @@ package org.sievos.lexmodel.sp1;
 
 import java.util.List;
 
-import org.sievos.lexmodel.sp1.SP1.Executable;
-import org.sievos.lexmodel.std.StdPart;
 import org.sievos.lexmodel.std.StdPartFunction;
+import org.sievos.lexmodel.std.StdPartProvider;
 
 /**
  * A composite function, suitable for evaluation
  */
 public interface CompositeFunctionLN extends ExprLN {
 
-    @Override
-    Executable asExecutable();
-
-    StdPart asPart();
+    StdPartProvider asPart();
     List<? extends StdPartFunction> getFuncList();
 }

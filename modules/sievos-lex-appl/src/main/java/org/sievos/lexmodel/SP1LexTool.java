@@ -31,8 +31,7 @@
  */
 package org.sievos.lexmodel;
 
-import org.sievos.lexmodel.sp1.SP1;
-import org.sievos.lexmodel.sp1.SP1.Executable;
+import org.sievos.lexmodel.std.StdCompiler;
 
 /**
  *
@@ -46,9 +45,7 @@ public interface SP1LexTool {
     }
 
     // Injection should happen here
-    static SP1.Compiler compilerInstance =
-//        org.sievos.lexmodel.sp1.impl.SP1AntrlCompiler.makeFcallCompiler(
-//             org.sievos.lexmodel.sp1.impl.SP1NodeFactory.instance());
+    static StdCompiler<Executable> compilerInstance =
         org.sievos.lexmodel.sp1.impl.SP1AntrlCompiler.makeExprCompiler(
              org.sievos.lexmodel.sp1.impl.SP1NodeFactory.instance());
 

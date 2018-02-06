@@ -5,11 +5,10 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import org.sievos.lexmodel.SP1LexTool;
-import org.sievos.lexmodel.sp1.SP1.Executable;
-import org.sievos.lexmodel.std.StdPart;
-
 import org.junit.Test;
+import org.sievos.lexmodel.Executable;
+import org.sievos.lexmodel.SP1LexTool;
+import org.sievos.lexmodel.std.StdPartProvider;
 
 
 /**
@@ -34,7 +33,7 @@ public class TestLexCompiler {
 
     Consumer<String> funcCompare = (s) -> {
         final Executable apply = compileFunc.apply(s);
-        final StdPart result = apply.execute();
+        final StdPartProvider result = apply.execute();
         System.out.println(String.format("%-20s -> %s -> %s",
             s, apply.toString(), result.toString()));
     };

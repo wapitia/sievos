@@ -40,7 +40,7 @@ import org.sievos.lexmodel.NamedSignature;
 /**
  *
  */
-public class StdFuncDict<OT> {
+public class StdFuncDict {
 
     private final Map<NamedSignature, StdPartFunction> partFunctionMap;
 

@@ -31,11 +31,7 @@
  */
 package org.sievos.lexmodel.sp1;
 
-import org.sievos.lexmodel.std.StdBund;
-import org.sievos.lexmodel.std.StdCompiler;
-import org.sievos.lexmodel.std.StdExecutable;
-import org.sievos.lexmodel.std.StdPart;
-import org.sievos.lexmodel.std.StdPartFunction;
+import org.sievos.lexmodel.Executable;
 
 /**
  * In the SP1 system, all static results are some type of partition,
@@ -45,34 +41,4 @@ public interface SP1 {
 
     public static final Executable FNULL = null;
 
-    public static final PartLN NULLPART = null;
-
-
-    public boolean isNullResult(PartLN part);
-
-    interface Compiler extends StdCompiler<PartLN> {
-
-        @Override
-        Executable compile(String expression);
-    }
-
-
-    interface Executable extends StdExecutable<PartLN> {
-
-        /**
-         * Execute this function, returning its result as some Sievos SP1
-         * result derivative {@code R}
-         *
-         * @see org.sievos.lexmodel.Executable#execute()
-         * @see SP1#Result
-         */
-        @Override
-        public StdPart execute();
-    }
-
-    interface PartFunction extends StdPartFunction {
-
-        @Override
-        StdBund execute(StdBund bund);
-    }
 }

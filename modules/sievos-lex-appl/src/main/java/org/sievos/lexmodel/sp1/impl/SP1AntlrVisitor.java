@@ -33,6 +33,9 @@ package org.sievos.lexmodel.sp1.impl;
 
 import static org.sievos.kern.TI.toTWhen;
 
+import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
+import org.antlr.v4.runtime.tree.ParseTree;
+import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 import org.sievos.kern.TI;
 import org.sievos.lex.SievosParser.Bund1Context;
 import org.sievos.lex.SievosParser.BundXContext;
@@ -51,10 +54,6 @@ import org.sievos.lexmodel.sp1.IdentifierLN;
 import org.sievos.lexmodel.sp1.SP1Node;
 import org.sievos.lexmodel.sp1.SP1NodeProducer;
 import org.sievos.lexmodel.sp1.SingleLN;
-
-import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
-import org.antlr.v4.runtime.tree.ParseTree;
-import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 
 public class SP1AntlrVisitor extends AbstractParseTreeVisitor<SP1Node>
     implements ParseTreeVisitor<SP1Node>, SievosVisitor<SP1Node>
