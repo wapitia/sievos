@@ -33,16 +33,15 @@ package org.sievos.lexmodel.sp1.antlr;
 
  import java.util.function.Function;
 
+import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.CodePointCharStream;
+import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.tree.ParseTree;
 import org.sievos.lex.SievosLexer;
 import org.sievos.lex.SievosParser;
 import org.sievos.lex.SievosVisitor;
 import org.sievos.lexmodel.sp1.SP1Node;
 import org.sievos.lexmodel.std.StdGenerator;
-
-import org.antlr.v4.runtime.CharStreams;
-import org.antlr.v4.runtime.CodePointCharStream;
-import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.tree.ParseTree;
 
 /**
  * Abstraction for the Antlr parsing, visit, and compilation of
@@ -104,7 +103,7 @@ public class SP1AntlrGenerator<N extends SP1Node,R> implements StdGenerator<R> {
     public R walkGoalAndFinish(final ParseTree parseTree) {
         final N node = visitAndReduce(parseTree);
         final R result  = finishResult.apply(node) ;
-        System.out.printf("compile result: %s\n", result);
+//        System.out.printf("generator result: %s\n", result);
         return result;
     }
 

@@ -74,7 +74,7 @@ class SP1BundAccum {
 
     @Override
     public String toString() {
-        return SP1BundAccum.bundleToString(bitset, numBits);
+        return SP1BundAccum.asBund(bitset, numBits).toString();
     }
 
     StdPartProvider asPartition() {
@@ -99,7 +99,7 @@ class SP1BundAccum {
         final Iterator<Boolean> iter = WapitiaCollections.bitSetIterator(bitset,size);
         iter.forEachRemaining( (final Boolean bitvalue) -> {
 	    		final TI tWhen = TI.toTWhen(bitvalue);
-	            tilist.add(tWhen);
+	            tilist.add(0, tWhen);
 	         }
         );
         final StdBundImpl result = new StdBundImpl(tilist.toArray(new TI[size]));

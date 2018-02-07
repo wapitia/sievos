@@ -44,11 +44,11 @@ extends StdPartFunction
 {
 
     def bund2KernN(bund: StdBund): N = {
-    // TODO
-        val b: TI = TI.F
-        val y: TI = TI.T
-        val x: TI = TI.T
-        new Kern.N(b,y,x)
+      val ar = bund.asArray()
+      val b: TI = ar(0)
+      val y: TI = ar(1)
+      val x: TI = ar(2)
+      N(b,y,x)
     }
 
     def kern2Bund(n: N): StdBund = 
