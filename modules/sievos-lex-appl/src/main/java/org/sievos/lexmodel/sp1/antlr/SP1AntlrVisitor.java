@@ -65,8 +65,8 @@ public class SP1AntlrVisitor extends AbstractParseTreeVisitor<SP1Node>
     }
 
     /*
-        @rule expr: ExprLN
-                 def funcallExpr(fcall: CompositeFunctionLN)
+       rule expr: ExprLN
+            def funcallExpr(fcall: CompositeFunctionLN)
     */
     @Override
     public ExprLN visitFuncallExpr(final FuncallExprContext ctx) {
@@ -76,9 +76,9 @@ public class SP1AntlrVisitor extends AbstractParseTreeVisitor<SP1Node>
     }
 
     /*
-        @rule fcall: CompositeFunctionLN
-                 def funcall(part: BundLN, fname: IdentifierLN)
-                 def composite(fcall: CompositeFunctionLN, fname: IdentifierLN)
+       rule fcall: CompositeFunctionLN
+              def funcall(part: BundLN, fname: IdentifierLN)
+              def composite(fcall: CompositeFunctionLN, fname: IdentifierLN)
     */
     @Override
     public CompositeFunctionLN visitFuncall(final FuncallContext ctx) {
@@ -97,9 +97,9 @@ public class SP1AntlrVisitor extends AbstractParseTreeVisitor<SP1Node>
     }
 
     /*
-        @rule part: BundLN
-                 def part1(bund: BundLN)
-                 def partX(part: BundLN, bund: BundLN)
+       rule part: BundLN
+              def part1(bund: BundLN)
+              def partX(part: BundLN, bund: BundLN)
      */
     @Override
     public BundLN visitPart1(final Part1Context ctx) {
@@ -117,9 +117,9 @@ public class SP1AntlrVisitor extends AbstractParseTreeVisitor<SP1Node>
     }
 
     /*
-        @rule bund: BundLN
-                 def bund1(tline: SingleLN)
-                 def bundX(tline: SingleLN, bund: BundLN)
+       rule bund: BundLN
+              def bund1(tline: SingleLN)
+              def bundX(tline: SingleLN, bund: BundLN)
     */
     @Override
     public BundLN visitBund1(final Bund1Context ctx)
@@ -137,8 +137,8 @@ public class SP1AntlrVisitor extends AbstractParseTreeVisitor<SP1Node>
     }
 
     /*
-        @rule fname: IdentifierLN
-                 def identifier(id: String)
+       rule fname: IdentifierLN
+               def identifier(id: String)
     */
     @Override
     public IdentifierLN visitIdentifier(final IdentifierContext ctx)
@@ -148,8 +148,8 @@ public class SP1AntlrVisitor extends AbstractParseTreeVisitor<SP1Node>
     }
 
     /*
-        @rule tline: SingleLN
-                 def tline(ti: TI)
+       rule tline: SingleLN
+              def tline(ti: TI)
     */
     @Override
     public SingleLN visitTline(final TlineContext ctx)

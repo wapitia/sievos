@@ -348,8 +348,8 @@ public class SP1AntlrUtil implements SP1NodeProducer {
         final java.util.List<StdPartFunction> funcList = tupNode.getFuncList();
         final java.util.List<StdPartFunction> newList =
                 new ArrayList<>(funcList.size() + 1);
-        newList.add(partFunction);
         newList.addAll(funcList);
+        newList.add(partFunction);
 
         final SP1BundAccum tuple = tupNode.getTuple();
         return new CompositeFunctionImpl(newList, tuple);
