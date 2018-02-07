@@ -74,7 +74,7 @@ class SP1BundAccum {
 
     @Override
     public String toString() {
-        return SP1BundAccum.bundleToString(bitset, numBits);
+        return SP1BundAccum.asBund(bitset, numBits).toString();
     }
 
     StdPartProvider asPartition() {

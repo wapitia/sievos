@@ -150,8 +150,8 @@ public interface WapitiaCollections {
     /**
      * Limit the size of the bitset iterator of the given bitset
      * @param bitSet
-     * @param size
-     * @return
+     * @param size limit bitset size
+     * @return Iterator of Boolean
      */
     static LimitIterator<Boolean> bitSetIterator(final BitSet bitSet, final int size)
     {
@@ -161,6 +161,13 @@ public interface WapitiaCollections {
         return result;
     }
 
+    /**
+     * Create and return an iterator with a hard upper limit on the number
+     * of items it will return.
+     * @param src
+     * @param limit
+     * @return
+     */
     static <T> LimitIterator<T> limitIterator(final Iterator<T> src,
         final long limit)
     {
