@@ -33,12 +33,17 @@
 package com.wapitia.common.collections;
 
 import java.util.ArrayList;
+import java.util.BitSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+/**
+ * Collection of collection patterns.
+ */
 public interface WapitiaCollections {
 
     /**
@@ -130,6 +135,36 @@ public interface WapitiaCollections {
     static <K,V> V mapPut(final Map<K,V> map, final K key, final V item) {
         map.put(key, item);  // ignore results of map.put, the old value
         return item;
+    }
+
+    /**
+     * An iterator of the bits in the supplied BitSet, counting from bit 0
+     * and working upword, no limit
+     * @param bitSet Iterator of this bitset, which is not changed
+     * @return
+     */
+    static BitSetIterator bitSetIterator(final BitSet bitSet) {
+        return new BitSetIterator(bitSet);
+    }
+
+    /**
+     * Limit the size of the bitset iterator of the given bitset
+     * @param bitSet
+     * @param size
+     * @return
+     */
+    static LimitIterator<Boolean> bitSetIterator(final BitSet bitSet, final int size)
+    {
+        final LimitIterator<Boolean> result =
+            WapitiaCollections.<Boolean> limitIterator(
+                new BitSetIterator(bitSet), (long) size);
+        return result;
+    }
+
+    static <T> LimitIterator<T> limitIterator(final Iterator<T> src,
+        final long limit)
+    {
+        return new LimitIterator<T>(src, c -> c < limit);
     }
 
 }

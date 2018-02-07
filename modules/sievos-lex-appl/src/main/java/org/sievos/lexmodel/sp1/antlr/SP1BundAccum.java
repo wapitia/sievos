@@ -34,6 +34,7 @@ package org.sievos.lexmodel.sp1.antlr;
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.EnumMap;
+import java.util.Iterator;
 import java.util.List;
 
 import org.sievos.kern.Part;
@@ -41,6 +42,8 @@ import org.sievos.kern.TI;
 import org.sievos.lexmodel.sp1.impl.StdBundImpl;
 import org.sievos.lexmodel.std.StdBund;
 import org.sievos.lexmodel.std.StdPartProvider;
+
+import com.wapitia.common.collections.WapitiaCollections;
 
 class SP1BundAccum {
 
@@ -79,20 +82,26 @@ class SP1BundAccum {
         return () -> result;
     }
 
-
     public static String bundleToString(final BitSet bitset, final int size) {
+
         final StringBuilder bldr = new StringBuilder();
-        for (int ix = size-1; ix >= 0; --ix) {
-            bldr.append(tDispChar(TI.toTWhen(bitset.get(ix))));
-        }
+        final Iterator<Boolean> iter = WapitiaCollections.bitSetIterator(bitset,size);
+        iter.forEachRemaining( (final Boolean bitvalue) -> {
+	    		final TI tWhen = TI.toTWhen(bitvalue);
+	    		bldr.append(tDispChar(tWhen));
+	         }
+        );
         return bldr.toString();
     }
 
     public static StdBund asBund(final BitSet bitset, final int size) {
         final List<TI> tilist = new ArrayList<>();
-        for (int ix = size-1; ix >= 0; --ix) {
-            tilist.add(TI.toTWhen(bitset.get(ix)));
-        }
+        final Iterator<Boolean> iter = WapitiaCollections.bitSetIterator(bitset,size);
+        iter.forEachRemaining( (final Boolean bitvalue) -> {
+	    		final TI tWhen = TI.toTWhen(bitvalue);
+	            tilist.add(tWhen);
+	         }
+        );
         final StdBundImpl result = new StdBundImpl(tilist.toArray(new TI[size]));
         return result;
     }
