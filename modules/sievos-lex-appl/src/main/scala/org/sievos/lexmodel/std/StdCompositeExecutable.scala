@@ -29,27 +29,39 @@
  * ARISING OUT OF THE USE OF OR INABILITY TO USE THIS SOFTWARE, EVEN IF
  * WAPITIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  */
-package org.sievos.lexmodel.sp1;
+package org.sievos.lexmodel
+package std
 
-import org.sievos.lexmodel.Executable;
-import org.sievos.lexmodel.std.StdGenerator;
+import org.sievos.lexmodel.sp1.impl.StdPartImpl
+import org.sievos.kern.Part
+
+import scala.collection.JavaConverters._
 
 /**
- * In the SP1 system, all static results are some type of partition,
- * returned as a {@link PartLN}
+ * Executable takes a Standard Partition and a list of Partion Functions
+ * and applies the composite function chain to each bundle of the given
+ * partition.
  */
-public interface SP1 {
+// TODO: pure Scala
+class StdCompositeExecutable(inputPart: StdPartProvider, 
+    funcList: java.util.List[StdPartFunction]) 
+  extends Executable 
+{
+  
+  val scalaFuncList: scala.collection.mutable.Buffer[StdPartFunction] = 
+    funcList.asScala
 
-    /**
-     * Make compiler that takes a Sievos "expr" goal and produces some
-     * Executable from it.
-     */
-    static StdGenerator<Executable> makeExprCompiler() {
+  override def execute(): StdPartImpl = {
 
-        // Injection should happen here
-        return org.sievos.lexmodel.sp1.antlr.SP1AntlrUtil
-                .instance()
-                .makeExprCompiler();
+      val part: Part[StdBund] = inputPart.partition
+      val resultPart: Part[StdBund] = part.map(bund => composeEachBund(bund))
+      new StdPartImpl(resultPart)
+  }
+
+  def composeEachBund(bund: StdBund): StdBund = {
+      var accumBund: StdBund = bund
+      for (pf <- scalaFuncList) 
+        accumBund = pf.execute(accumBund)
+      accumBund
     }
-
 }

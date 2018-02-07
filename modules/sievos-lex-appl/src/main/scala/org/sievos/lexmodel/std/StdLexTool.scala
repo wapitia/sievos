@@ -29,15 +29,18 @@
  * ARISING OUT OF THE USE OF OR INABILITY TO USE THIS SOFTWARE, EVEN IF
  * WAPITIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  */
-package org.sievos.lexmodel.std;
+package org.sievos.lexmodel
+package std
 
-// Part is a Scala Trait and Object
-import org.sievos.kern.Part;
+import org.sievos.lexmodel.Executable
 
-/**
- * Wraps a partition of bundles, {@code Part<StdBund> }
- */
-public interface StdPartProvider {
+object StdLexTool {
 
-    Part<StdBund> partition();
+    def compile(expression: String): Executable  =
+      compilerInstance.compile(expression)
+
+    // Injection should happen here
+    def compilerInstance: StdGenerator[Executable] =
+        org.sievos.lexmodel.sp1.SP1.makeExprCompiler
+
 }

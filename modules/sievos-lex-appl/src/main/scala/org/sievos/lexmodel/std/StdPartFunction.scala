@@ -29,7 +29,8 @@
  * ARISING OUT OF THE USE OF OR INABILITY TO USE THIS SOFTWARE, EVEN IF
  * WAPITIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  */
-package org.sievos.lexmodel.std;
+package org.sievos.lexmodel
+package std
 
 /**
  * A function that has the  implementation to take a single Standard

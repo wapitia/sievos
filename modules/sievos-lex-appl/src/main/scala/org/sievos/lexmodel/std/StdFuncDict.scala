@@ -29,53 +29,34 @@
  * ARISING OUT OF THE USE OF OR INABILITY TO USE THIS SOFTWARE, EVEN IF
  * WAPITIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  */
-package org.sievos.lexmodel.std;
+package org.sievos.lexmodel
+package std
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import org.sievos.lexmodel.NamedSignature
 
-import org.sievos.lexmodel.NamedSignature;
+class StdFuncDict {
 
-/**
- *
- */
-public class StdFuncDict {
+//  val MISSING_FUNC: StdPartFunction = null
+  
+  val partFunctionMap = scala.collection.mutable.Map.empty[NamedSignature, StdPartFunction]
 
-    private final Map<NamedSignature, StdPartFunction> partFunctionMap;
-
-    public StdFuncDict() {
-        this.partFunctionMap = new HashMap<NamedSignature, StdPartFunction>();
-    }
-
-    public void put(final NamedSignature sig, final StdPartFunction func) {
-        partFunctionMap.put(sig, func);
-    }
-
-    public <PF extends StdPartFunction> PF getPartFunction(final String name) {
-        return this.getPartFunction(NamedSignature.apply(name));
-    }
-
-    public <PF extends StdPartFunction> PF getPartFunction(final NamedSignature sig) {
-        @SuppressWarnings("unchecked")
-        final PF result = Optional
-            .ofNullable((PF) partFunctionMap.get(sig))
-            .orElseThrow(() -> new FunctionNotFoundException(sig));
-        return result;
-    }
-
-    @SuppressWarnings("serial")
-    static class FunctionNotFoundException extends UnsupportedOperationException {
-        final NamedSignature func;
-
-        FunctionNotFoundException(final NamedSignature func) {
-            super(func.toString());
-            this.func = func;
-        }
-
-        public NamedSignature getSignature() {
-            return func;
-        }
-    }
-
+  def put(sig: NamedSignature, func: StdPartFunction) =
+    partFunctionMap.put(sig, func)
+        
+  def getPartFunction(name: String): StdPartFunction = 
+    getPartFunction(NamedSignature.apply(name))
+  
+  def getPartFunction(sig: NamedSignature): StdPartFunction = {
+    val res: StdPartFunction = 
+      partFunctionMap.getOrElse[StdPartFunction](sig, StdFuncDict.MISSING_FUNC)
+    res
+  }
+  
 }
+
+object StdFuncDict {
+  
+  val MISSING_FUNC: StdPartFunction = null
+  
+}
+

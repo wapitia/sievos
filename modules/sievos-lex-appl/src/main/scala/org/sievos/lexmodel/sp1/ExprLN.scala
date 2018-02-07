@@ -29,12 +29,10 @@
  * ARISING OUT OF THE USE OF OR INABILITY TO USE THIS SOFTWARE, EVEN IF
  * WAPITIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  */
-package org.sievos.lexmodel.sp1;
 
-import org.sievos.kern.Part;
-import org.sievos.lexmodel.std.StdBund;
+package org.sievos.lexmodel
+package sp1
 
-public interface PartLN extends SP1Node {
+import org.sievos.lexmodel.Executable
 
-    Part<StdBund> asPart();
-}
+trait ExprLN extends SP1Node with Executable

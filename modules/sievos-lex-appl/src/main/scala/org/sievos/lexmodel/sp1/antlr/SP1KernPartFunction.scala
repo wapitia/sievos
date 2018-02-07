@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-present wapitia.com
+ * Copyright 2016-2018 wapitia.com
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -29,23 +29,34 @@
  * ARISING OUT OF THE USE OF OR INABILITY TO USE THIS SOFTWARE, EVEN IF
  * WAPITIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  */
-package org.sievos.lexmodel;
+package org.sievos.lexmodel
+package sp1.antlr
 
-import org.sievos.lexmodel.std.StdGenerator;
+import org.sievos.kern.Kern.N
+import org.sievos.kern.Kern
+import org.sievos.kern.TI
+import org.sievos.lexmodel.sp1.impl.StdBundImpl
+import org.sievos.lexmodel.std.StdBund
+import org.sievos.lexmodel.std.StdPartFunction
 
-/**
- *
- */
-public interface SP1LexTool {
+class SP1KernPartFunction(name: String, n2n: N => N)
+extends StdPartFunction
+{
 
-    static Executable compile(final String expression)
-    {
-        final Executable res = compilerInstance.compile(expression);
-        return res;
+    def bund2KernN(bund: StdBund): N = {
+    // TODO
+        val b: TI = TI.F
+        val y: TI = TI.T
+        val x: TI = TI.T
+        new Kern.N(b,y,x)
     }
 
-    // Injection should happen here
-    static StdGenerator<Executable> compilerInstance =
-        org.sievos.lexmodel.sp1.SP1.makeExprCompiler();
+    def kern2Bund(n: N): StdBund = 
+        StdBundImpl.apply(n.b,n.y,n.x)
+
+    override def execute(bund: StdBund): StdBund =
+        kern2Bund(n2n.apply(bund2KernN(bund)))
+
+    override def toString = name
 
 }

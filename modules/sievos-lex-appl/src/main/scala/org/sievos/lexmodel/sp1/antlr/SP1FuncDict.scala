@@ -29,32 +29,25 @@
  * ARISING OUT OF THE USE OF OR INABILITY TO USE THIS SOFTWARE, EVEN IF
  * WAPITIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  */
-package org.sievos.lexmodel.sp1;
 
-import org.sievos.kern.TI;
+package org.sievos.lexmodel
+package sp1.antlr
 
-/**
- *
- */
-public interface SP1NodeProducer {
+import java.util.function.Function
 
-    BundLN bund1(SingleLN singNode);
+import org.sievos.kern.Kern
+import org.sievos.kern.Kern.N
+import org.sievos.lexmodel.NamedSignature
+import org.sievos.lexmodel.std.StdFuncDict
 
-    IdentifierLN identifier(String identString);
+class SP1FuncDict extends StdFuncDict {
 
-    SingleLN tline(TI ti);
+        // TODO: Flexible library lookup of functions
+  putKPF("r", Kern.r)
+  putKPF("z", Kern.z)
 
-    BundLN bundX(SingleLN singNode, BundLN bundNode);
+  def putKPF(name: String, func: N => N) =
+    put(NamedSignature.apply(name), new SP1KernPartFunction(name, func))
 
-    BundLN part1(BundLN tbund);
-
-    BundLN partX(BundLN tpart, BundLN tbund);
-
-    ExprLN funcallExpr(CompositeFunctionLN fcall);
-
-    CompositeFunctionLN funcall(BundLN ptp, IdentifierLN fnameName);
-
-    CompositeFunctionLN composite(IdentifierLN fnameName,
-        CompositeFunctionLN subfname);
 
 }

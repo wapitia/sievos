@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-present wapitia.com
+ * Copyright 2016-2018 wapitia.com
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -29,23 +29,26 @@
  * ARISING OUT OF THE USE OF OR INABILITY TO USE THIS SOFTWARE, EVEN IF
  * WAPITIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  */
-package org.sievos.lexmodel.std;
+package org.sievos.lexmodel
+package sp1
 
-import org.sievos.lexmodel.Executable;
+import org.sievos.lexmodel.Executable
+import org.sievos.lexmodel.std.StdGenerator
 
 /**
- *
+ * In the SP1 system, all static results are some type of partition,
+ * returned as a {@link PartLN}
  */
-public interface StdLexTool {
-
-    static Executable compile(final String expression)
-    {
-        final Executable res = compilerInstance.compile(expression);
-        return res;
-    }
-
-    // Injection should happen here
-    static StdGenerator<Executable> compilerInstance =
-        org.sievos.lexmodel.sp1.SP1.makeExprCompiler();
+object SP1 {
+  
+    /**
+     * Make compiler that takes a Sievos "expr" goal and produces some
+     * Executable from it.
+     */
+    def makeExprCompiler: StdGenerator[Executable] = 
+      // Injection should happen here
+        org.sievos.lexmodel.sp1.antlr.SP1AntlrUtil
+                .instance()
+                .makeExprCompiler()
 
 }

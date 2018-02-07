@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-present wapitia.com
+ * Copyright 2016-2018 wapitia.com
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -29,15 +29,20 @@
  * ARISING OUT OF THE USE OF OR INABILITY TO USE THIS SOFTWARE, EVEN IF
  * WAPITIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  */
-package org.sievos.lexmodel.std;
+package org.sievos.lexmodel
+package sp1
 
-import org.sievos.kern.TI;
+import java.util.List
+
+import org.sievos.lexmodel.std.StdPartFunction
+import org.sievos.lexmodel.std.StdPartProvider
 
 /**
- * Standard Bundle Interface can deliver its TI bundle
- * as an array of TI states.
+ * A composite function, suitable for evaluation
  */
-public interface StdBund {
+trait CompositeFunctionLN extends ExprLN {
 
-    TI[] asArray();
+    def asPart(): StdPartProvider 
+
+    def getFuncList(): List[StdPartFunction]
 }

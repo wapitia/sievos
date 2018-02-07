@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2018 wapitia.com
+ * Copyright 2016-present wapitia.com
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -29,26 +29,23 @@
  * ARISING OUT OF THE USE OF OR INABILITY TO USE THIS SOFTWARE, EVEN IF
  * WAPITIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  */
+package org.sievos.lexmodel
 
-package org.sievos.lexmodel.sp1.antlr;
+import org.sievos.lexmodel.std.StdGenerator
 
-import java.util.function.Function;
+/**
+ *  Main static entry point for the Sievos language lexical parser
+ *  and generator.
+ *  Here a Sievos string expression may be parsed and compiled into
+ *  an Executable object
+ */
+object SievosLexTool {
 
-import org.sievos.kern.Kern;
-import org.sievos.kern.Kern.N;
-import org.sievos.lexmodel.NamedSignature;
-import org.sievos.lexmodel.std.StdFuncDict;
+  def compile(expression: String): Executable = 
+    compilerInstance.compile(expression)
 
-class SP1FuncDict extends StdFuncDict {
-
-    private void putKPF(final String name, final Function<N,N> func) {
-        put(NamedSignature.apply(name), new SP1KernPartFunction(name, func));
-    }
-
-    SP1FuncDict() {
-        // TODO: Flexible library lookup of functions
-        putKPF("r", Kern::r);
-        putKPF("z", Kern::z);
-    }
+  // Injection should happen here
+  def compilerInstance: StdGenerator[Executable] =
+    org.sievos.lexmodel.sp1.SP1.makeExprCompiler
 
 }

@@ -35,7 +35,6 @@ import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Optional;
 
 import org.sievos.kern.TI;
@@ -49,6 +48,7 @@ import org.sievos.lexmodel.sp1.SP1Node;
 import org.sievos.lexmodel.sp1.SP1NodeProducer;
 import org.sievos.lexmodel.sp1.SingleLN;
 import org.sievos.lexmodel.sp1.impl.StdPartImpl;
+import org.sievos.lexmodel.std.StdCompositeExecutable;
 import org.sievos.lexmodel.std.StdGenerator;
 import org.sievos.lexmodel.std.StdPartFunction;
 import org.sievos.lexmodel.std.StdPartProvider;
@@ -250,17 +250,17 @@ public class SP1AntlrUtil implements SP1NodeProducer {
     implements CompositeFunctionLN
     {
 
-        private final List<StdPartFunction> funcList;
+        private final java.util.List<StdPartFunction> funcList;
         private final SP1BundAccum tuple;
 
-        CompositeFunctionImpl(final List<StdPartFunction> funcList, final SP1BundAccum tuple) {
+        CompositeFunctionImpl(final java.util.List<StdPartFunction> funcList, final SP1BundAccum tuple) {
             this.funcList = new ArrayList<>(funcList);
             this.tuple = tuple;
         }
 
         @Override
         public StdPartProvider execute() {
-            final CompositeExecutable exec = new CompositeExecutable(asPart(), funcList);
+            final StdCompositeExecutable exec = new StdCompositeExecutable(asPart(), funcList);
             final StdPartImpl result = exec.execute();
             return result;
         }
@@ -272,7 +272,7 @@ public class SP1AntlrUtil implements SP1NodeProducer {
         }
 
         @Override
-        public List<StdPartFunction> getFuncList() {
+        public java.util.List<StdPartFunction> getFuncList() {
             return funcList;
         }
 
@@ -335,7 +335,7 @@ public class SP1AntlrUtil implements SP1NodeProducer {
         final String identName = identNode.getIdent();
         final SP1BundAccum tuple = ptp.makeBundAccum();
         final StdPartFunction func = funcDict.getPartFunction(identName);
-        final List<StdPartFunction> slist = Collections
+        final java.util.List<StdPartFunction> slist = Collections
                 .<StdPartFunction> singletonList(func);
         return new CompositeFunctionImpl(slist, tuple);
     }
@@ -345,8 +345,8 @@ public class SP1AntlrUtil implements SP1NodeProducer {
         final String identName = funcName.getIdent();
         final StdPartFunction partFunction =
                 funcDict.getPartFunction(identName);
-        final List<StdPartFunction> funcList = tupNode.getFuncList();
-        final List<StdPartFunction> newList =
+        final java.util.List<StdPartFunction> funcList = tupNode.getFuncList();
+        final java.util.List<StdPartFunction> newList =
                 new ArrayList<>(funcList.size() + 1);
         newList.add(partFunction);
         newList.addAll(funcList);

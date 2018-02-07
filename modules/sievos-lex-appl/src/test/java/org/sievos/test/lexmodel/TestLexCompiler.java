@@ -7,7 +7,7 @@ import java.util.function.Function;
 
 import org.junit.Test;
 import org.sievos.lexmodel.Executable;
-import org.sievos.lexmodel.SP1LexTool;
+import org.sievos.lexmodel.SievosLexTool;
 import org.sievos.lexmodel.std.StdPartProvider;
 
 
@@ -29,7 +29,7 @@ public class TestLexCompiler {
         expressions.forEach(funcCompare);
     }
 
-    Function<String,Executable> compileFunc = (s) -> SP1LexTool.compile(s);
+    Function<String,Executable> compileFunc = (s) -> SievosLexTool.compile(s);
 
     Consumer<String> funcCompare = (s) -> {
         final Executable apply = compileFunc.apply(s);
