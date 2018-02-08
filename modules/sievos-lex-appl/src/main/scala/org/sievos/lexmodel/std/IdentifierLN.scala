@@ -29,31 +29,12 @@
  * ARISING OUT OF THE USE OF OR INABILITY TO USE THIS SOFTWARE, EVEN IF
  * WAPITIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  */
-package org.sievos.lexmodel
-package sp1.impl
+package org.sievos.lexmodel.std
 
-import org.sievos.kern.TI
-import org.sievos.lexmodel.std.StdBund
+import org.sievos.lexmodel.SievosLexNode
 
-/**
- * Basic StdBund implementation
- */
-case class StdBundImpl(tiarray: Array[TI]) extends StdBund {
+trait IdentifierLN extends SievosLexNode {
 
-    /**
-     * Return a copy of this Bundle's array of TI states
-     */
-    override def asArray: Array[TI] = tiarray.clone()
+    def getIdent(): String
 
-    override def toString: String =  {
-      val sstream: Stream[String] = tiarray.toStream.map(f => f.toString)
-      sstream.mkString
-    }
-
-}
-
-object StdBundImpl {
-  
-  // standard 3-bundle
-  def apply(t1: TI, t2: TI, t3: TI) = new StdBundImpl(Array(t1,t2,t3))
 }

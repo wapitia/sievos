@@ -32,7 +32,8 @@
 package org.sievos.lexmodel
 package std
 
-import com.wapitia.lex.{StdGenerator,StdGenerateStatus}
+import com.wapitia.lex.StdGenerateStatus
+import com.wapitia.lex.StdGenerator
 
 object StdLexTool {
 

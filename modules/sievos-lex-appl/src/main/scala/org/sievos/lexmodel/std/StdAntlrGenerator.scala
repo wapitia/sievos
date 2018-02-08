@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2018 wapitia.com
+ * Copyright 2016-present wapitia.com
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -29,12 +29,33 @@
  * ARISING OUT OF THE USE OF OR INABILITY TO USE THIS SOFTWARE, EVEN IF
  * WAPITIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  */
-package org.sievos.lexmodel
-package sp1
+package org.sievos.lexmodel.std
 
-import org.sievos.kern.TI
+import org.antlr.v4.runtime.CodePointCharStream
+import org.antlr.v4.runtime.CommonTokenStream
+import org.antlr.v4.runtime.tree.ParseTree
+import org.sievos.lex.SievosLexer
+import org.sievos.lex.SievosParser
+import org.sievos.lexmodel.SievosLexNode
+import org.sievos.lexmodel.std.antlr.SievosAntlrErrorListener
+import com.wapitia.lex.antlr.AntlrGeneratorBase
+import org.sievos.lexmodel.sp1.antlr.SP1AntlrVisitor
+import org.sievos.lex.SievosVisitor
 
-trait SingleLN extends SP1Node {
-
-    def getState: TI
-}
+/**
+ * An Antlr Generator for some goal in the Sievos language such as "expr" 
+ *  
+ * see :modules:sievos-lex-lang:src/main/antlr/org.sievos.lex.Sievos.g4
+ */
+abstract class StdAntlrGenerator[R](   
+  sievosVisitor: SievosVisitor[SievosLexNode],
+  goalOfParser: SievosParser => ParseTree, 
+  finishResult: SievosLexNode => R)
+  extends AntlrGeneratorBase[SievosLexNode,R,SievosParser](
+    sievosVisitor, 
+    goalOfParser, 
+    finishResult,  
+    new SievosAntlrErrorListener(), 
+    (cps: CodePointCharStream) => new SievosLexer(cps),
+    (cts: CommonTokenStream) => new SievosParser(cts) )
+    

@@ -36,8 +36,8 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import org.sievos.lexmodel.Executable;
 import org.sievos.lexmodel.SievosLexTool;
+import org.sievos.lexmodel.std.Executable;
 import org.sievos.lexmodel.std.StdPartProvider;
 
 import org.junit.Assert;

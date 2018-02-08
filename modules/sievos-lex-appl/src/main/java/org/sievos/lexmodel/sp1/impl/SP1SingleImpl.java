@@ -29,11 +29,28 @@
  * ARISING OUT OF THE USE OF OR INABILITY TO USE THIS SOFTWARE, EVEN IF
  * WAPITIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  */
-package org.sievos.lexmodel
-package sp1
 
-trait IdentifierLN extends SP1Node {
+package org.sievos.lexmodel.sp1.impl;
 
-    def getIdent(): String
+import org.sievos.kern.TI;
+import org.sievos.lexmodel.std.SingleLN;
+
+public class SP1SingleImpl implements SingleLN {
+
+    private final TI state;
+
+    public SP1SingleImpl(final TI state) {
+        this.state = state;
+    }
+
+    @Override
+    public TI getState() {
+        return state;
+    }
+
+    @Override
+    public String toString() {
+        return SP1BundAccum.tDispChar(state);
+    }
 
 }

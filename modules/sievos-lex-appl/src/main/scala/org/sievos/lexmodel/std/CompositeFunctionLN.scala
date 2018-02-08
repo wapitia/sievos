@@ -29,64 +29,17 @@
  * ARISING OUT OF THE USE OF OR INABILITY TO USE THIS SOFTWARE, EVEN IF
  * WAPITIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  */
+package org.sievos.lexmodel.std
 
-package org.sievos.lexmodel.sp1.antlr;
+import java.util.List
 
-import java.util.ArrayList;
+/**
+ * A composite function, suitable for evaluation
 
-import org.sievos.lexmodel.sp1.CompositeFunctionLN;
-import org.sievos.lexmodel.sp1.impl.StdPartImpl;
-import org.sievos.lexmodel.std.StdCompositeExecutable;
-import org.sievos.lexmodel.std.StdPartFunction;
-import org.sievos.lexmodel.std.StdPartProvider;
+import org.sievos.lexmodel.std.ExprLN */
+trait CompositeFunctionLN extends ExprLN {
 
-class CompositeFunctionImpl implements CompositeFunctionLN
-{
+    def asPart(): StdPartProvider 
 
-    private final java.util.List<StdPartFunction> funcList;
-    private final SP1BundAccum tuple;
-
-    CompositeFunctionImpl(final java.util.List<StdPartFunction> funcList, final SP1BundAccum tuple) {
-        this.funcList = new ArrayList<>(funcList);
-        this.tuple = tuple;
-    }
-
-    @Override
-    public StdPartProvider execute() {
-        final StdCompositeExecutable exec = new StdCompositeExecutable(asPart(), funcList);
-        final StdPartImpl result = exec.execute();
-        return result;
-    }
-
-
-    @Override
-    public StdPartProvider asPart() {
-        return tuple.asPartition();
-    }
-
-    @Override
-    public java.util.List<StdPartFunction> getFuncList() {
-        return funcList;
-    }
-
-    public SP1BundAccum getTuple() {
-        return tuple;
-    }
-
-    @Override
-    public String toString() {
-
-        final StringBuilder bldr = new StringBuilder();
-        bldr.append(tuple.toString());
-        bldr.append(' ');
-        if (funcList.size() == 1) {
-            bldr.append(funcList.get(0).toString());
-        }
-        else {
-            bldr.append(funcList.toString());
-        }
-        return bldr.toString();
-    }
-
-
+    def getFuncList(): List[StdPartFunction]
 }

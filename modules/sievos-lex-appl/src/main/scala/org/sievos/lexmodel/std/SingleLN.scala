@@ -29,11 +29,12 @@
  * ARISING OUT OF THE USE OF OR INABILITY TO USE THIS SOFTWARE, EVEN IF
  * WAPITIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  */
-package org.sievos.lexmodel
-package sp1
+package org.sievos.lexmodel.std
 
-trait BundLN extends SP1Node {
+import org.sievos.kern.TI
+import org.sievos.lexmodel.SievosLexNode
 
-    def pipe(tbund: BundLN): BundLN
+trait SingleLN extends SievosLexNode {
 
+    def getState: TI
 }

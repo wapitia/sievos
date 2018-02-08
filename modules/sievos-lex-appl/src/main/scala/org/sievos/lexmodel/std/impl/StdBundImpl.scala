@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-present wapitia.com
+ * Copyright 2016-2018 wapitia.com
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -29,31 +29,31 @@
  * ARISING OUT OF THE USE OF OR INABILITY TO USE THIS SOFTWARE, EVEN IF
  * WAPITIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  */
-package org.sievos.lexmodel.sp1.antlr
+package org.sievos.lexmodel
+package std.impl
 
-import org.antlr.v4.runtime.CodePointCharStream
-import org.antlr.v4.runtime.CommonTokenStream
-import org.antlr.v4.runtime.tree.ParseTree
-import org.sievos.lex.SievosLexer
-import org.sievos.lex.SievosParser
-import org.sievos.lexmodel.sp1.SP1Node
-import org.sievos.lexmodel.sp1.SP1NodeProducer
-
-import com.wapitia.lex.antlr.AntlrGeneratorBase
+import org.sievos.kern.TI
+import org.sievos.lexmodel.std.StdBund
 
 /**
- * An Antlr Generator for some goal in the Sievos language such as "expr" 
- *  
- * see :modules:sievos-lex-lang:src/main/antlr/org.sievos.lex.Sievos.g4
+ * Basic StdBund implementation
  */
-abstract class SP1AntlrGenerator[R](nodes: SP1NodeProducer,   
-  goalOfParser: SievosParser => ParseTree, 
-  finishResult: SP1Node => R)
-  extends AntlrGeneratorBase[SP1Node,R,SievosParser](
-    new SP1AntlrVisitor(nodes), 
-    goalOfParser, 
-    finishResult,  
-    new SievosAntlrErrorListener(), 
-    (cps: CodePointCharStream) => new SievosLexer(cps),
-    (cts: CommonTokenStream) => new SievosParser(cts) )
-    
+case class StdBundImpl(tiarray: Array[TI]) extends StdBund {
+
+    /**
+     * Return a copy of this Bundle's array of TI states
+     */
+    override def asArray: Array[TI] = tiarray.clone()
+
+    override def toString: String =  {
+      val sstream: Stream[String] = tiarray.toStream.map(f => f.toString)
+      sstream.mkString
+    }
+
+}
+
+object StdBundImpl {
+  
+  // standard 3-bundle
+  def apply(t1: TI, t2: TI, t3: TI) = new StdBundImpl(Array(t1,t2,t3))
+}

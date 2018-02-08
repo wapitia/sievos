@@ -29,20 +29,32 @@
  * ARISING OUT OF THE USE OF OR INABILITY TO USE THIS SOFTWARE, EVEN IF
  * WAPITIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  */
-package org.sievos.lexmodel
-package sp1
+package org.sievos.lexmodel.std
 
-import java.util.List
-
-import org.sievos.lexmodel.std.StdPartFunction
-import org.sievos.lexmodel.std.StdPartProvider
+import org.sievos.kern.TI
 
 /**
- * A composite function, suitable for evaluation
+ * Abstraction of the SP1 lexical tree construction model.
  */
-trait CompositeFunctionLN extends ExprLN {
+trait StdLexNodeProducer {
 
-    def asPart(): StdPartProvider 
+  def bund1(sing: SingleLN): BundLN 
 
-    def getFuncList(): List[StdPartFunction]
+  def identifier(ident: String): IdentifierLN
+
+  def tline(ti: TI): SingleLN 
+
+  def bundX(sing: SingleLN, bund: BundLN): BundLN 
+
+  def part1(bund: BundLN): BundLN 
+
+  def partX(part: BundLN, bund: BundLN): BundLN 
+
+  def funcallExpr(fcall: CompositeFunctionLN): ExprLN 
+
+  def funcall(bund: BundLN, fnameName: IdentifierLN): CompositeFunctionLN 
+
+  def composite(fnameName: IdentifierLN, 
+        subfname: CompositeFunctionLN): CompositeFunctionLN 
+
 }

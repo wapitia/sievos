@@ -50,9 +50,15 @@ import org.sievos.lex.SievosParser.TlineContext
 import org.sievos.lex.SievosVisitor
 import org.antlr.v4.runtime.Token
 import com.wapitia.lex.antlr.AntlrVisitorBase
+import org.sievos.lexmodel.std.ExprLN
+import org.sievos.lexmodel.std.CompositeFunctionLN
+import org.sievos.lexmodel.std.BundLN
+import org.sievos.lexmodel.std.IdentifierLN
+import org.sievos.lexmodel.std.SingleLN
+import org.sievos.lexmodel.std.StdLexNodeProducer
 
-class SP1AntlrVisitor(nodes: SP1NodeProducer) 
-extends AntlrVisitorBase[SP1Node] with SievosVisitor[SP1Node]
+class SP1AntlrVisitor(nodes: StdLexNodeProducer) 
+extends AntlrVisitorBase[SievosLexNode] with SievosVisitor[SievosLexNode]
 {
     /*
        rule expr: ExprLN

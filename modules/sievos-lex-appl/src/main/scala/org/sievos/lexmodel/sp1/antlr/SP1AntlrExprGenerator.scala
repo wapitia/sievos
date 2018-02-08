@@ -31,25 +31,23 @@
  */
 package org.sievos.lexmodel.sp1.antlr
 
-import org.sievos.lexmodel.Executable
-import org.sievos.lexmodel.sp1.SP1NodeProducer
-
 import com.wapitia.lex.StdGenerator
+import org.sievos.lexmodel.std.{Executable,StdLexNodeProducer,StdAntlrGenerator}
 
 /**
  * An Antlr Generator for the Sievos "expr" goal returning an Executable
  * ' 
  * see :modules:sievos-lex-lang:src/main/antlr/org.sievos.lex.Sievos.g4
  */
-class SP1AntlrExprGenerator(nodes: SP1NodeProducer) 
-  extends SP1AntlrGenerator[Executable](
-    nodes, 
+class SP1AntlrExprGenerator(nodes: StdLexNodeProducer) 
+  extends StdAntlrGenerator[Executable](
+    new SP1AntlrVisitor(nodes),
     p => p.expr, 
     n => n.asInstanceOf[Executable])
 
 object SP1AntlrExprGenerator {
   
-  def apply(nodes: SP1NodeProducer): StdGenerator[Executable] = 
+  def apply(nodes: StdLexNodeProducer): StdGenerator[Executable] = 
     new SP1AntlrExprGenerator(nodes)
 
 }

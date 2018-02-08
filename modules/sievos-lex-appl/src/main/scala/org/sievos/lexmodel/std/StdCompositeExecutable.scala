@@ -32,10 +32,10 @@
 package org.sievos.lexmodel
 package std
 
-import org.sievos.lexmodel.sp1.impl.StdPartImpl
-import org.sievos.kern.Part
+import scala.collection.JavaConverters.asScalaBufferConverter
 
-import scala.collection.JavaConverters._
+import org.sievos.kern.Part
+import org.sievos.lexmodel.std.impl.StdPartImpl
 
 /**
  * Executable takes a Standard Partition and a list of Partion Functions

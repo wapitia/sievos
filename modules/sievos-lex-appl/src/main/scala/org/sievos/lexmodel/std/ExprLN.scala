@@ -30,9 +30,8 @@
  * WAPITIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  */
 
-package org.sievos.lexmodel
-package sp1
+package org.sievos.lexmodel.std
 
-import org.sievos.lexmodel.Executable
+import org.sievos.lexmodel.SievosLexNode
 
-trait ExprLN extends SP1Node with Executable
+trait ExprLN extends SievosLexNode with Executable

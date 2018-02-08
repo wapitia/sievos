@@ -29,28 +29,40 @@
  * ARISING OUT OF THE USE OF OR INABILITY TO USE THIS SOFTWARE, EVEN IF
  * WAPITIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  */
+package org.sievos.lexmodel
+package sp1
+package impl
 
-package org.sievos.lexmodel.sp1.antlr;
+import org.sievos.kern.Kern.N
+import org.sievos.kern.TI
+import org.sievos.lexmodel.std.StdBund
+import org.sievos.lexmodel.std.StdPartFunction
+import org.sievos.lexmodel.std.impl.StdBundImpl
 
-import org.sievos.kern.TI;
-import org.sievos.lexmodel.sp1.SingleLN;
+class StdBund2KernFunction(name: String, n2n: N => N)
+extends StdPartFunction
+{
+  import B2K.{asBund,asN}
 
-class SingleImpl implements SingleLN {
+  override def execute(bund: StdBund): StdBund = {
+    val i = asN(bund)
+    val o = n2n(i)
+    asBund(o)
+  }
 
-    private final TI state;
+  override def toString = name
+}
 
-    public SingleImpl(final TI state) {
-        this.state = state;
+private[sp1] object B2K {
+  
+    def asN(bund: StdBund): N = {
+      val ar = bund.asArray()
+      val b: TI = ar(0)
+      val y: TI = ar(1)
+      val x: TI = ar(2)
+      N(b,y,x)
     }
 
-    @Override
-    public TI getState() {
-        return state;
-    }
-
-    @Override
-    public String toString() {
-        return SP1BundAccum.tDispChar(state);
-    }
-
+    def asBund(n: N): StdBund = 
+        StdBundImpl.apply(n.b,n.y,n.x)
 }

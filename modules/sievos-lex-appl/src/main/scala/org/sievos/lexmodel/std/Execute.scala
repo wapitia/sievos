@@ -29,9 +29,7 @@
  * ARISING OUT OF THE USE OF OR INABILITY TO USE THIS SOFTWARE, EVEN IF
  * WAPITIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  */
-package org.sievos.lexmodel
-
-import org.sievos.lexmodel.std.StdPartProvider
+package org.sievos.lexmodel.std
 
 /**
  * Executable producing some standard part

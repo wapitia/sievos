@@ -29,33 +29,4 @@
  * ARISING OUT OF THE USE OF OR INABILITY TO USE THIS SOFTWARE, EVEN IF
  * WAPITIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  */
-package org.sievos.lexmodel
-package sp1
-
-import org.sievos.kern.TI
-
-/**
- * Abstraction of the SP1 lexical tree construction model.
- */
-trait SP1NodeProducer {
-
-  def bund1(sing: SingleLN): BundLN 
-
-  def identifier(ident: String): IdentifierLN
-
-  def tline(ti: TI): SingleLN 
-
-  def bundX(sing: SingleLN, bund: BundLN): BundLN 
-
-  def part1(bund: BundLN): BundLN 
-
-  def partX(part: BundLN, bund: BundLN): BundLN 
-
-  def funcallExpr(fcall: CompositeFunctionLN): ExprLN 
-
-  def funcall(bund: BundLN, fnameName: IdentifierLN): CompositeFunctionLN 
-
-  def composite(fnameName: IdentifierLN, 
-        subfname: CompositeFunctionLN): CompositeFunctionLN 
-
-}
+package org.sievos.lexmodel.sp1.impl;

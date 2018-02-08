@@ -36,14 +36,18 @@ import java.util.Collections;
 import java.util.Optional;
 
 import org.sievos.kern.TI;
-import org.sievos.lexmodel.Executable;
-import org.sievos.lexmodel.sp1.BundLN;
-import org.sievos.lexmodel.sp1.CompositeFunctionLN;
-import org.sievos.lexmodel.sp1.ExprLN;
-import org.sievos.lexmodel.sp1.IdentifierLN;
-import org.sievos.lexmodel.sp1.SP1Node;
-import org.sievos.lexmodel.sp1.SP1NodeProducer;
-import org.sievos.lexmodel.sp1.SingleLN;
+import org.sievos.lexmodel.sp1.impl.SP1BundAccum;
+import org.sievos.lexmodel.sp1.impl.SP1BundImpl;
+import org.sievos.lexmodel.sp1.impl.SP1CompositeFunctionImpl;
+import org.sievos.lexmodel.sp1.impl.SP1IdentifierImpl;
+import org.sievos.lexmodel.sp1.impl.SP1SingleImpl;
+import org.sievos.lexmodel.std.BundLN;
+import org.sievos.lexmodel.std.CompositeFunctionLN;
+import org.sievos.lexmodel.std.Executable;
+import org.sievos.lexmodel.std.ExprLN;
+import org.sievos.lexmodel.std.IdentifierLN;
+import org.sievos.lexmodel.std.SingleLN;
+import org.sievos.lexmodel.std.StdLexNodeProducer;
 import org.sievos.lexmodel.std.StdPartFunction;
 
 import com.wapitia.lex.StdGenerator;
@@ -54,7 +58,7 @@ import com.wapitia.lex.StdGenerator;
  *
  */
 // TODO Refactor to Scala
-public class SP1AntlrUtil implements SP1NodeProducer {
+public class SP1AntlrUtil implements StdLexNodeProducer {
 
     static SP1FuncDict funcDict = new SP1FuncDict();
 
@@ -75,7 +79,7 @@ public class SP1AntlrUtil implements SP1NodeProducer {
         final IdentifierLN fnameName)
     {
         // TODO: Smarter than cast?
-        return makeCompositeFunction(fnameName, (BundImpl) ptp);
+        return makeCompositeFunction(fnameName, (SP1BundImpl) ptp);
     }
 
     @Override
@@ -83,7 +87,7 @@ public class SP1AntlrUtil implements SP1NodeProducer {
         final CompositeFunctionLN subfname)
     {
         // TODO: Smarter than cast?
-        return makeCompositeFunction(fnameName, (CompositeFunctionImpl) subfname);
+        return makeCompositeFunction(fnameName, (SP1CompositeFunctionImpl) subfname);
     }
 
     @Override
@@ -104,7 +108,7 @@ public class SP1AntlrUtil implements SP1NodeProducer {
     @Override
     public BundLN bundX(final SingleLN singNode, final BundLN bundNode) {
         // TODO: Smarter than cast?
-        return makeTBundle(singNode, (BundImpl) bundNode);
+        return makeTBundle(singNode, (SP1BundImpl) bundNode);
     }
 
     @Override
@@ -117,12 +121,12 @@ public class SP1AntlrUtil implements SP1NodeProducer {
         return makeTSingle(ti);
     }
 
-    static IdentifierImpl makeIdentifier(final String ident) {
-        return new IdentifierImpl(ident);
+    static SP1IdentifierImpl makeIdentifier(final String ident) {
+        return new SP1IdentifierImpl(ident);
     }
 
     static SingleLN makeTSingle(final TI ti) {
-        return new SingleImpl(ti);
+        return new SP1SingleImpl(ti);
     }
 
     static ExprLN makeExpr(final CompositeFunctionLN compfunc) {
@@ -132,7 +136,7 @@ public class SP1AntlrUtil implements SP1NodeProducer {
 
     static BundLN makeTBundle(final SingleLN singNode)
     {
-        return new BundImpl(singNode.getState(), Optional.empty());
+        return new SP1BundImpl(singNode.getState(), Optional.empty());
     }
 
     static BundLN makePart(final BundLN tpart, final BundLN tbund) {
@@ -142,25 +146,25 @@ public class SP1AntlrUtil implements SP1NodeProducer {
 
 
     static BundLN makeTBundle(final SingleLN singNode,
-        final BundImpl tupNode)
+        final SP1BundImpl tupNode)
     {
-        return new BundImpl(singNode.getState(), Optional.of(tupNode));
+        return new SP1BundImpl(singNode.getState(), Optional.of(tupNode));
     }
 
     static CompositeFunctionLN makeCompositeFunction(
         final IdentifierLN identNode,
-        final BundImpl ptp)
+        final SP1BundImpl ptp)
     {
         final String identName = identNode.getIdent();
         final SP1BundAccum tuple = ptp.makeBundAccum();
         final StdPartFunction func = funcDict.getPartFunction(identName);
         final java.util.List<StdPartFunction> slist = Collections
                 .<StdPartFunction> singletonList(func);
-        return new CompositeFunctionImpl(slist, tuple);
+        return new SP1CompositeFunctionImpl(slist, tuple);
     }
 
     static CompositeFunctionLN makeCompositeFunction(
-        final IdentifierLN funcName, final CompositeFunctionImpl tupNode) {
+        final IdentifierLN funcName, final SP1CompositeFunctionImpl tupNode) {
         final String identName = funcName.getIdent();
         final StdPartFunction partFunction =
                 funcDict.getPartFunction(identName);
@@ -171,7 +175,7 @@ public class SP1AntlrUtil implements SP1NodeProducer {
         newList.add(partFunction);
 
         final SP1BundAccum tuple = tupNode.getTuple();
-        return new CompositeFunctionImpl(newList, tuple);
+        return new SP1CompositeFunctionImpl(newList, tuple);
     }
 
     /**

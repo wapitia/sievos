@@ -29,4 +29,12 @@
  * ARISING OUT OF THE USE OF OR INABILITY TO USE THIS SOFTWARE, EVEN IF
  * WAPITIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  */
-package org.sievos.lexmodel.sp1;
+package org.sievos.lexmodel.std
+
+import org.sievos.kern.Part
+import org.sievos.lexmodel.SievosLexNode
+
+trait PartLN extends SievosLexNode {
+
+    def asPart: Part[StdBund] 
+}

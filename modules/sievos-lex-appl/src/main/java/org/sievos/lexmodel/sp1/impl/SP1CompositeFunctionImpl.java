@@ -30,81 +30,66 @@
  * WAPITIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  */
 
-package org.sievos.lexmodel.sp1.antlr;
+package org.sievos.lexmodel.sp1.impl;
 
-import java.util.BitSet;
-import java.util.Iterator;
-import java.util.Optional;
+import java.util.ArrayList;
 
-import org.sievos.kern.TI;
-import org.sievos.lexmodel.sp1.BundLN;
+import org.sievos.lexmodel.std.CompositeFunctionLN;
+import org.sievos.lexmodel.std.StdCompositeExecutable;
+import org.sievos.lexmodel.std.StdPartFunction;
+import org.sievos.lexmodel.std.StdPartProvider;
+import org.sievos.lexmodel.std.impl.StdPartImpl;
 
-import com.wapitia.common.collections.OptionalIterable;
-
-class BundImpl extends SingleImpl implements BundLN, Iterable<TI>
+public class SP1CompositeFunctionImpl implements CompositeFunctionLN
 {
-    static final OptionalIterable<TI,BundImpl> iter =
-        new OptionalIterable<TI,BundImpl>(
-            BundImpl::getState, BundImpl::getNext);
 
-    private final Optional<BundImpl> next;
+    private final java.util.List<StdPartFunction> funcList;
+    private final SP1BundAccum tuple;
 
-    public BundImpl(final TI state,
-        final Optional<BundImpl> next)
+    public SP1CompositeFunctionImpl(
+            final java.util.List<StdPartFunction> funcList,
+            final SP1BundAccum tuple)
     {
-        super(state);
-        this.next = next;
-    }
-
-
-    public Optional<BundImpl> getNext() {
-        return next;
+        this.funcList = new ArrayList<>(funcList);
+        this.tuple = tuple;
     }
 
     @Override
-    public Iterator<TI> iterator() {
-        return iter.iterator(this);
+    public StdPartProvider execute() {
+        final StdCompositeExecutable exec = new StdCompositeExecutable(asPart(), funcList);
+        final StdPartImpl result = exec.execute();
+        return result;
     }
 
-    public SP1BundAccum makeBundAccum() {
-        final BitSet bits = asBits();
-        return new SP1BundAccum(size(), bits);
+
+    @Override
+    public StdPartProvider asPart() {
+        return tuple.asPartition();
     }
 
-    /**
-     * An ordered set of bits, as a BitSet.
-     * The {@link #getState() state } of this {@code TupNode}
-     * is bit 0, the next tuple's state is
-     *
-     * @return a BitSet of this
-     */
-    public BitSet asBits() {
-        final BitSet bits = new BitSet();
-        setbitR(bits, size()-1);
-        return bits;
+    @Override
+    public java.util.List<StdPartFunction> getFuncList() {
+        return funcList;
     }
 
-    public int size() {
-        return 1 + next.map(BundImpl::size).orElse(0);
-    }
-
-    void setbitR(final BitSet bitset, final int ix) {
-
-        if (getState() == TI.T) {
-            bitset.set(ix);
-        }
-        next.ifPresent(nn -> nn.setbitR(bitset, ix-1));
+    public SP1BundAccum getTuple() {
+        return tuple;
     }
 
     @Override
     public String toString() {
-        return SP1BundAccum.bundleToString(asBits(), size());
+
+        final StringBuilder bldr = new StringBuilder();
+        bldr.append(tuple.toString());
+        bldr.append(' ');
+        if (funcList.size() == 1) {
+            bldr.append(funcList.get(0).toString());
+        }
+        else {
+            bldr.append(funcList.toString());
+        }
+        return bldr.toString();
     }
 
-    @Override
-    public BundLN pipe(final BundLN tbund) {
-        // TODO Auto-generated method stub
-        return null;
-    }
 
 }

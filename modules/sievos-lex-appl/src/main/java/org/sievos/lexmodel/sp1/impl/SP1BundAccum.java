@@ -29,7 +29,7 @@
  * ARISING OUT OF THE USE OF OR INABILITY TO USE THIS SOFTWARE, EVEN IF
  * WAPITIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  */
-package org.sievos.lexmodel.sp1.antlr;
+package org.sievos.lexmodel.sp1.impl;
 
 import java.util.ArrayList;
 import java.util.BitSet;
@@ -39,13 +39,13 @@ import java.util.List;
 
 import org.sievos.kern.Part;
 import org.sievos.kern.TI;
-import org.sievos.lexmodel.sp1.impl.StdBundImpl;
 import org.sievos.lexmodel.std.StdBund;
 import org.sievos.lexmodel.std.StdPartProvider;
+import org.sievos.lexmodel.std.impl.StdBundImpl;
 
 import com.wapitia.common.collections.WapitiaCollections;
 
-class SP1BundAccum {
+public class SP1BundAccum {
 
     public static String tDispChar(final TI ti) {
         return TI_DISP_MAP.get(ti);
@@ -60,7 +60,7 @@ class SP1BundAccum {
     final BitSet bitset;
     final int numBits;
 
-    SP1BundAccum(final int numBits) {
+    public SP1BundAccum(final int numBits) {
         this(numBits, new BitSet(numBits));
     }
 

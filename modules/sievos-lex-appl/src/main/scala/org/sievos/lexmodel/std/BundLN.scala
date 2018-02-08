@@ -29,41 +29,12 @@
  * ARISING OUT OF THE USE OF OR INABILITY TO USE THIS SOFTWARE, EVEN IF
  * WAPITIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  */
-package org.sievos.lexmodel
-package sp1
-package antlr
+package org.sievos.lexmodel.std
 
-import org.sievos.kern.Kern.N
-import org.sievos.kern.Kern
-import org.sievos.kern.TI
-import org.sievos.lexmodel.sp1.impl.StdBundImpl
-import org.sievos.lexmodel.std.StdBund
-import org.sievos.lexmodel.std.StdPartFunction
+import org.sievos.lexmodel.SievosLexNode
 
-class StdBund2KernFunction(name: String, n2n: N => N)
-extends StdPartFunction
-{
-  import B2K.{asBund,asN}
+trait BundLN extends SievosLexNode {
 
-  override def execute(bund: StdBund): StdBund = {
-    val i = asN(bund)
-    val o = n2n(i)
-    asBund(o)
-  }
+    def pipe(tbund: BundLN): BundLN
 
-  override def toString = name
-}
-
-private[sp1] object B2K {
-  
-    def asN(bund: StdBund): N = {
-      val ar = bund.asArray()
-      val b: TI = ar(0)
-      val y: TI = ar(1)
-      val x: TI = ar(2)
-      N(b,y,x)
-    }
-
-    def asBund(n: N): StdBund = 
-        StdBundImpl.apply(n.b,n.y,n.x)
 }

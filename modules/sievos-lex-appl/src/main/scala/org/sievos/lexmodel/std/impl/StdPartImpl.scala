@@ -30,7 +30,7 @@
  * WAPITIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  */
 package org.sievos.lexmodel
-package sp1.impl
+package std.impl
 
 import org.sievos.kern.Part
 import org.sievos.lexmodel.std.{StdBund, StdPartProvider}

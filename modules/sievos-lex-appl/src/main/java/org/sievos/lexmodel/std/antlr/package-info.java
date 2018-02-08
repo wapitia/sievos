@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-present wapitia.com
+ * Copyright 2016-2018 wapitia.com
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -29,11 +29,7 @@
  * ARISING OUT OF THE USE OF OR INABILITY TO USE THIS SOFTWARE, EVEN IF
  * WAPITIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  */
-package org.sievos.lexmodel
-package sp1
-
 /**
- * Node for all lexical graphs produced from some lexical parser and 
- * analyzer, such as Antlr 
+ * 
  */
-trait SP1Node
+package org.sievos.lexmodel.std.antlr;

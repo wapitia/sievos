@@ -32,7 +32,7 @@
 package org.sievos.lexmodel
 package sp1
 
-import org.sievos.lexmodel.Executable
+import org.sievos.lexmodel.std.Executable
 
 import com.wapitia.lex.StdGenerator
 

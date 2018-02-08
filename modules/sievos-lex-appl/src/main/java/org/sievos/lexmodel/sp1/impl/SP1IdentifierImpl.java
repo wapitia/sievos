@@ -30,15 +30,15 @@
  * WAPITIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  */
 
-package org.sievos.lexmodel.sp1.antlr;
+package org.sievos.lexmodel.sp1.impl;
 
-import org.sievos.lexmodel.sp1.IdentifierLN;
+import org.sievos.lexmodel.std.IdentifierLN;
 
-class IdentifierImpl implements IdentifierLN {
+public class SP1IdentifierImpl implements IdentifierLN {
 
     private final String ident;
 
-    IdentifierImpl(final String ident) {
+    public SP1IdentifierImpl(final String ident) {
         this.ident = ident;
     }
 
