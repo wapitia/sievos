@@ -42,11 +42,19 @@ import org.sievos.lexmodel.std.StdGenerateStatus
  */
 object SievosLexTool {
 
+  /**
+   * Parse and compile the given "expr" expression, and return
+   * its Executable result.
+   */
   def generate(expression: String): (Option[Executable],StdGenerateStatus) = 
-    compilerInstance.generate(expression)
+    exprGenerator.generate(expression)
 
+  /**
+   * Return a parser generator for the Sievos "expr" rule,
+   * returning an Executable result
+   */
   // Injection should happen here
-  def compilerInstance: StdGenerator[Executable] =
+  def exprGenerator: StdGenerator[Executable] =
     org.sievos.lexmodel.sp1.SP1.makeExprGenerator
 
 }
