@@ -156,18 +156,18 @@ public interface WapitiaCollections {
 
     /**
      * An iterator of the bits in the supplied BitSet, counting from bit 0
-     * and working upword, no limit
-     * @param bitSet Iterator of this bitset, which is not changed
-     * @return
+     * and working upward, no limit
+     * @param bitSet Iterator of this BitSet, which is not changed
+     * @return an {@code Iterator<Boolean>}
      */
     static BitSetIterator bitSetIterator(final BitSet bitSet) {
         return new BitSetIterator(bitSet);
     }
 
     /**
-     * Limit the size of the bitset iterator of the given bitset
+     * Limit the size of the BitSet iterator of the given BitSet
      * @param bitSet
-     * @param size limit bitset size
+     * @param size limit BitSet size
      * @return Iterator of Boolean
      */
     static LimitIterator<Boolean> bitSetIterator(final BitSet bitSet, final int size)
@@ -188,7 +188,7 @@ public interface WapitiaCollections {
     static <T> LimitIterator<T> limitIterator(final Iterator<T> src,
         final long limit)
     {
-        return new LimitIterator<T>(src, c -> c < limit);
+        return new LimitIterator<T>(src, index -> index < limit);
     }
 
 }
