@@ -31,9 +31,9 @@
  */
 package com.wapitia.lex.antlr
 
-import org.antlr.v4.runtime.{Parser, CharStreams, CodePointCharStream, CommonTokenStream, ANTLRErrorListener}
+import org.antlr.v4.runtime.{Lexer, Parser, CharStreams, CodePointCharStream, 
+    CommonTokenStream, ANTLRErrorListener}
 import org.antlr.v4.runtime.tree.{ParseTree, ParseTreeVisitor}
-import org.antlr.v4.runtime.Lexer
 
 import com.wapitia.lex.{StdGenerator, StdGenerateStatus}
 
@@ -46,6 +46,17 @@ import com.wapitia.lex.{StdGenerator, StdGenerateStatus}
  *          // TODO Not sure I need to abstract Parser at the class level
  * @param PT parser extension, the actual parser type, so that the goals
  *           of that parse tree has context here.
+ * @param antlrVisitor the Antlr visitor set up to visit nodes in a
+ *        Antlr ParseTree          
+ * @param goalOfParser, specfic goal within the parser which we want
+ *        to target to compile, which results in a ParseTree
+ * @param finishResult the compilation function which can map from an Antlr
+ *        parse tree node of type N into the result type R
+ * @param eListen the error listener must not be null              
+ * @param lexerCtor can construct a generated Antlr Lexer instance given
+ *        a stream of characters (CodePointCharStream)
+ * @param parserCtor can construct a generated Antlr Parser instance given
+ *        a stream of tokens (CommonTokenStream)              
  */
 class AntlrGeneratorBase[N,R,PT <: Parser](
   antlrVisitor: ParseTreeVisitor[N],

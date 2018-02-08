@@ -31,7 +31,6 @@
  */
 package com.wapitia.lex
 
-
 trait StdGenerator[R] {
 
     def generate(expression: String): (Option[R], StdGenerateStatus)
