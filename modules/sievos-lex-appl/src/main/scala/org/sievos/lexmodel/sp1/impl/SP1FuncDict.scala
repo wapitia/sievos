@@ -31,15 +31,12 @@
  */
 
 package org.sievos.lexmodel
-package sp1.antlr
-
-import java.util.function.Function
+package sp1.impl
 
 import org.sievos.kern.Kern
 import org.sievos.kern.Kern.N
 import org.sievos.lexmodel.NamedSignature
 import org.sievos.lexmodel.std.StdFuncDict
-import org.sievos.lexmodel.sp1.impl.StdBund2KernFunction
 
 class SP1FuncDict extends StdFuncDict {
 

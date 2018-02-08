@@ -39,6 +39,7 @@ import org.sievos.kern.TI;
 import org.sievos.lexmodel.sp1.impl.SP1BundAccum;
 import org.sievos.lexmodel.sp1.impl.SP1BundImpl;
 import org.sievos.lexmodel.sp1.impl.SP1CompositeFunctionImpl;
+import org.sievos.lexmodel.sp1.impl.SP1FuncDict;
 import org.sievos.lexmodel.sp1.impl.SP1IdentifierImpl;
 import org.sievos.lexmodel.sp1.impl.SP1SingleImpl;
 import org.sievos.lexmodel.std.BundLN;
