@@ -42,7 +42,7 @@ import org.sievos.lexmodel.sp1.SP1NodeProducer
 import com.wapitia.lex.antlr.AntlrGeneratorBase
 
 /**
- * An Antlr Generator for the some goal 
+ * An Antlr Generator for some goal in the Sievos language such as "expr" 
  *  
  * see :modules:sievos-lex-lang:src/main/antlr/org.sievos.lex.Sievos.g4
  */
