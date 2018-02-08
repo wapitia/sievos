@@ -66,7 +66,7 @@ public interface WapitiaCollections {
     static <K,LV> void put(final Map<K,List<LV>> mapOfLists,
         final K key, final LV listItem)
     {
-        put(mapOfLists, key, listItem, ArrayList::new);
+        put(mapOfLists, key, listItem, ArrayList<LV>::new);
     }
 
     /**
