@@ -60,11 +60,11 @@ import java.util.function.Predicate;
  */
 public class LimitIterator<T> implements Iterator<T> {
 
-    final Iterator<T> sourceIter;
-    final Predicate<Long> limitPredicate;
+    private final Iterator<T> sourceIter;
+    private final Predicate<Long> limitPredicate;
 
     // mutable current index, starts at zero and increments on every next()
-    long current;
+    private long current;
 
     /**
      * Constructor takes a source iterator to wrap and a predicate
