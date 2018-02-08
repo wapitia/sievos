@@ -49,10 +49,10 @@ import org.sievos.lex.SievosParser.PartXContext
 import org.sievos.lex.SievosParser.TlineContext
 import org.sievos.lex.SievosVisitor
 import org.antlr.v4.runtime.Token
+import com.wapitia.lex.antlr.AntlrVisitorBase
 
-class SP1AntlrVisitor2(nodes: SP1NodeProducer) 
-extends AbstractParseTreeVisitor[SP1Node]
-with ParseTreeVisitor[SP1Node] with SievosVisitor[SP1Node]
+class SP1AntlrVisitor(nodes: SP1NodeProducer) 
+extends AntlrVisitorBase[SP1Node] with SievosVisitor[SP1Node]
 {
     /*
        rule expr: ExprLN
@@ -140,19 +140,4 @@ with ParseTreeVisitor[SP1Node] with SievosVisitor[SP1Node]
       nodes.tline(ti)
     }
     
-    def visitTo[T](parseTree: ParseTree): T =
-      parseTree.accept[T](this.asInstanceOf[ParseTreeVisitor[T]])
-      
-    def validateContext[A <: ParserRuleContext](ctx: A): A = {
-      // TODO: Is there a more straightforward way to
-      //       test whether a parsing exception occurred from context?
-      val sttok: Token =  ctx.getStart
-      val eofx = sttok.getType == Token.EOF
-      if (eofx) { 
-        // TODO Better Runtime exception
-        throw new RuntimeException("Invalid Antlr Parsing Context")
-      }
-      ctx
-    }
-
 }

@@ -50,7 +50,7 @@ abstract class SP1AntlrGenerator[R](nodes: SP1NodeProducer,
   goalOfParser: SievosParser => ParseTree, 
   finishResult: SP1Node => R)
   extends AntlrGeneratorBase[SP1Node,R,SievosParser](
-    new SP1AntlrVisitor2(nodes), 
+    new SP1AntlrVisitor(nodes), 
     goalOfParser, 
     finishResult,  
     new SievosAntlrErrorListener(), 
