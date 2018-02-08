@@ -143,13 +143,16 @@ with ParseTreeVisitor[SP1Node] with SievosVisitor[SP1Node]
     def visitTo[T](parseTree: ParseTree): T =
       parseTree.accept[T](this.asInstanceOf[ParseTreeVisitor[T]])
       
-    def validateContext(ctx: ParserRuleContext): Unit = {
+    def validateContext[A <: ParserRuleContext](ctx: A): A = {
       // TODO: Is there a more straightforward way to
       //       test whether a parsing exception occurred from context?
       val sttok: Token =  ctx.getStart
       val eofx = sttok.getType == Token.EOF
-      if (eofx) 
+      if (eofx) { 
+        // TODO Better Runtime exception
         throw new RuntimeException("Invalid Antlr Parsing Context")
+      }
+      ctx
     }
 
 }
