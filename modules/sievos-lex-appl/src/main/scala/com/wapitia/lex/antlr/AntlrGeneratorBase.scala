@@ -58,10 +58,10 @@ import com.wapitia.lex.{StdGenerator, StdGenerateStatus}
  * @param parserCtor can construct a generated Antlr Parser instance given
  *        a stream of tokens (CommonTokenStream)              
  */
-class AntlrGeneratorBase[N,R,PT <: Parser](
+class AntlrGeneratorBase[N,GNT <: N,R,PT <: Parser](
   antlrVisitor: ParseTreeVisitor[N],
   goalOfParser: PT => ParseTree, 
-  finishResult: N => R, 
+  finishResult: GNT => R, 
   eListen: ANTLRErrorListener,
   lexerCtor: CodePointCharStream => Lexer,
   parserCtor: CommonTokenStream => PT) 
@@ -92,7 +92,7 @@ class AntlrGeneratorBase[N,R,PT <: Parser](
     walkGoalAndFinish(goalOfParser(parser))
 
   def walkGoalAndFinish(parseTree: ParseTree): R = 
-    finishResult(walkGoal(parseTree))
+    finishResult(walkGoal(parseTree).asInstanceOf[GNT])
 
   def walkGoal(parseTree: ParseTree): N = 
     antlrVisitor.visit(parseTree)

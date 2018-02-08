@@ -34,17 +34,19 @@ package org.sievos.lexmodel.sp1.antlr
 import com.wapitia.lex.StdGenerator
 import org.sievos.lexmodel.std.{Executable, StdLexNodeProducer}
 import org.sievos.lexmodel.antlr.SievosAntlrGenerator
+import org.sievos.lexmodel.std.ExprLN
 
 /**
  * An Antlr Generator for the Sievos "expr" goal returning an Executable
- * ' 
+ * In our case the intermediate node ExprLN is-a Executable, and so
+ * the finishResultArgument (third argument) to SievosAntlrGenerator
+ * is just a straight identity.
+ * 
  * see :modules:sievos-lex-lang:src/main/antlr/org.sievos.lex.Sievos.g4
  */
 class SP1AntlrExprGenerator(nodes: StdLexNodeProducer) 
-  extends SievosAntlrGenerator[Executable](
-    new SP1AntlrVisitor(nodes),
-    p => p.expr, 
-    n => n.asInstanceOf[Executable])
+  extends SievosAntlrGenerator[ExprLN,Executable](
+    new SP1AntlrVisitor(nodes), p => p.expr, n => n)
 
 object SP1AntlrExprGenerator {
   

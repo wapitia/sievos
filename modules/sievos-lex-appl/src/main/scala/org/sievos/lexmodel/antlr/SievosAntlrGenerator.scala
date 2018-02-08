@@ -44,12 +44,13 @@ import com.wapitia.lex.antlr.AntlrGeneratorBase
  * An Antlr Generator for some goal in the Sievos language such as "expr" 
  *  
  * see :modules:sievos-lex-lang:src/main/antlr/org.sievos.lex.Sievos.g4
+ * @param GNT Goal Node type, the narrowed type of a SievosLexNode
  */
-abstract class SievosAntlrGenerator[R](   
+abstract class SievosAntlrGenerator[GNT <: SievosLexNode,R](   
   sievosVisitor: SievosVisitor[SievosLexNode],
   goalOfParser: SievosParser => ParseTree, 
-  finishResult: SievosLexNode => R)
-  extends AntlrGeneratorBase[SievosLexNode,R,SievosParser](
+  finishResult: GNT => R)
+  extends AntlrGeneratorBase[SievosLexNode,GNT,R,SievosParser](
     sievosVisitor, 
     goalOfParser, 
     finishResult,  
