@@ -33,7 +33,8 @@ package org.sievos.lexmodel
 package sp1
 
 import org.sievos.lexmodel.Executable
-import org.sievos.lexmodel.std.StdGenerator
+
+import com.wapitia.lex.StdGenerator
 
 /**
  * In the SP1 system, all static results are some type of partition,
@@ -51,4 +52,5 @@ object SP1 {
                 .instance()
                 .makeExprGenerator()
 
+                
 }

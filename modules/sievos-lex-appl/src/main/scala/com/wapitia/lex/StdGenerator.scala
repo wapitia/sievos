@@ -29,8 +29,8 @@
  * ARISING OUT OF THE USE OF OR INABILITY TO USE THIS SOFTWARE, EVEN IF
  * WAPITIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  */
-package org.sievos.lexmodel
-package std
+package com.wapitia.lex
+
 
 trait StdGenerator[R] {
 

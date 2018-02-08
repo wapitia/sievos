@@ -32,7 +32,6 @@
 package org.sievos.lexmodel.sp1.antlr;
 
 import java.util.ArrayList;
-import java.util.BitSet;
 import java.util.Collections;
 import java.util.Optional;
 
@@ -45,15 +44,9 @@ import org.sievos.lexmodel.sp1.IdentifierLN;
 import org.sievos.lexmodel.sp1.SP1Node;
 import org.sievos.lexmodel.sp1.SP1NodeProducer;
 import org.sievos.lexmodel.sp1.SingleLN;
-import org.sievos.lexmodel.std.StdGenerator;
 import org.sievos.lexmodel.std.StdPartFunction;
 
-import org.antlr.v4.runtime.ANTLRErrorListener;
-import org.antlr.v4.runtime.Parser;
-import org.antlr.v4.runtime.RecognitionException;
-import org.antlr.v4.runtime.Recognizer;
-import org.antlr.v4.runtime.atn.ATNConfigSet;
-import org.antlr.v4.runtime.dfa.DFA;
+import com.wapitia.lex.StdGenerator;
 
 /**
  * Collection of concrete {@link SP1Node} extension types, suitable
@@ -67,51 +60,9 @@ public class SP1AntlrUtil implements SP1NodeProducer {
 
     // The SP1NodeProducer API
 
-    class SievosAntlrErrorListener implements ANTLRErrorListener {
-
-        @Override
-        public void syntaxError(Recognizer<?, ?> recognizer,
-                Object offendingSymbol, int line, int charPositionInLine,
-                String msg, RecognitionException e)
-        {
-            System.out.println("Syntax error: " + msg);
-        }
-
-        @Override
-        public void reportAmbiguity(Parser recognizer, DFA dfa, int startIndex,
-                int stopIndex, boolean exact, BitSet ambigAlts,
-                ATNConfigSet configs)
-        {
-            System.out.println("Ambiguity: " + ambigAlts.toString());
-        }
-
-        @Override
-        public void reportAttemptingFullContext(Parser recognizer, DFA dfa,
-                int startIndex, int stopIndex, BitSet conflictingAlts,
-                ATNConfigSet configs)
-        {
-            System.out.println("AttemptingFullContext: " + dfa.toString());
-        }
-
-        @Override
-        public void reportContextSensitivity(Parser recognizer, DFA dfa,
-                int startIndex, int stopIndex, int prediction,
-                ATNConfigSet configs)
-        {
-            System.out.println("ContextSensitivity: " + dfa.toString());
-        }
-
-    }
-
     public StdGenerator<Executable> makeExprGenerator() {
 
-        final SP1AntlrVisitor2 comp = new SP1AntlrVisitor2(this);
-        // the result of the visit to the "expr" goal (NodeRN)
-        // is also executable, so just an identity casting.
-        final ANTLRErrorListener eListen = new SievosAntlrErrorListener();
-        final StdGenerator<Executable> result =
-            new AntlrExprGenerator(comp, eListen);
-        return result;
+        return SP1AntlrExprGenerator.apply(this);
     }
 
     @Override

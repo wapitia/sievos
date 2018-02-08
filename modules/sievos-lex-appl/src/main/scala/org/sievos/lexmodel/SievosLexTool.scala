@@ -31,8 +31,7 @@
  */
 package org.sievos.lexmodel
 
-import org.sievos.lexmodel.std.StdGenerator
-import org.sievos.lexmodel.std.StdGenerateStatus
+import com.wapitia.lex.{StdGenerator,StdGenerateStatus}
 
 /**
  *  Main static entry point for the Sievos language lexical parser

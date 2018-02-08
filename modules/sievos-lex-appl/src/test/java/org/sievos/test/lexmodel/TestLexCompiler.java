@@ -7,11 +7,12 @@ import java.util.function.Function;
 
 import org.sievos.lexmodel.Executable;
 import org.sievos.lexmodel.SievosLexTool;
-import org.sievos.lexmodel.std.StdGenerateStatus;
 import org.sievos.lexmodel.std.StdPartProvider;
 
 import org.junit.Assert;
 import org.junit.Test;
+
+import com.wapitia.lex.StdGenerateStatus;
 
 import scala.Option;
 import scala.Tuple2;
