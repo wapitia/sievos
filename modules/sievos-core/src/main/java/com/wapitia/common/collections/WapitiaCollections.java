@@ -61,11 +61,28 @@ public interface WapitiaCollections {
      * @param mapOfLists mutable  Map of Lists: {@code Map<K,List<LV>> }
      * @param key key into the Map
      * @param listItem item to add to the key entry's list value.
+     * @see #put(Map, Object, Object, Supplier)
      */
     static <K,LV> void put(final Map<K,List<LV>> mapOfLists,
         final K key, final LV listItem)
     {
-        mapGetOrCreate(mapOfLists, key, ArrayList::new).add(listItem);
+        put(mapOfLists, key, listItem, ArrayList::new);
+    }
+
+    /**
+     * Put a key/value pair into a Map-List structure having the
+     * common usage pattern:  {@code Map<K,List<V>> }
+     * <p>This is just like {@link #put(Map, Object, Object)} above,
+     * but this method also takes a List constructor when ArrayList::new
+     * just won't do.
+     *
+     * @param listCtor supplies a new empty List instance
+     * @see #put(Map, Object, Object)
+     */
+    static <K,LV> void put(final Map<K,List<LV>> mapOfLists,
+            final K key, final LV listItem, Supplier<List<LV>> listCtor)
+    {
+        mapGetOrCreate(mapOfLists, key, listCtor).add(listItem);
     }
 
     /**
