@@ -30,24 +30,63 @@
  * WAPITIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  */
 
-package org.sievos.lexmodel
-package sp1.antlr
+package org.sievos.lexmodel.sp1.antlr;
 
-import java.util.function.Function
+import java.util.ArrayList;
 
-import org.sievos.kern.Kern
-import org.sievos.kern.Kern.N
-import org.sievos.lexmodel.NamedSignature
-import org.sievos.lexmodel.std.StdFuncDict
+import org.sievos.lexmodel.sp1.CompositeFunctionLN;
+import org.sievos.lexmodel.sp1.impl.StdPartImpl;
+import org.sievos.lexmodel.std.StdCompositeExecutable;
+import org.sievos.lexmodel.std.StdPartFunction;
+import org.sievos.lexmodel.std.StdPartProvider;
 
-class SP1FuncDict extends StdFuncDict {
+class CompositeFunctionImpl implements CompositeFunctionLN
+{
 
-        // TODO: Flexible library lookup of functions
-  putKPF("r", Kern.r)
-  putKPF("z", Kern.z)
+    private final java.util.List<StdPartFunction> funcList;
+    private final SP1BundAccum tuple;
 
-  def putKPF(name: String, func: N => N) =
-    put(NamedSignature.apply(name), new StdBund2KernFunction(name, func))
+    CompositeFunctionImpl(final java.util.List<StdPartFunction> funcList, final SP1BundAccum tuple) {
+        this.funcList = new ArrayList<>(funcList);
+        this.tuple = tuple;
+    }
+
+    @Override
+    public StdPartProvider execute() {
+        final StdCompositeExecutable exec = new StdCompositeExecutable(asPart(), funcList);
+        final StdPartImpl result = exec.execute();
+        return result;
+    }
+
+
+    @Override
+    public StdPartProvider asPart() {
+        return tuple.asPartition();
+    }
+
+    @Override
+    public java.util.List<StdPartFunction> getFuncList() {
+        return funcList;
+    }
+
+    public SP1BundAccum getTuple() {
+        return tuple;
+    }
+
+    @Override
+    public String toString() {
+
+        final StringBuilder bldr = new StringBuilder();
+        bldr.append(tuple.toString());
+        bldr.append(' ');
+        if (funcList.size() == 1) {
+            bldr.append(funcList.get(0).toString());
+        }
+        else {
+            bldr.append(funcList.toString());
+        }
+        return bldr.toString();
+    }
 
 
 }

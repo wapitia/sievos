@@ -30,24 +30,24 @@
  * WAPITIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  */
 
-package org.sievos.lexmodel
-package sp1.antlr
+package org.sievos.lexmodel.sp1.antlr;
 
-import java.util.function.Function
+import org.sievos.lexmodel.sp1.IdentifierLN;
 
-import org.sievos.kern.Kern
-import org.sievos.kern.Kern.N
-import org.sievos.lexmodel.NamedSignature
-import org.sievos.lexmodel.std.StdFuncDict
+class IdentifierImpl implements IdentifierLN {
 
-class SP1FuncDict extends StdFuncDict {
+    private final String ident;
 
-        // TODO: Flexible library lookup of functions
-  putKPF("r", Kern.r)
-  putKPF("z", Kern.z)
+    IdentifierImpl(final String ident) {
+        this.ident = ident;
+    }
 
-  def putKPF(name: String, func: N => N) =
-    put(NamedSignature.apply(name), new StdBund2KernFunction(name, func))
-
-
+    @Override
+    public String getIdent() {
+        return ident;
+    }
+    @Override
+    public String toString() {
+        return ident;
+    }
 }

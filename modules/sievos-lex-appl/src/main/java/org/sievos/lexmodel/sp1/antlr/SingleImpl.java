@@ -30,24 +30,27 @@
  * WAPITIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  */
 
-package org.sievos.lexmodel
-package sp1.antlr
+package org.sievos.lexmodel.sp1.antlr;
 
-import java.util.function.Function
+import org.sievos.kern.TI;
+import org.sievos.lexmodel.sp1.SingleLN;
 
-import org.sievos.kern.Kern
-import org.sievos.kern.Kern.N
-import org.sievos.lexmodel.NamedSignature
-import org.sievos.lexmodel.std.StdFuncDict
+class SingleImpl implements SingleLN {
 
-class SP1FuncDict extends StdFuncDict {
+    private final TI state;
 
-        // TODO: Flexible library lookup of functions
-  putKPF("r", Kern.r)
-  putKPF("z", Kern.z)
+    public SingleImpl(final TI state) {
+        this.state = state;
+    }
 
-  def putKPF(name: String, func: N => N) =
-    put(NamedSignature.apply(name), new StdBund2KernFunction(name, func))
+    @Override
+    public TI getState() {
+        return state;
+    }
 
+    @Override
+    public String toString() {
+        return SP1BundAccum.tDispChar(state);
+    }
 
 }

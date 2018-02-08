@@ -32,13 +32,10 @@
 package org.sievos.lexmodel.sp1.antlr;
 
 import java.util.ArrayList;
-import java.util.BitSet;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.Optional;
 
 import org.sievos.kern.TI;
-import org.sievos.lex.SievosParser;
 import org.sievos.lexmodel.Executable;
 import org.sievos.lexmodel.sp1.BundLN;
 import org.sievos.lexmodel.sp1.CompositeFunctionLN;
@@ -47,19 +44,15 @@ import org.sievos.lexmodel.sp1.IdentifierLN;
 import org.sievos.lexmodel.sp1.SP1Node;
 import org.sievos.lexmodel.sp1.SP1NodeProducer;
 import org.sievos.lexmodel.sp1.SingleLN;
-import org.sievos.lexmodel.sp1.impl.StdPartImpl;
-import org.sievos.lexmodel.std.StdCompositeExecutable;
 import org.sievos.lexmodel.std.StdGenerator;
 import org.sievos.lexmodel.std.StdPartFunction;
-import org.sievos.lexmodel.std.StdPartProvider;
-
-import com.wapitia.common.collections.OptionalIterable;
 
 /**
  * Collection of concrete {@link SP1Node} extension types, suitable
  * for the SievosLex parsers to compile expressions
  *
  */
+// TODO Refactor to Scala
 public class SP1AntlrUtil implements SP1NodeProducer {
 
     static SP1FuncDict funcDict = new SP1FuncDict();
@@ -68,14 +61,12 @@ public class SP1AntlrUtil implements SP1NodeProducer {
 
     public StdGenerator<Executable> makeExprCompiler() {
 
-        final SP1AntlrVisitor comp = new SP1AntlrVisitor(this);
-        // ExprLN is both the result from the parse tree visit as well
-        // as the result executable, making these supplied functions easy
-        return new SP1AntlrGenerator<ExprLN,Executable>(comp,
-            SievosParser::expr,
-            (final SP1Node n) -> (ExprLN) n,
-            (final ExprLN n) -> n);
-
+        final SP1AntlrVisitor2 comp = new SP1AntlrVisitor2(this);
+        // the result of the visit to the "expr" goal (NodeRN)
+        // is also executable, so just an identity casting.
+        final StdGenerator<Executable> result =
+            new AntlrExprGenerator(comp);
+        return result;
     }
 
     @Override
@@ -128,174 +119,6 @@ public class SP1AntlrUtil implements SP1NodeProducer {
     @Override
     public SingleLN tline(final TI ti) {
         return makeTSingle(ti);
-    }
-
-    static class SP1Base implements SP1Node {
-
-    }
-
-    private static class IdentifierImpl extends SP1Base implements IdentifierLN {
-
-        private final String ident;
-
-        IdentifierImpl(final String ident) {
-            this.ident = ident;
-        }
-
-        @Override
-        public String getIdent() {
-            return ident;
-        }
-        @Override
-        public String toString() {
-            return ident;
-        }
-    }
-
-    private static class SingleImpl extends SP1Base implements SingleLN {
-
-        private final TI state;
-
-        public SingleImpl(final TI state) {
-            this.state = state;
-        }
-
-        @Override
-        public TI getState() {
-            return state;
-        }
-
-        @Override
-        public String toString() {
-            return SP1BundAccum.tDispChar(state);
-        }
-
-    }
-
-    private static class BundImpl extends SingleImpl implements BundLN, Iterable<TI>
-    {
-
-        static final OptionalIterable<TI,BundImpl> iter =
-            new OptionalIterable<TI,BundImpl>(
-                BundImpl::getState, BundImpl::getNext);
-
-        private final Optional<BundImpl> next;
-
-        public BundImpl(final TI state,
-            final Optional<BundImpl> next)
-        {
-            super(state);
-            this.next = next;
-        }
-
-
-        public Optional<BundImpl> getNext() {
-            return next;
-        }
-
-        @Override
-        public Iterator<TI> iterator() {
-            return iter.iterator(this);
-        }
-
-        public SP1BundAccum makeBundAccum() {
-            final BitSet bits = asBits();
-            return new SP1BundAccum(size(), bits);
-        }
-
-        /**
-         * An ordered set of bits, as a BitSet.
-         * The {@link #getState() state } of this {@code TupNode}
-         * is bit 0, the next tuple's state is
-         *
-         * @return a BitSet of this
-         */
-        public BitSet asBits() {
-            final BitSet bits = new BitSet();
-            setbitR(bits, size()-1);
-            return bits;
-        }
-
-        public int size() {
-            return 1 + next.map(BundImpl::size).orElse(0);
-        }
-
-        void setbitR(final BitSet bitset, final int ix) {
-
-            if (getState() == TI.T) {
-                bitset.set(ix);
-            }
-            next.ifPresent(nn -> nn.setbitR(bitset, ix-1));
-        }
-
-        @Override
-        public String toString() {
-            return SP1BundAccum.bundleToString(asBits(), size());
-        }
-
-        @Override
-        public BundLN pipe(final BundLN tbund) {
-            // TODO Auto-generated method stub
-            return null;
-        }
-
-    }
-
-    private static abstract class ExprImpl implements ExprLN
-    {
-    }
-
-
-    private static class CompositeFunctionImpl extends ExprImpl
-    implements CompositeFunctionLN
-    {
-
-        private final java.util.List<StdPartFunction> funcList;
-        private final SP1BundAccum tuple;
-
-        CompositeFunctionImpl(final java.util.List<StdPartFunction> funcList, final SP1BundAccum tuple) {
-            this.funcList = new ArrayList<>(funcList);
-            this.tuple = tuple;
-        }
-
-        @Override
-        public StdPartProvider execute() {
-            final StdCompositeExecutable exec = new StdCompositeExecutable(asPart(), funcList);
-            final StdPartImpl result = exec.execute();
-            return result;
-        }
-
-
-        @Override
-        public StdPartProvider asPart() {
-            return tuple.asPartition();
-        }
-
-        @Override
-        public java.util.List<StdPartFunction> getFuncList() {
-            return funcList;
-        }
-
-        public SP1BundAccum getTuple() {
-            return tuple;
-        }
-
-        @Override
-        public String toString() {
-
-            final StringBuilder bldr = new StringBuilder();
-            bldr.append(tuple.toString());
-            bldr.append(' ');
-            if (funcList.size() == 1) {
-                bldr.append(funcList.get(0).toString());
-            }
-            else {
-                bldr.append(funcList.toString());
-            }
-            return bldr.toString();
-        }
-
-
     }
 
     static IdentifierImpl makeIdentifier(final String ident) {
