@@ -40,14 +40,13 @@ import com.wapitia.lex.{StdGenerator, StdGenerateStatus}
 /**
  * Abstraction for the Antlr parsing, visit, and compilation of
  * a Sievos language goal.
+ * @param N the node type for the antlr visitor          
  * @param R the resultant expression type, suitable for some sort of 
  *          execution or interpretation.
- * @param N the node type for the antlr visitor          
+ *          // TODO Not sure I need to abstract Parser at the class level
+ * @param PT parser extension, the actual parser type, so that the goals
+ *           of that parse tree has context here.
  */
-// TODO This class (not the Object) may be generic enough to move to an 
-//      abstract Wapitia object if its reasonable to abstract 
-//      the SievosVisitor and SievosParser as their respective 
-//      ParseTreeVisitor and Parser base types
 class AntlrGeneratorBase[N,R,PT <: Parser](
   antlrVisitor: ParseTreeVisitor[N],
   goalOfParser: PT => ParseTree, 
@@ -63,8 +62,9 @@ class AntlrGeneratorBase[N,R,PT <: Parser](
   override def generate(expression: String): (Option[R], StdGenerateStatus) = {
    
     // one-shot use for these things, i guess
-    val parser: PT = AntlrGeneratorBase.createParser(expression, eListen, lexerCtor, parserCtor)
     try {
+      val parser: PT = AntlrGeneratorBase.createParser(expression, eListen, 
+          lexerCtor, parserCtor)
       val result: R = walkAndFinish(parser)
       (Some(result), StdGenerateStatus.OK)
     }
