@@ -82,17 +82,27 @@ public class LimitIterator<T> implements Iterator<T> {
         this.current = 0L;
     }
 
+    /**
+     * Return true only if the limitPredicate passes and the source iterator
+     * hasNext is also true
+     */
     @Override
     public boolean hasNext() {
         return limitPredicate.test(current) && sourceIter.hasNext();
     }
 
+    /**
+     * Return the next item from the source iterator.
+     */
     @Override
     public T next() {
         this.current += 1L;
         return sourceIter.next();
     }
 
+    /**
+     * Static factory constructor method
+     */
     public static <TS> LimitIterator<TS> apply(final Iterator<TS> src,
             final Predicate<Long> limitPredicate)
     {
