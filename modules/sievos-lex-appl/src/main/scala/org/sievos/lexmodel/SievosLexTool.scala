@@ -32,6 +32,7 @@
 package org.sievos.lexmodel
 
 import org.sievos.lexmodel.std.StdGenerator
+import org.sievos.lexmodel.std.StdGenerateStatus
 
 /**
  *  Main static entry point for the Sievos language lexical parser
@@ -41,11 +42,11 @@ import org.sievos.lexmodel.std.StdGenerator
  */
 object SievosLexTool {
 
-  def compile(expression: String): Executable = 
-    compilerInstance.compile(expression)
+  def generate(expression: String): (Option[Executable],StdGenerateStatus) = 
+    compilerInstance.generate(expression)
 
   // Injection should happen here
   def compilerInstance: StdGenerator[Executable] =
-    org.sievos.lexmodel.sp1.SP1.makeExprCompiler
+    org.sievos.lexmodel.sp1.SP1.makeExprGenerator
 
 }

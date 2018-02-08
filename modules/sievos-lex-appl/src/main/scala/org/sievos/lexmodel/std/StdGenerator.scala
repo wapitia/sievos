@@ -34,5 +34,5 @@ package std
 
 trait StdGenerator[R] {
 
-    def compile(expression: String): R
+    def generate(expression: String): (Option[R], StdGenerateStatus)
 }

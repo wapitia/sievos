@@ -33,19 +33,22 @@ package org.sievos.lexmodel
 package sp1
 package antlr
 
-import org.antlr.v4.runtime.tree.{AbstractParseTreeVisitor,ParseTreeVisitor}
-import org.sievos.lex.SievosParser.FuncallExprContext
-import org.sievos.lex.SievosVisitor
+import org.antlr.v4.runtime.ParserRuleContext
+import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor
+import org.antlr.v4.runtime.tree.ParseTree
+import org.antlr.v4.runtime.tree.ParseTreeVisitor
+import org.sievos.kern.TI
 import org.sievos.lex.SievosParser.Bund1Context
+import org.sievos.lex.SievosParser.BundXContext
+import org.sievos.lex.SievosParser.CompositeContext
 import org.sievos.lex.SievosParser.FuncallContext
+import org.sievos.lex.SievosParser.FuncallExprContext
 import org.sievos.lex.SievosParser.IdentifierContext
 import org.sievos.lex.SievosParser.Part1Context
 import org.sievos.lex.SievosParser.PartXContext
-import org.sievos.lex.SievosParser.BundXContext
-import org.antlr.v4.runtime.tree.ParseTree
-import org.sievos.lex.SievosParser.CompositeContext
 import org.sievos.lex.SievosParser.TlineContext
-import org.sievos.kern.TI
+import org.sievos.lex.SievosVisitor
+import org.antlr.v4.runtime.Token
 
 class SP1AntlrVisitor2(nodes: SP1NodeProducer) 
 extends AbstractParseTreeVisitor[SP1Node]
@@ -56,9 +59,10 @@ with ParseTreeVisitor[SP1Node] with SievosVisitor[SP1Node]
               def funcallExpr(fcall: CompositeFunctionLN)
     */
     override def visitFuncallExpr(ctx: FuncallExprContext): ExprLN = {
-        val fcall = visitTo[CompositeFunctionLN](ctx.fcall())
-        val exprNode = nodes.funcallExpr(fcall)
-        exprNode
+      validateContext(ctx)
+      val fcall = visitTo[CompositeFunctionLN](ctx.fcall())
+      val exprNode = nodes.funcallExpr(fcall)
+      exprNode
     }
 
     /*
@@ -67,12 +71,14 @@ with ParseTreeVisitor[SP1Node] with SievosVisitor[SP1Node]
               def composite(fcall: CompositeFunctionLN, fname: IdentifierLN)
     */
     override def visitFuncall(ctx: FuncallContext): CompositeFunctionLN = {
-        val bundNode = visitTo[BundLN](ctx.part())
-        val identNode = visitTo[IdentifierLN](ctx.fname())
-        nodes.funcall(bundNode, identNode)
+      validateContext(ctx)
+      val bundNode = visitTo[BundLN](ctx.part())
+      val identNode = visitTo[IdentifierLN](ctx.fname())
+      nodes.funcall(bundNode, identNode)
     }
-
+    
     override def visitComposite(ctx: CompositeContext): CompositeFunctionLN = {
+      validateContext(ctx)
       val compositeNode = visitTo[CompositeFunctionLN](ctx.fcall())
       val identode = visitTo[IdentifierLN](ctx.fname())
       nodes.composite(identode, compositeNode)
@@ -84,14 +90,16 @@ with ParseTreeVisitor[SP1Node] with SievosVisitor[SP1Node]
               def partX(part: BundLN, bund: BundLN)
      */
     override def visitPart1(ctx: Part1Context): BundLN = {
-        val bundNode = visitTo[BundLN](ctx.bund())
-        nodes.part1(bundNode)
+      validateContext(ctx)
+      val bundNode = visitTo[BundLN](ctx.bund())
+      nodes.part1(bundNode)
     }
 
     override def visitPartX(ctx: PartXContext): BundLN = {
-        val partNode = visitTo[BundLN](ctx.part())
-        val bundNode = visitTo[BundLN](ctx.bund())
-        nodes.partX(partNode, bundNode)
+      validateContext(ctx)
+       val partNode = visitTo[BundLN](ctx.part())
+       val bundNode = visitTo[BundLN](ctx.bund())
+       nodes.partX(partNode, bundNode)
     }
 
     /*
@@ -100,14 +108,16 @@ with ParseTreeVisitor[SP1Node] with SievosVisitor[SP1Node]
               def bundX(tline: SingleLN, bund: BundLN)
     */
     override def visitBund1(ctx: Bund1Context): BundLN = {
-        val singNode = visitTo[SingleLN](ctx.tline())
-        nodes.bund1(singNode);
+      validateContext(ctx)
+      val singNode = visitTo[SingleLN](ctx.tline())
+      nodes.bund1(singNode);
     }
 
     override def visitBundX(ctx: BundXContext): BundLN = {
-        val bundNode = visitTo[BundLN](ctx.bund())
-        val singNode = visitTo[SingleLN](ctx.tline())
-        nodes.bundX(singNode, bundNode)
+      validateContext(ctx)
+      val bundNode = visitTo[BundLN](ctx.bund())
+      val singNode = visitTo[SingleLN](ctx.tline())
+      nodes.bundX(singNode, bundNode)
     }
 
     /*
@@ -115,8 +125,9 @@ with ParseTreeVisitor[SP1Node] with SievosVisitor[SP1Node]
                def identifier(id: String)
     */
     override def visitIdentifier(ctx: IdentifierContext): IdentifierLN = {
-        val ident: String = ctx.IDENT().getText()
-        nodes.identifier(ident)
+      validateContext(ctx)
+      val ident: String = ctx.IDENT().getText()
+      nodes.identifier(ident)
     }
 
     /*
@@ -124,11 +135,21 @@ with ParseTreeVisitor[SP1Node] with SievosVisitor[SP1Node]
               def tline(ti: TI)
     */
     override def visitTline(ctx: TlineContext): SingleLN = {
-        val ti: TI = TI.toTWhen(ctx.T() != null)
-        nodes.tline(ti)
+      validateContext(ctx)
+      val ti: TI = TI.toTWhen(ctx.T() != null)
+      nodes.tline(ti)
+    }
+    
+    def visitTo[T](parseTree: ParseTree): T =
+      parseTree.accept[T](this.asInstanceOf[ParseTreeVisitor[T]])
+      
+    def validateContext(ctx: ParserRuleContext): Unit = {
+      // TODO: Is there a more straightforward way to
+      //       test whether a parsing exception occurred from context?
+      val sttok: Token =  ctx.getStart
+      val eofx = sttok.getType == Token.EOF
+      if (eofx) 
+        throw new RuntimeException("Invalid Antlr Parsing Context")
     }
 
-    def visitTo[T](parseTree: ParseTree): T = 
-      parseTree.accept[T](this.asInstanceOf[ParseTreeVisitor[T]])
-    
 }

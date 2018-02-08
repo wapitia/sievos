@@ -36,11 +36,11 @@ import org.sievos.lexmodel.Executable
 
 object StdLexTool {
 
-    def compile(expression: String): Executable  =
-      compilerInstance.compile(expression)
+    def compile(expression: String): (Option[Executable], StdGenerateStatus)  =
+      compilerInstance.generate(expression)
 
     // Injection should happen here
     def compilerInstance: StdGenerator[Executable] =
-        org.sievos.lexmodel.sp1.SP1.makeExprCompiler
+        org.sievos.lexmodel.sp1.SP1.makeExprGenerator
 
 }

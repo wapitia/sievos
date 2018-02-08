@@ -5,12 +5,16 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import org.junit.Assert;
-import org.junit.Test;
 import org.sievos.lexmodel.Executable;
 import org.sievos.lexmodel.SievosLexTool;
+import org.sievos.lexmodel.std.StdGenerateStatus;
 import org.sievos.lexmodel.std.StdPartProvider;
 
+import org.junit.Assert;
+import org.junit.Test;
+
+import scala.Option;
+import scala.Tuple2;
 
 /**
  *
@@ -24,6 +28,14 @@ public class TestLexCompiler {
             ee("FTT r z","TTF"));
         expressions.forEach(compareFunc);
     }
+
+    @Test
+    public void testInvalid() {
+        final List<Tup2<String,String>> expressions = Arrays.asList(
+            ee("X","TTF"));
+        expressions.forEach(compareFunc);
+    }
+
     @Test
     public void testSimple() {
 
@@ -50,16 +62,21 @@ public class TestLexCompiler {
     Consumer<Tup2<String,String>> compareFunc =
         ee -> funcCompare(ee.i, ee.e);
 
-    Function<String,Executable> compileFunc =
-        SievosLexTool::compile;
+    Function<String,Tuple2<Option<Executable>,StdGenerateStatus>> compileFunc =
+        SievosLexTool::generate;
 
     void funcCompare(final String s, final String x) {
-        final Executable apply = compileFunc.apply(s);
-        final StdPartProvider result = apply.execute();
-        final String resultString = result.toString();
-        System.out.println(String.format("%-20s -> %s -> %s",
-            s, apply.toString(), resultString));
-        Assert.assertEquals("Mismatched result", x, resultString);
+        final Tuple2<Option<Executable>,StdGenerateStatus> apply = compileFunc.apply(s);
+        final Option<Executable> optEx =  apply._1();
+        final StdGenerateStatus genStatus = apply._2();
+        System.out.println("Status: " + genStatus);
+        if (optEx.isDefined()) {
+            final StdPartProvider result = optEx.get().execute();
+            final String resultString = result.toString();
+            System.out.println(String.format("%-20s -> %s -> %s",
+                s, apply.toString(), resultString));
+            Assert.assertEquals("Mismatched result", x, resultString);
+        }
     };
 
 }

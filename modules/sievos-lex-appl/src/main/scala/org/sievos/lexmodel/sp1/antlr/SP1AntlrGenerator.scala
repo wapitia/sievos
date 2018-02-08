@@ -38,6 +38,10 @@ import org.antlr.v4.runtime.tree.ParseTree
 import org.sievos.lex.{SievosLexer,SievosParser,SievosVisitor}
 import org.sievos.lexmodel.sp1.SP1Node
 import org.sievos.lexmodel.std.StdGenerator
+import org.antlr.v4.runtime.ANTLRErrorListener
+import org.sievos.lexmodel.std.StdGenerateStatus
+
+
 
 /**
  * Abstraction for the Antlr parsing, visit, and compilation of
@@ -48,18 +52,25 @@ import org.sievos.lexmodel.std.StdGenerator
 class SP1AntlrGenerator[R](
   antlrVisitor: SievosVisitor[SP1Node],
   goalOfParser: SievosParser => ParseTree, 
-  finishResult: SP1Node => R ) 
+  finishResult: SP1Node => R, 
+  eListen: ANTLRErrorListener) 
   extends StdGenerator[R] 
 {
   /**
    * Compile the Sievos expression and return its result
    */
-  override def compile(expression: String): R = {
+  override def generate(expression: String): (Option[R], StdGenerateStatus) = {
    
     // one-shot use for these things, i guess
-    val parser: SievosParser = SP1AntlrGenerator.createParser(expression)
-    val result: R = walkAndFinish(parser)
-    result
+    val parser: SievosParser = SP1AntlrGenerator.createParser(expression,eListen)
+    try {
+      val result: R = walkAndFinish(parser)
+      (Some(result), StdGenerateStatus.OK)
+    }
+    catch { case x: RuntimeException =>
+      // TODO: Handle various types of exceptions, generate custom statuses
+      (None, StdGenerateStatus(x))
+    }
   }
 
   /**
@@ -82,25 +93,39 @@ class SP1AntlrGenerator[R](
  * ' 
  * see :modules:sievos-lex-lang:src/main/antlr/org.sievos.lex.Sievos.g4
  */
-class AntlrExprGenerator(antlrVisitor: SievosVisitor[SP1Node]) 
+class AntlrExprGenerator(antlrVisitor: SievosVisitor[SP1Node], 
+  eListen: ANTLRErrorListener) 
   extends SP1AntlrGenerator[Executable](antlrVisitor, 
-    p => p.expr, n => n.asInstanceOf[Executable])
+    p => p.expr, n => n.asInstanceOf[Executable], eListen)
   
 
 object SP1AntlrGenerator {
 
-  def createParser(expression: String): SievosParser =
-    createParser(createLexer(expression))
+  def createParser(expression: String, eListen: ANTLRErrorListener): SievosParser =
+    createParser(createLexer(expression, eListen), eListen)
   
-  def createParser(lexer: SievosLexer): SievosParser = 
-    createParser(new CommonTokenStream(lexer))
+  def createParser(lexer: SievosLexer, eListen: ANTLRErrorListener): SievosParser = 
+    createParser(new CommonTokenStream(lexer), eListen)
   
-  def createParser(cts: CommonTokenStream): SievosParser = 
-    new SievosParser(cts)
+  def createLexer(expression: String, eListen: ANTLRErrorListener): SievosLexer = 
+    createLexer(CharStreams.fromString(expression), eListen)
+  
+  def createParser(cts: CommonTokenStream, eListen: ANTLRErrorListener)
+  : SievosParser = 
+  {
+    val parser = new SievosParser(cts)
+    parser.removeErrorListeners()
+    parser.addErrorListener(eListen)
+    parser
+  }
 
-  def createLexer(expression: String): SievosLexer = 
-    createLexer(CharStreams.fromString(expression))
+  def createLexer(cpcs: CodePointCharStream, eListen: ANTLRErrorListener)
+  : SievosLexer = 
+  { 
+    val lexer = new SievosLexer(cpcs)
+    lexer.removeErrorListeners()
+    lexer.addErrorListener(eListen)
+    lexer
+  }
   
-  def createLexer(cpcs: CodePointCharStream): SievosLexer = 
-    new SievosLexer(cpcs)
 }

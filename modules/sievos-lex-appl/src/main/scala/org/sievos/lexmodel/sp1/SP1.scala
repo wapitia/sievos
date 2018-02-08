@@ -45,10 +45,10 @@ object SP1 {
      * Make compiler that takes a Sievos "expr" goal and produces some
      * Executable from it.
      */
-    def makeExprCompiler: StdGenerator[Executable] = 
+    def makeExprGenerator: StdGenerator[Executable] = 
       // Injection should happen here
         org.sievos.lexmodel.sp1.antlr.SP1AntlrUtil
                 .instance()
-                .makeExprCompiler()
+                .makeExprGenerator()
 
 }
