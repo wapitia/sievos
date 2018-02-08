@@ -32,7 +32,8 @@
 package org.sievos.lexmodel.sp1.antlr
 
 import com.wapitia.lex.StdGenerator
-import org.sievos.lexmodel.std.{Executable,StdLexNodeProducer,StdAntlrGenerator}
+import org.sievos.lexmodel.std.{Executable, StdLexNodeProducer}
+import org.sievos.lexmodel.antlr.SievosAntlrGenerator
 
 /**
  * An Antlr Generator for the Sievos "expr" goal returning an Executable
@@ -40,7 +41,7 @@ import org.sievos.lexmodel.std.{Executable,StdLexNodeProducer,StdAntlrGenerator}
  * see :modules:sievos-lex-lang:src/main/antlr/org.sievos.lex.Sievos.g4
  */
 class SP1AntlrExprGenerator(nodes: StdLexNodeProducer) 
-  extends StdAntlrGenerator[Executable](
+  extends SievosAntlrGenerator[Executable](
     new SP1AntlrVisitor(nodes),
     p => p.expr, 
     n => n.asInstanceOf[Executable])

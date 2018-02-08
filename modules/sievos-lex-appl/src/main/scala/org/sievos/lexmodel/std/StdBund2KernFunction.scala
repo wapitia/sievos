@@ -30,13 +30,10 @@
  * WAPITIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  */
 package org.sievos.lexmodel
-package sp1
-package impl
+package std
 
 import org.sievos.kern.Kern.N
 import org.sievos.kern.TI
-import org.sievos.lexmodel.std.StdBund
-import org.sievos.lexmodel.std.StdPartFunction
 import org.sievos.lexmodel.std.impl.StdBundImpl
 
 class StdBund2KernFunction(name: String, n2n: N => N)
@@ -53,7 +50,7 @@ extends StdPartFunction
   override def toString = name
 }
 
-private[sp1] object B2K {
+private[std] object B2K {
   
     def asN(bund: StdBund): N = {
       val ar = bund.asArray()

@@ -37,6 +37,7 @@ import org.sievos.kern.Kern
 import org.sievos.kern.Kern.N
 import org.sievos.lexmodel.NamedSignature
 import org.sievos.lexmodel.std.StdFuncDict
+import org.sievos.lexmodel.std.StdBund2KernFunction
 
 class SP1FuncDict extends StdFuncDict {
 

@@ -1,4 +1,4 @@
-package org.sievos.lexmodel.std.antlr;
+package org.sievos.lexmodel.antlr;
 
 import java.util.BitSet;
 
