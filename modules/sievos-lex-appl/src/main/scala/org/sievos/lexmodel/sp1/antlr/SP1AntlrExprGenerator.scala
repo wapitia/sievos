@@ -31,34 +31,11 @@
  */
 package org.sievos.lexmodel.sp1.antlr
 
-import com.wapitia.lex.StdGenerator
-
-import org.sievos.lexmodel.sp1.SP1Node
-import org.sievos.lex.SievosVisitor
 import org.sievos.lexmodel.Executable
 import org.sievos.lexmodel.sp1.SP1NodeProducer
-import org.antlr.v4.runtime.ANTLRErrorListener
-import org.antlr.v4.runtime.CodePointCharStream
-import org.antlr.v4.runtime.CommonTokenStream
-import org.antlr.v4.runtime.Parser
 
-import com.wapitia.lex.antlr.AntlrGeneratorBase
-import org.sievos.lex.SievosLexer
-import org.sievos.lex.SievosParser
 import com.wapitia.lex.StdGenerator
-import org.antlr.v4.runtime.tree.ParseTree
 
-abstract class SP1AntlrGenerator[R](nodes: SP1NodeProducer,   
-  goalOfParser: SievosParser => ParseTree, 
-  finishResult: SP1Node => R)
-  extends AntlrGeneratorBase[SP1Node,R,SievosParser](
-    new SP1AntlrVisitor2(nodes), 
-    goalOfParser, 
-    finishResult,  
-    new SievosAntlrErrorListener(), 
-    (cps: CodePointCharStream) => new SievosLexer(cps),
-    (cts: CommonTokenStream) => new SievosParser(cts) )
-    
 /**
  * An Antlr Generator for the Sievos "expr" goal returning an Executable
  * ' 
