@@ -61,7 +61,7 @@ class StdCompositeExecutable(inputPart: StdPartProvider,
   def composeEachBund(bund: StdBund): StdBund = {
       var accumBund: StdBund = bund
       for (pf <- scalaFuncList) 
-        accumBund = pf -> accumBund
+        accumBund = pf <@ accumBund
       accumBund
     }
 }

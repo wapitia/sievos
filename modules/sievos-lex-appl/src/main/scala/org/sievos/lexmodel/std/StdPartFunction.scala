@@ -41,6 +41,6 @@ trait StdPartFunction {
 
     def execute(bundle: StdBund): StdBund
     
-    def ->(bund: StdBund): StdBund = execute(bund)
+    def <@(bund: StdBund): StdBund = execute(bund)
 
 }

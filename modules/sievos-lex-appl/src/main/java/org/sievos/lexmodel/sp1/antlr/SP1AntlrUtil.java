@@ -36,7 +36,6 @@ import java.util.Collections;
 import java.util.Optional;
 
 import org.sievos.kern.TI;
-import org.sievos.lex.SievosParser;
 import org.sievos.lexmodel.Executable;
 import org.sievos.lexmodel.sp1.BundLN;
 import org.sievos.lexmodel.sp1.CompositeFunctionLN;
@@ -53,6 +52,7 @@ import org.sievos.lexmodel.std.StdPartFunction;
  * for the SievosLex parsers to compile expressions
  *
  */
+// TODO Refactor to Scala
 public class SP1AntlrUtil implements SP1NodeProducer {
 
     static SP1FuncDict funcDict = new SP1FuncDict();
@@ -65,8 +65,7 @@ public class SP1AntlrUtil implements SP1NodeProducer {
         // the result of the visit to the "expr" goal (NodeRN)
         // is also executable, so just an identity casting.
         final StdGenerator<Executable> result =
-            new SP1AntlrGenerator<Executable>(comp, SievosParser::expr,
-            (final SP1Node n) -> (Executable) n);
+            new AntlrExprGenerator(comp);
         return result;
     }
 

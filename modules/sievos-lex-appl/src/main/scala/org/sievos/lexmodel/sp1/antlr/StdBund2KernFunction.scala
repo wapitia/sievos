@@ -45,11 +45,11 @@ extends StdPartFunction
 {
   import B2K.{asBund,asN}
 
-    override def execute(bund: StdBund): StdBund = {
-      val i = asN(bund)
-      val o = n2n(i)
-      asBund(o)
-    }
+  override def execute(bund: StdBund): StdBund = {
+    val i = asN(bund)
+    val o = n2n(i)
+    asBund(o)
+  }
 
   override def toString = name
 }
@@ -66,6 +66,4 @@ private[sp1] object B2K {
 
     def asBund(n: N): StdBund = 
         StdBundImpl.apply(n.b,n.y,n.x)
-
-  
 }

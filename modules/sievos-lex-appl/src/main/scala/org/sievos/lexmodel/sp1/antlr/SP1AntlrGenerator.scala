@@ -57,8 +57,7 @@ class SP1AntlrGenerator[R](
   override def compile(expression: String): R = {
    
     // one-shot use for these things, i guess
-    val lexer: SievosLexer = SP1AntlrGenerator.createLexer(expression)
-    val parser: SievosParser = SP1AntlrGenerator.createParser(lexer)
+    val parser: SievosParser = SP1AntlrGenerator.createParser(expression)
     val result: R = walkAndFinish(parser)
     result
   }
@@ -70,21 +69,38 @@ class SP1AntlrGenerator[R](
     walkGoalAndFinish(goalOfParser(parser))
 
   def walkGoalAndFinish(parseTree: ParseTree): R = 
-    finishResult(antlrVisitor.visit(parseTree))
+    finishResult(walkGoal(parseTree))
+
+  def walkGoal(parseTree: ParseTree): SP1Node = 
+    antlrVisitor.visit(parseTree)
+    
 }
+
+/**
+ * Returns an Antlr Generator for the Sievos "expr" goal
+ * returning an executable
+ * ' 
+ * see :modules:sievos-lex-lang:src/main/antlr/org.sievos.lex.Sievos.g4
+ */
+class AntlrExprGenerator(antlrVisitor: SievosVisitor[SP1Node]) 
+  extends SP1AntlrGenerator[Executable](antlrVisitor, 
+    p => p.expr, n => n.asInstanceOf[Executable])
+  
 
 object SP1AntlrGenerator {
 
-  def  createParser(lexer: SievosLexer): SievosParser =  {
-    val tokens = new CommonTokenStream(lexer)
-    val parser = new SievosParser(tokens)
-    parser
-  }
-
-  def createLexer(expression: String): SievosLexer = {
-    val cpcinput: CodePointCharStream  = CharStreams.fromString(expression)
-    val lexer: SievosLexer = new SievosLexer(cpcinput)
-    lexer
-  }
+  def createParser(expression: String): SievosParser =
+    createParser(createLexer(expression))
   
+  def createParser(lexer: SievosLexer): SievosParser = 
+    createParser(new CommonTokenStream(lexer))
+  
+  def createParser(cts: CommonTokenStream): SievosParser = 
+    new SievosParser(cts)
+
+  def createLexer(expression: String): SievosLexer = 
+    createLexer(CharStreams.fromString(expression))
+  
+  def createLexer(cpcs: CodePointCharStream): SievosLexer = 
+    new SievosLexer(cpcs)
 }
