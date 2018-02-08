@@ -46,22 +46,33 @@ import com.wapitia.lex.antlr.AntlrGeneratorBase
 import org.sievos.lex.SievosLexer
 import org.sievos.lex.SievosParser
 import com.wapitia.lex.StdGenerator
+import org.antlr.v4.runtime.tree.ParseTree
 
+abstract class SP1AntlrGenerator[R](nodes: SP1NodeProducer,   
+  goalOfParser: SievosParser => ParseTree, 
+  finishResult: SP1Node => R)
+  extends AntlrGeneratorBase[SP1Node,R,SievosParser](
+    new SP1AntlrVisitor2(nodes), 
+    goalOfParser, 
+    finishResult,  
+    new SievosAntlrErrorListener(), 
+    (cps: CodePointCharStream) => new SievosLexer(cps),
+    (cts: CommonTokenStream) => new SievosParser(cts) )
+    
 /**
- * Returns an Antlr Generator for the Sievos "expr" goal
- * returning an executable
+ * An Antlr Generator for the Sievos "expr" goal returning an Executable
  * ' 
  * see :modules:sievos-lex-lang:src/main/antlr/org.sievos.lex.Sievos.g4
  */
-class SP1AntlrExprGenerator(antlrVisitor: SievosVisitor[SP1Node]) 
-  extends AntlrGeneratorBase[SP1Node,Executable,SievosParser](antlrVisitor, 
-    p => p.expr, n => n.asInstanceOf[Executable],  new SievosAntlrErrorListener(), 
-    (cps: CodePointCharStream) => new SievosLexer(cps),
-    (cts: CommonTokenStream) => new SievosParser(cts) )
+class SP1AntlrExprGenerator(nodes: SP1NodeProducer) 
+  extends SP1AntlrGenerator[Executable](
+    nodes, 
+    p => p.expr, 
+    n => n.asInstanceOf[Executable])
 
 object SP1AntlrExprGenerator {
   
   def apply(nodes: SP1NodeProducer): StdGenerator[Executable] = 
-    new SP1AntlrExprGenerator(new SP1AntlrVisitor2(nodes))
+    new SP1AntlrExprGenerator(nodes)
 
 }
