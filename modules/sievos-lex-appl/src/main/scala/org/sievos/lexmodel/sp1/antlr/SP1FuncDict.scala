@@ -47,7 +47,7 @@ class SP1FuncDict extends StdFuncDict {
   putKPF("z", Kern.z)
 
   def putKPF(name: String, func: N => N) =
-    put(NamedSignature.apply(name), new SP1KernPartFunction(name, func))
+    put(NamedSignature.apply(name), new StdBund2KernFunction(name, func))
 
 
 }

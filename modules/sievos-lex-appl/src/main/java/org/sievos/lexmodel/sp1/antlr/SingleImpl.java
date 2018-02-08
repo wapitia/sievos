@@ -29,39 +29,28 @@
  * ARISING OUT OF THE USE OF OR INABILITY TO USE THIS SOFTWARE, EVEN IF
  * WAPITIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  */
-package org.sievos.lexmodel
-package std
 
-import org.sievos.lexmodel.sp1.impl.StdPartImpl
-import org.sievos.kern.Part
+package org.sievos.lexmodel.sp1.antlr;
 
-import scala.collection.JavaConverters._
+import org.sievos.kern.TI;
+import org.sievos.lexmodel.sp1.SingleLN;
 
-/**
- * Executable takes a Standard Partition and a list of Partion Functions
- * and applies the composite function chain to each bundle of the given
- * partition.
- */
-// TODO: pure Scala
-class StdCompositeExecutable(inputPart: StdPartProvider, 
-    funcList: java.util.List[StdPartFunction]) 
-  extends Executable 
-{
-  
-  val scalaFuncList: scala.collection.mutable.Buffer[StdPartFunction] = 
-    funcList.asScala
+class SingleImpl implements SingleLN {
 
-  override def execute(): StdPartImpl = {
+    private final TI state;
 
-      val part: Part[StdBund] = inputPart.partition
-      val resultPart: Part[StdBund] = part.map(bund => composeEachBund(bund))
-      new StdPartImpl(resultPart)
-  }
-
-  def composeEachBund(bund: StdBund): StdBund = {
-      var accumBund: StdBund = bund
-      for (pf <- scalaFuncList) 
-        accumBund = pf -> accumBund
-      accumBund
+    public SingleImpl(final TI state) {
+        this.state = state;
     }
+
+    @Override
+    public TI getState() {
+        return state;
+    }
+
+    @Override
+    public String toString() {
+        return SP1BundAccum.tDispChar(state);
+    }
+
 }

@@ -44,5 +44,6 @@ trait Executable {
      */
     def execute: StdPartProvider 
     // TODO:    Part<TI[]> execute()
-
+    
+    def ->() : StdPartProvider = execute
 }

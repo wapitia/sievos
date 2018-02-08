@@ -29,39 +29,25 @@
  * ARISING OUT OF THE USE OF OR INABILITY TO USE THIS SOFTWARE, EVEN IF
  * WAPITIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  */
-package org.sievos.lexmodel
-package std
 
-import org.sievos.lexmodel.sp1.impl.StdPartImpl
-import org.sievos.kern.Part
+package org.sievos.lexmodel.sp1.antlr;
 
-import scala.collection.JavaConverters._
+import org.sievos.lexmodel.sp1.IdentifierLN;
 
-/**
- * Executable takes a Standard Partition and a list of Partion Functions
- * and applies the composite function chain to each bundle of the given
- * partition.
- */
-// TODO: pure Scala
-class StdCompositeExecutable(inputPart: StdPartProvider, 
-    funcList: java.util.List[StdPartFunction]) 
-  extends Executable 
-{
-  
-  val scalaFuncList: scala.collection.mutable.Buffer[StdPartFunction] = 
-    funcList.asScala
+class IdentifierImpl implements IdentifierLN {
 
-  override def execute(): StdPartImpl = {
+    private final String ident;
 
-      val part: Part[StdBund] = inputPart.partition
-      val resultPart: Part[StdBund] = part.map(bund => composeEachBund(bund))
-      new StdPartImpl(resultPart)
-  }
+    IdentifierImpl(final String ident) {
+        this.ident = ident;
+    }
 
-  def composeEachBund(bund: StdBund): StdBund = {
-      var accumBund: StdBund = bund
-      for (pf <- scalaFuncList) 
-        accumBund = pf -> accumBund
-      accumBund
+    @Override
+    public String getIdent() {
+        return ident;
+    }
+    @Override
+    public String toString() {
+        return ident;
     }
 }

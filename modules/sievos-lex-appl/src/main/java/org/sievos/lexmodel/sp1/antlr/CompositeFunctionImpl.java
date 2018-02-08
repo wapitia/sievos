@@ -29,39 +29,64 @@
  * ARISING OUT OF THE USE OF OR INABILITY TO USE THIS SOFTWARE, EVEN IF
  * WAPITIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  */
-package org.sievos.lexmodel
-package std
 
-import org.sievos.lexmodel.sp1.impl.StdPartImpl
-import org.sievos.kern.Part
+package org.sievos.lexmodel.sp1.antlr;
 
-import scala.collection.JavaConverters._
+import java.util.ArrayList;
 
-/**
- * Executable takes a Standard Partition and a list of Partion Functions
- * and applies the composite function chain to each bundle of the given
- * partition.
- */
-// TODO: pure Scala
-class StdCompositeExecutable(inputPart: StdPartProvider, 
-    funcList: java.util.List[StdPartFunction]) 
-  extends Executable 
+import org.sievos.lexmodel.sp1.CompositeFunctionLN;
+import org.sievos.lexmodel.sp1.impl.StdPartImpl;
+import org.sievos.lexmodel.std.StdCompositeExecutable;
+import org.sievos.lexmodel.std.StdPartFunction;
+import org.sievos.lexmodel.std.StdPartProvider;
+
+class CompositeFunctionImpl implements CompositeFunctionLN
 {
-  
-  val scalaFuncList: scala.collection.mutable.Buffer[StdPartFunction] = 
-    funcList.asScala
 
-  override def execute(): StdPartImpl = {
+    private final java.util.List<StdPartFunction> funcList;
+    private final SP1BundAccum tuple;
 
-      val part: Part[StdBund] = inputPart.partition
-      val resultPart: Part[StdBund] = part.map(bund => composeEachBund(bund))
-      new StdPartImpl(resultPart)
-  }
-
-  def composeEachBund(bund: StdBund): StdBund = {
-      var accumBund: StdBund = bund
-      for (pf <- scalaFuncList) 
-        accumBund = pf -> accumBund
-      accumBund
+    CompositeFunctionImpl(final java.util.List<StdPartFunction> funcList, final SP1BundAccum tuple) {
+        this.funcList = new ArrayList<>(funcList);
+        this.tuple = tuple;
     }
+
+    @Override
+    public StdPartProvider execute() {
+        final StdCompositeExecutable exec = new StdCompositeExecutable(asPart(), funcList);
+        final StdPartImpl result = exec.execute();
+        return result;
+    }
+
+
+    @Override
+    public StdPartProvider asPart() {
+        return tuple.asPartition();
+    }
+
+    @Override
+    public java.util.List<StdPartFunction> getFuncList() {
+        return funcList;
+    }
+
+    public SP1BundAccum getTuple() {
+        return tuple;
+    }
+
+    @Override
+    public String toString() {
+
+        final StringBuilder bldr = new StringBuilder();
+        bldr.append(tuple.toString());
+        bldr.append(' ');
+        if (funcList.size() == 1) {
+            bldr.append(funcList.get(0).toString());
+        }
+        else {
+            bldr.append(funcList.toString());
+        }
+        return bldr.toString();
+    }
+
+
 }

@@ -40,4 +40,7 @@ package std
 trait StdPartFunction {
 
     def execute(bundle: StdBund): StdBund
+    
+    def ->(bund: StdBund): StdBund = execute(bund)
+
 }

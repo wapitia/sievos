@@ -30,7 +30,8 @@
  * WAPITIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  */
 package org.sievos.lexmodel
-package sp1.antlr
+package sp1
+package antlr
 
 import org.sievos.kern.Kern.N
 import org.sievos.kern.Kern
@@ -39,11 +40,23 @@ import org.sievos.lexmodel.sp1.impl.StdBundImpl
 import org.sievos.lexmodel.std.StdBund
 import org.sievos.lexmodel.std.StdPartFunction
 
-class SP1KernPartFunction(name: String, n2n: N => N)
+class StdBund2KernFunction(name: String, n2n: N => N)
 extends StdPartFunction
 {
+  import B2K.{asBund,asN}
 
-    def bund2KernN(bund: StdBund): N = {
+    override def execute(bund: StdBund): StdBund = {
+      val i = asN(bund)
+      val o = n2n(i)
+      asBund(o)
+    }
+
+  override def toString = name
+}
+
+private[sp1] object B2K {
+  
+    def asN(bund: StdBund): N = {
       val ar = bund.asArray()
       val b: TI = ar(0)
       val y: TI = ar(1)
@@ -51,12 +64,8 @@ extends StdPartFunction
       N(b,y,x)
     }
 
-    def kern2Bund(n: N): StdBund = 
+    def asBund(n: N): StdBund = 
         StdBundImpl.apply(n.b,n.y,n.x)
 
-    override def execute(bund: StdBund): StdBund =
-        kern2Bund(n2n.apply(bund2KernN(bund)))
-
-    override def toString = name
-
+  
 }
