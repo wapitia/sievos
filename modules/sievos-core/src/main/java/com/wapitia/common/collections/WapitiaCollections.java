@@ -188,7 +188,7 @@ public interface WapitiaCollections {
     static <T> LimitIterator<T> limitIterator(final Iterator<T> src,
         final long limit)
     {
-        return new LimitIterator<T>(src, index -> index < limit);
+        return LimitIterator.<T> apply(src, index -> index < limit);
     }
 
 }

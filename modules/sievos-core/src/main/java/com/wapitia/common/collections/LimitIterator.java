@@ -70,11 +70,13 @@ public class LimitIterator<T> implements Iterator<T> {
      * Constructor takes a source iterator to wrap and a predicate
      * that checks against the current 0-based iterator index
      * to tell whether to advance.
+     * Constructor is protected as clients should use the
+     * {@link #apply(Iterator, Predicate)} factory method.
      *
-     * @param sourceIter
-     * @param limitPredicate
+     * @param sourceIter wrapped iterator must not be null.
+     * @param limitPredicate the predicate checks against current index.
      */
-    public LimitIterator(final Iterator<T> sourceIter,
+    protected LimitIterator(final Iterator<T> sourceIter,
         final Predicate<Long> limitPredicate)
     {
         this.sourceIter = sourceIter;
