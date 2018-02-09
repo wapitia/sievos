@@ -13,13 +13,13 @@
      This will pull the latest Sievos source into git-workspace/sievos
   
 * Invoke Gradle to build the project (Cygwin)
-  4. ./git-workspace> cd ./sievos
-  6. ./sievos> ./gradlew.bat wrapper
+  1. ./git-workspace> cd ./sievos
+  2. ./sievos> ./gradlew.bat wrapper
      This updates the .gradle directory and its project files.
-  7. ./sievos> ./gradlew.bat eclipse
+  3. ./sievos> ./gradlew.bat eclipse
      This will install the Eclipse-specific IDE meta files (.classpath, .project,
      .settings) as well as download locally all 3rd party jars needed (plus more).
-  8. ./sievos> ./gradlew.bat build
+  4. ./sievos> ./gradlew.bat build
    
 * Build your IDE project (Eclipse IDE)
   * Install the latest version of Eclipse from http://www.eclipse.org/downloads/
