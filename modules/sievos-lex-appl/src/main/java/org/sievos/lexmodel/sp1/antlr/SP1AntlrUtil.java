@@ -36,6 +36,7 @@ import java.util.Collections;
 import java.util.Optional;
 
 import org.sievos.kern.TI;
+import org.sievos.lexmodel.SievosLexNode;
 import org.sievos.lexmodel.sp1.impl.SP1BundAccum;
 import org.sievos.lexmodel.sp1.impl.SP1BundImpl;
 import org.sievos.lexmodel.sp1.impl.SP1CompositeFunctionImpl;
@@ -54,8 +55,8 @@ import org.sievos.lexmodel.std.StdPartFunction;
 import com.wapitia.lex.StdGenerator;
 
 /**
- * Collection of concrete {@link SP1Node} extension types, suitable
- * for the SievosLex parsers to compile expressions
+ * Collection of concrete {@link SievosLexNode} implementation nodes,
+ * suitable for the SievosLex parsers to compile expressions
  *
  */
 // TODO Refactor to Scala
@@ -65,6 +66,10 @@ public class SP1AntlrUtil implements StdLexNodeProducer {
 
     // The SP1NodeProducer API
 
+    /**
+     * @return an {@link SP1AntlrExprGenerator}
+     * @see SP1AntlrExprGenerator#apply(StdLexNodeProducer)
+     */
     public StdGenerator<Executable> makeExprGenerator() {
 
         return SP1AntlrExprGenerator.apply(this);
@@ -180,7 +185,7 @@ public class SP1AntlrUtil implements StdLexNodeProducer {
     }
 
     /**
-     * @return
+     * @return the SP1AntlrUtil singleton
      */
     public static SP1AntlrUtil instance() {
         return instance;
