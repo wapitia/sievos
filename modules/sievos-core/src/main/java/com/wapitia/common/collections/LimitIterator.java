@@ -39,20 +39,20 @@ import java.util.function.Predicate;
  * Simple wrapping around another iterator imposing
  * some limit to how many elements are returned.
  * <p>
- * The client provides an {@see Iterator} that will be wrapped, and
- * a {@see Predicate} whose job it is to cut off the iteration at a certain
+ * The client provides an {@link Iterator} that will be wrapped, and
+ * a {link Predicate} whose job it is to cut off the iteration at a certain
  * index point. The predicate is provided the 0-based count of the
  * wrapped iterator's item that have been delivered so far,
  * and the predicate's job is to return false once a threshold is met.
  *
  * <p>
  * Example:
- * <p>
+ * </p>
  * <pre>
  *
- *  Iterator<String> inputIter ...
- *  Predicate<Long> first10 = (Long ix) -> ix < 10L;
- *  Iterator<String> limIter = LimitIterator.<String>apply(inputIter, first10);
+ *  {@code Iterator<String> } inputIter ...
+ *  {@code Predicate<Long>  first10 = (Long ix) -> ix < 10L; }
+ *  {@code Iterator<String> limIter = LimitIterator.<String> apply(inputIter, first10); }
  *
  * </pre>
  *
@@ -95,6 +95,9 @@ public class LimitIterator<T> implements Iterator<T> {
 
     /**
      * Return the next item from the source iterator.
+     *
+     * @return next item after having incremented our current count
+     * @see java.util.Iterator#next()
      */
     @Override
     public T next() {
@@ -103,14 +106,21 @@ public class LimitIterator<T> implements Iterator<T> {
     }
 
     /**
-     * Static factory constructor method
+     * Static factory constructor method creates a LimitIterator.
+     *
+     * @param <TS> iterator item type
+     *
+     * @param sourceIter the Iterator wrapped and limited.
+     * @param limitPredicate the condition on which to end iteration
+     *        after a certain count
+     * @return an {@code Iterator<TS>}
      */
-    public static <TS> LimitIterator<TS> apply(final Iterator<TS> src,
+    public static <TS> LimitIterator<TS> apply(final Iterator<TS> sourceIter,
             final Predicate<Long> limitPredicate)
     {
-        Objects.requireNonNull(src);
+        Objects.requireNonNull(sourceIter);
         Objects.requireNonNull(limitPredicate);
-        return new LimitIterator<TS>(src, limitPredicate);
+        return new LimitIterator<TS>(sourceIter, limitPredicate);
     }
 
 }

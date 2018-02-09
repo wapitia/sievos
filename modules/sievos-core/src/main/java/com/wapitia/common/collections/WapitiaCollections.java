@@ -29,13 +29,12 @@
  * ARISING OUT OF THE USE OF OR INABILITY TO USE THIS SOFTWARE, EVEN IF
  * WAPITIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  */
-
 package com.wapitia.common.collections;
 
 import java.util.ArrayList;
 import java.util.BitSet;
+import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -47,42 +46,53 @@ import java.util.function.Supplier;
 public interface WapitiaCollections {
 
     /**
-     * Put a key/value pair into a Map-List structure having the
+     * Put a key/value pair into a Map-Collection structure having the
      * common usage pattern:  {@code Map<K,List<V>> }
      *
-     * This puts a new value into that list in the map, creating a new
-     * ArrayList for the key's list, if needed.
-     * This prevents the developer from having to deal with nulls,
+     * This puts a new value into that collection in the map, creating a new
+     * {@link ArrayList} for the key's list, if needed.
+     * This prevents the developer from having to deal with {@code null}s,
      * since this function does it.
      *
      * @param <K> map's key type
      * @param <LV> list's value's type
      *
-     * @param mapOfLists mutable  Map of Lists: {@code Map<K,List<LV>> }
+     * @param collectionMap mutable  Map of Lists: {@code Map<K,List<LV>> }
      * @param key key into the Map
-     * @param listItem item to add to the key entry's list value.
-     * @see #put(Map, Object, Object, Supplier)
+     * @param newItem item to add to the key entry's list value.
+     * @see #add(Map, Object, Object, Supplier)
      */
-    static <K,LV> void put(final Map<K,List<LV>> mapOfLists,
-        final K key, final LV listItem)
+    static <K,LV> void add(final Map<K,Collection<LV>> collectionMap,
+        final K key, final LV newItem)
     {
-        put(mapOfLists, key, listItem, ArrayList<LV>::new);
+        add(collectionMap, key, newItem, ArrayList<LV>::new);
     }
 
     /**
      * Put a key/value pair into a Map-List structure having the
-     * common usage pattern:  {@code Map<K,List<V>> }
-     * <p>This is just like {@link #put(Map, Object, Object)} above,
+     * common usage pattern:  {@code Map<K,Collection<V>> }
+     *
+     * <p>
+     * This is just like {@link #add(Map, Object, Object)} above,
      * but this method also takes a List constructor when ArrayList::new
      * just won't do.
+     * </p>
      *
-     * @param listCtor supplies a new empty List instance
-     * @see #put(Map, Object, Object)
+     * @param <K> The Map's key's type
+     * @param <LV> The Map's Value's Collection type
+     *
+     * @param collectionMap a Map of Collections
+     * @param key the key into mapOfCollections re
+     * @param listItem item to append to the collection at the
+     *        map's key entry
+     * @param listCtor Collection construction action, taken once if necessary.
+     * @see #add(Map, Object, Object)
      */
-    static <K,LV> void put(final Map<K,List<LV>> mapOfLists,
-            final K key, final LV listItem, Supplier<List<LV>> listCtor)
+    static <K,LV> void add(final Map<K,Collection<LV>> collectionMap,
+            final K key, final LV listItem,
+            final Supplier<Collection<LV>> listCtor)
     {
-        mapGetOrCreate(mapOfLists, key, listCtor).add(listItem);
+        mapGetOrCreate(collectionMap, key, listCtor).add(listItem);
     }
 
     /**
@@ -92,14 +102,14 @@ public interface WapitiaCollections {
      * @param <K> map's key type
      * @param <LV> list's value's type
      *
-     * @param mapOfLists
-     * @param key
-     * @param action
+     * @param collectionMap a Map of Collections
+     * @param key the key into mapOfCollections re
+     * @param action Each item is given by this consumer for action
      */
-    static <K,LV> void forEach(final Map<K,List<LV>> mapOfLists,
+    static <K,LV> void forEach(final Map<K,Collection<LV>> collectionMap,
             final K key, final Consumer<LV> action)
     {
-        Optional.<List<LV>> ofNullable(mapOfLists.get(key))
+        Optional.<Collection<LV>> ofNullable(collectionMap.get(key))
                 .ifPresent(list -> list.forEach(action));
     }
 
@@ -144,6 +154,7 @@ public interface WapitiaCollections {
      *
      * @param <K> Map's key type
      * @param <V> Map's value type
+     *
      * @param map the container to alter
      * @param key the key of the map entry to change or add.
      * @param item new key's value for the map
@@ -166,11 +177,13 @@ public interface WapitiaCollections {
 
     /**
      * Limit the size of the BitSet iterator of the given BitSet
-     * @param bitSet
+     *
+     * @param bitSet BitSet through whose bits of which we shall iterate
      * @param size limit BitSet size
      * @return Iterator of Boolean
      */
-    static LimitIterator<Boolean> bitSetIterator(final BitSet bitSet, final int size)
+    static LimitIterator<Boolean> bitSetIterator(final BitSet bitSet,
+        final int size)
     {
         final LimitIterator<Boolean> result =
             WapitiaCollections.<Boolean> limitIterator(
@@ -181,14 +194,18 @@ public interface WapitiaCollections {
     /**
      * Create and return an iterator with a hard upper limit on the number
      * of items it will return.
-     * @param src
-     * @param limit
-     * @return
+     *
+     * @param <T> The type of the items delivered by this and the source
+     *            iterator
+     * @param sourceIter Iterator that will be wrapped and limited.
+     * @param limit Count of maximum times {@link Iterator#next next()} may
+     *        be called using this newly generated iterator
+     * @return an {@code Iterator<T>}
      */
-    static <T> LimitIterator<T> limitIterator(final Iterator<T> src,
+    static <T> LimitIterator<T> limitIterator(final Iterator<T> sourceIter,
         final long limit)
     {
-        return LimitIterator.<T> apply(src, index -> index < limit);
+        return LimitIterator.<T> apply(sourceIter, index -> index < limit);
     }
 
 }
